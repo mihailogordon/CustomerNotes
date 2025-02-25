@@ -15,11 +15,24 @@
                  showInWebsite="0"
                  showInStore="0">
                  
-            <label>Customer Notes Settings</label>
+            <label>Settings</label>
             <tab>customer_notes</tab>
             <resource>Krga_CustomerNotes::settings</resource>
 
-            <group id="list_settings" translate="label" sortOrder="10" showInDefault="1">
+            <group id="general_settings" translate="label" sortOrder="10" showInDefault="1">
+                <label>General Settings</label>
+
+                <field id="show_in_menu" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Show in Menu</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="menu_item_label" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Menu Item Label</label>
+                </field>
+            </group>
+            
+            <group id="list_settings" translate="label" sortOrder="20" showInDefault="1">
                 <label>List Settings</label>
 
                 <field id="page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
@@ -27,12 +40,12 @@
                     <validate>validate-number</validate>
                 </field>
 
-                <field id="show_tags_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
+                <field id="show_tags_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
                     <label>Show Tags</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
                     <label>Show Pagination</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

@@ -16,6 +16,20 @@ class Config extends AbstractHelper
         $this->scopeConfig = $scopeConfig;
     }
 
+    public function isMenuItemEnabled() {
+        return $this->scopeConfig->getValue(
+            'customer_notes_settings/general_settings/show_in_menu',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
+    public function getMenuItemLabel() {
+        return $this->scopeConfig->getValue(
+            'customer_notes_settings/general_settings/menu_item_label',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
     public function getListPageSize()
     {
         return (int) $this->scopeConfig->getValue(

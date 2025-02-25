@@ -4,6 +4,10 @@
 
     <default>
         <customer_notes_settings>
+            <general_settings>
+                <show_in_menu>1</show_in_menu>
+                <menu_item_label>Customer Notes</menu_item_label>
+            </general_settings>
             <list_settings>
                 <page_size>8</page_size>
                 <show_pagination_on_list>1</show_pagination_on_list>
