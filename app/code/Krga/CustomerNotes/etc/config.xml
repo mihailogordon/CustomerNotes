@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/config.xsd">
+
+    <default>
+        <customer_notes_settings>
+            <list_settings>
+                <page_size>8</page_size>
+                <show_pagination_on_list>1</show_pagination_on_list>
+                <show_tags_on_list>1</show_tags_on_list>
+                <show_add_note_form_on_list>1</show_add_note_form_on_list>
+            </list_settings>
+        </customer_notes_settings>
+    </default>
+
+</config>

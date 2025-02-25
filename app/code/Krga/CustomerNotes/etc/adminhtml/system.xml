@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    
+    <system>
+        <tab id="customer_notes" translate="label" sortOrder="100">
+            <label>Customer Notes</label>
+        </tab>
+
+        <section id="customer_notes_settings"
+                 translate="label"
+                 type="text"
+                 sortOrder="10"
+                 showInDefault="1"
+                 showInWebsite="0"
+                 showInStore="0">
+                 
+            <label>Customer Notes Settings</label>
+            <tab>customer_notes</tab>
+            <resource>Krga_CustomerNotes::settings</resource>
+
+            <group id="list_settings" translate="label" sortOrder="10" showInDefault="1">
+                <label>List Settings</label>
+
+                <field id="page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Notes Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_tags_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
+                    <label>Show Tags</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="show_add_note_form_on_list" translate="label" type="select" sortOrder="40" showInDefault="1">
+                    <label>Show Add Note Form</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

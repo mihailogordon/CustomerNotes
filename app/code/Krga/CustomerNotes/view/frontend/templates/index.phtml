@@ -5,14 +5,14 @@ $customer_notes = $block->getNotes();
 $customer_notes_collection = $block->getNotesCollection();
 $customer_notes_page_size = $block->getPageSize();
 $customers = $block->getCustomers();
-$showTagsOnList = $block->getShowTagsOnList();
-$showPaginationOnList = $block->getShowPaginationOnList();
-$showAddNoteFormOnList = $block->getShowAddNoteFormOnList();
+$isListTagsEnabled = $block->isListTagsEnabled();
+$isListPaginationEnabled = $block->isListPaginationEnabled();
+$isListAddNoteFormEnabled = $block->isListAddNoteFormEnabled();
 $tags = $block->getTags();
 
 if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
     foreach( $customer_notes as $customer_note ) {
-        $noteTagsHtml = $showTagsOnList ? $customer_note->getNoteTagsHtml() : '';
+        $noteTagsHtml = $isListTagsEnabled ? $customer_note->getNoteTagsHtml() : '';
         $customer = $customer_note->getNoteCustomer($customer_note->getCustomerId());
         ?>
         <div>
@@ -39,7 +39,7 @@ if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
 
 <p><a href="<?php echo $block->getUrl('notes/index/trashed'); ?>">View trashed notes</a></p>
 
-<?php if ($showPaginationOnList) {
+<?php if ($isListPaginationEnabled) {
     $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
     $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
     $pagerBlock->setShowPerPage(true);
@@ -47,7 +47,7 @@ if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
     echo $pagerBlock->toHtml();
 } ?>
 
-<?php if ($showAddNoteFormOnList) { ?>
+<?php if ($isListAddNoteFormEnabled) { ?>
     <h2>Add Customer Note:</h2>
     <form id="add-note-form" action="<?php echo $block->getUrl('notes/index/add'); ?>" method="post">
         <label for="note">Note:</label>

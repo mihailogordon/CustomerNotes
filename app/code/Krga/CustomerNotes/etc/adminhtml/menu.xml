@@ -18,7 +18,8 @@
              action="notes/tags" sortOrder="930"/>
         <add id="Krga_CustomerNotes::settings" title="General Settings"
              module="Krga_CustomerNotes" parent="Krga_CustomerNotes::notes_parent"
-             resource="Krga_CustomerNotes::notes" translate="title"
-             action="notes/settings" sortOrder="940"/>
+             resource="Krga_CustomerNotes::settings" translate="title"
+             action="adminhtml/system_config/edit/section/customer_notes_settings"
+             sortOrder="940"/>
     </menu>
 </config>

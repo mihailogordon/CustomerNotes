@@ -52,17 +52,5 @@
         <constraint xsi:type="foreign" referenceId="FK_NOTES_TAG_NOTE_ID" table="customer_notes" column="note_id" referenceTable="customer_notes" referenceColumn="note_id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="FK_NOTES_TAG_TAG_ID" table="customer_notes_tags" column="tag_id" referenceTable="customer_notes_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
     </table>
-
-    <!-- Customer Notes Settings Table -->
-    <table name="customer_notes_settings" resource="default" engine="innodb" comment="Customer Notes Settings">
-        <column name="setting_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Setting ID"/>
-        <column name="option_name" xsi:type="varchar" length="255" nullable="false" comment="Option Name"/>
-        <column name="option_value" xsi:type="text" nullable="false" comment="Option Value"/>
-        <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="setting_id"/>
-        </constraint>
-        <constraint xsi:type="unique" referenceId="UNQ_VENDOR_CUSTOMERNOTES_OPTION_CODE">
-            <column name="option_name"/>
-        </constraint>
-    </table>
+    
 </schema>

@@ -3,69 +3,47 @@
 namespace Krga\CustomerNotes\Block;
 
 use Magento\Framework\View\Element\Template\Context;
+use Krga\CustomerNotes\Helper\Config;
 use Krga\CustomerNotes\Model\ResourceModel\Note\CollectionFactory;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Tag\CollectionFactory as TagCollectionFactory;
-use Krga\CustomerNotes\Model\Settings;
 
 class Notes extends \Magento\Framework\View\Element\Template
 {
-
+    protected $configHelper;
     private $collectionFactory;
     private $customerCollectionFactory;
     private $tagCollectionFactory;
-    private $settings;
-
-    private $pageSize;
-    private $showPaginationOnList;
-    private $showTagsOnList;
-    private $showAddNoteFormOnList;
 
     public function __construct(
         Context $context,
+        Config $configHelper,
         CollectionFactory $collectionFactory,
         CustomerCollectionFactory $customerCollectionFactory,
         TagCollectionFactory $tagCollectionFactory,
-        Settings $settings,
         array $data = []
     ) {
         parent::__construct($context, $data);
+        $this->configHelper = $configHelper;
         $this->collectionFactory = $collectionFactory;
         $this->customerCollectionFactory = $customerCollectionFactory;
         $this->tagCollectionFactory = $tagCollectionFactory;
-        $this->settings = $settings;
     }
 
-    public function getPageSize() {
-        if ($this->pageSize === null) {
-            $this->pageSize = $this->settings->getOption('page_size', 6);
-        }
-
-        return $this->pageSize;
+    public function getListPageSize() {
+        return $this->configHelper->getListPageSize();
     }
     
-    public function getShowPaginationOnList() {
-        if ($this->showPaginationOnList === null) {
-            $this->showPaginationOnList = $this->settings->getOption('show_pagination_on_list', 'yes') !== 'no';
-        }
-
-        return $this->showPaginationOnList;
+    public function isListPaginationEnabled() {
+        return $this->configHelper->isListPaginationEnabled();
     }
     
-    public function getShowTagsOnList() {
-        if ($this->showTagsOnList === null) {
-            $this->showTagsOnList = $this->settings->getOption('show_tags_on_list', 'yes') !== 'no';
-        }
-
-        return $this->showTagsOnList;
+    public function isListTagsEnabled() {
+        return $this->configHelper->isListTagsEnabled();
     }
     
-    public function getShowAddNoteFormOnList() {
-        if ($this->showAddNoteFormOnList === null) {
-            $this->showAddNoteFormOnList = $this->settings->getOption('show_add_note_form_on_list', 'yes') !== 'no';
-        }
-
-        return $this->showAddNoteFormOnList;
+    public function isListAddNoteFormEnabled() {
+        return $this->configHelper->isListAddNoteFormEnabled();
     }
 
     public function getNotesCollection() {
@@ -74,7 +52,7 @@ class Notes extends \Magento\Framework\View\Element\Template
         $collection = $this->collectionFactory->create()
         ->addFieldToFilter('is_deleted', ['eq' => 0])
         ->setOrder('created_at', 'DESC')
-        ->setPageSize($this->getPageSize())
+        ->setPageSize($this->getListPageSize())
         ->setCurPage($page);
 
         return $collection;
