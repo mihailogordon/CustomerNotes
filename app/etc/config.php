@@ -373,16 +373,11 @@ return [
         'Magento_WishlistAnalytics' => 1,
         'Magento_WishlistGraphQl' => 1,
         'Magento_WishlistSampleData' => 1,
-        'Krga_Blog' => 1,
         'Krga_CustomerNotes' => 1,
-        'Macademy_Jumpstart' => 1,
-        'Mastering_SampleModule' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeCustomerBalance' => 1,
         'PayPal_BraintreeGiftCardAccount' => 1,
         'PayPal_BraintreeGiftWrapping' => 1,
-        'PayPal_BraintreeGraphQl' => 1,
-        'Test_GraphQl' => 1,
-        'Thecoachsmb_Mymodule' => 1
+        'PayPal_BraintreeGraphQl' => 1
     ]
 ];
