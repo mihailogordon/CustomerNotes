@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/Setup/Declaration/Schema/etc/db_schema.xsd">
+
+    <!-- Customer Notes Table -->
+    <table name="customer_notes" resource="default" engine="innodb" comment="Customer Notes">
+        <column name="note_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Note ID"/>
+        <column name="customer_id" xsi:type="int" nullable="false" unsigned="true" comment="Customer ID"/>
+        <column name="note" xsi:type="text" nullable="false" comment="Note"/>
+        <column name="is_deleted" xsi:type="smallint" nullable="false" default="0" comment="Soft Delete Flag (0 = Active, 1 = Deleted)"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="note_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_CUSTOMER_NOTES_CUSTOMER_ID" table="customer_notes" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+
+    <!-- Customer Notes History Table -->
+    <table name="customer_notes_history" resource="default" engine="innodb" comment="Customer Notes History">
+        <column name="history_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="History ID"/>
+        <column name="note_id" xsi:type="int" nullable="false" unsigned="true" comment="Note ID"/>
+        <column name="customer_id" xsi:type="int" nullable="false" unsigned="true" comment="Customer ID"/>
+        <column name="previous_note" xsi:type="text" nullable="false" comment="Previous Note Content"/>
+        <column name="modified_by" xsi:type="int" nullable="false" unsigned="true" comment="Admin/User ID"/>
+        <column name="modified_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Modification Time"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="history_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_CUSTOMER_NOTES_HISTORY_NOTE_ID" table="customer_notes" column="note_id" referenceTable="customer_notes" referenceColumn="note_id" onDelete="CASCADE"/>
+    </table>
+
+    <!-- Customer Notes Tags Table -->
+    <table name="customer_notes_tags" resource="default" engine="innodb" comment="Customer Notes Tags">
+        <column name="tag_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Tag ID"/>
+        <column name="name" xsi:type="varchar" length="255" nullable="false"  comment="Tag Name"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tag_id"/>
+        </constraint>
+    </table>
+
+    <!-- Customer Notes Tag Relation Table -->
+    <table name="customer_notes_tag_relation" resource="default" engine="innodb" comment="Customer Notes Tag Relation">
+        <column name="relation_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Relation ID"/>
+        <column name="note_id" xsi:type="int" nullable="false" unsigned="true" comment="Note ID"/>
+        <column name="tag_id" xsi:type="int" nullable="false" unsigned="true" comment="Tag ID"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="relation_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_NOTES_TAG_NOTE_ID" table="customer_notes" column="note_id" referenceTable="customer_notes" referenceColumn="note_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_NOTES_TAG_TAG_ID" table="customer_notes_tags" column="tag_id" referenceTable="customer_notes_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
+    </table>
+
+    <!-- Customer Notes Settings Table -->
+    <table name="customer_notes_settings" resource="default" engine="innodb" comment="Customer Notes Settings">
+        <column name="setting_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Setting ID"/>
+        <column name="option_name" xsi:type="varchar" length="255" nullable="false" comment="Option Name"/>
+        <column name="option_value" xsi:type="text" nullable="false" comment="Option Value"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="setting_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNQ_VENDOR_CUSTOMERNOTES_OPTION_CODE">
+            <column name="option_name"/>
+        </constraint>
+    </table>
+</schema>

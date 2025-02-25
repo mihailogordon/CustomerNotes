@@ -1,0 +1,11 @@
+bin/
+dev/
+generated/
+lib/
+phpserver/
+setup/
+vendor/
+.DS_Store
+.htaccess
+.htaccess.sample
+.env

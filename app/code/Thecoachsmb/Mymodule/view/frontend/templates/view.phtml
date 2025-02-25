@@ -1,0 +1,11 @@
+<?php $articleCollection = $block->getCollection(); ?>
+<?php if(count($articleCollection)) { ?>
+      <h2><?= $block->escapeHtml(__('Thecoachsmb Articles')) ?></h2>
+      <?php foreach($articleCollection as $post): ?>
+           <h3><?= $block->escapeHtml(__('Article - ')) ?>
+               <a href="<?php echo $block->getArticleUrl($post->getId());?>"><?php echo $post->getTitle(); ?></a> 
+           </h3> 
+           <h4><?php echo date('F j, Y', strtotime($post->getCreatedAt())); ?></h4>
+           <p><?php echo $post->getContent(); ?></p> 
+     <?php endforeach; ?> 
+<?php } ?> 

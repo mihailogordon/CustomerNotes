@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">notes_grid.notes_grid_data_source</item>
+            <item name="deps" xsi:type="string">notes_grid.notes_grid_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">notes_grid</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="name" xsi:type="string">add</item>
+                <item name="label" xsi:type="string" translate="true">Add Note</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/item/new</item>
+            </item>
+        </item>
+    </argument>
+    <dataSource name="notes_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">note_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <!-- <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="notes_grid_data_source"> -->
+        <dataProvider class="Krga\CustomerNotes\Ui\Component\DataProvider\CustomerNotesDataProvider" name="notes_grid_data_source">
+            <settings>
+                <requestFieldName>note_id</requestFieldName>
+                <primaryFieldName>note_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="notes_grid">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>note_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="note_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Note ID</item>
+                </item>
+            </argument>
+        </column>
+        <column name="is_deleted" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno" />
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Trashed</label>
+            </settings>
+        </column>
+        <column name="customer">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Customer</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </column>
+        <column name="note">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Note</item>
+                </item>
+            </argument>
+        </column>
+        <column name="tags">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Tags</item>
+                </item>
+            </argument>
+        </column>
+        <column name="created_at">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Date</item>
+                </item>
+            </argument>
+        </column>
+        <actionsColumn name="actions" class="Krga\CustomerNotes\Ui\Component\Listing\Column\Actions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">107</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

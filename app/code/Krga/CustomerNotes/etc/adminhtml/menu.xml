@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Krga_CustomerNotes::notes_parent" title="Customer Notes"
+             module="Krga_CustomerNotes" resource="Krga_CustomerNotes::notes"
+             translate="title" sortOrder="900"/>
+        <add id="Krga_CustomerNotes::notes" title="Notes"
+             module="Krga_CustomerNotes" parent="Krga_CustomerNotes::notes_parent"
+             resource="Krga_CustomerNotes::notes" translate="title"
+             action="notes" sortOrder="910"/>
+        <add id="Krga_CustomerNotes::history_notes" title="History Notes"
+             module="Krga_CustomerNotes" parent="Krga_CustomerNotes::notes_parent"
+             resource="Krga_CustomerNotes::notes" translate="title"
+             action="notes/history" sortOrder="920"/>
+        <add id="Krga_CustomerNotes::note_tags" title="Tags"
+             module="Krga_CustomerNotes" parent="Krga_CustomerNotes::notes_parent"
+             resource="Krga_CustomerNotes::notes" translate="title"
+             action="notes/tags" sortOrder="930"/>
+        <add id="Krga_CustomerNotes::settings" title="General Settings"
+             module="Krga_CustomerNotes" parent="Krga_CustomerNotes::notes_parent"
+             resource="Krga_CustomerNotes::notes" translate="title"
+             action="notes/settings" sortOrder="940"/>
+    </menu>
+</config>

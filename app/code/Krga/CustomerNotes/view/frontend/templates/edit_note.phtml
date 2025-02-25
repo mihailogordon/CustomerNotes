@@ -1,0 +1,35 @@
+<?php
+/** @var \Krga\CustomerNotes\Block\Edit $block */
+$noteId = $block->getNoteId();
+$note = $block->getNoteContent();
+$customer = $block->getNoteCustomer();
+$allTags = $block->getAllTags();
+$tagsIds = $block->getTagsIds();
+?>
+
+<h1>Editing Note ID: <?= $noteId ?></h1>
+
+<form action="<?= $block->getUrl('notes/index/save') ?>" method="post">
+    <input type="hidden" name="note_id" value="<?= $noteId ?>" />
+    
+    <label for="note">Note:</label>
+    <textarea name="note" id="note"><?= $note; ?></textarea>
+    
+    <label for="customer">Customer:</label>
+    <input type="text" disabled readonly name="customer" id="customer" value="<?= $customer; ?>"/>
+    <br/>
+    <br/>
+    <?php if(is_array($allTags) && count($allTags) > 0) { ?>
+        <label for="tags">Tags:</label>
+        <select id="tags" name="tags[]" required multiple>
+            <?php foreach($allTags as $tag) { ?>
+                <option value="<?php echo $tag->getTagId(); ?>" <?php echo in_array($tag->getTagId(), $tagsIds, true) ? 'selected' : ''; ?>><?php echo $tag->getName(); ?></option>
+            <?php } ?>
+        </select>
+    <?php } ?>
+    <br/>
+    <br/>
+    <button type="submit" class="action primary">Save Note</button>
+</form>
+<br/>
+<p><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>

@@ -1,0 +1,38 @@
+<?php
+$tagName = $block->getTagName();
+$customer_notes = $block->getTagNotes();
+$customers = $block->getCustomers();
+
+if ($tagName) { ?>
+    <h1>Notes tagged as "<?= $tagName ?>"</h1>
+
+    <?php if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
+        foreach( $customer_notes as $customer_note ) {
+            $noteTagsHtml = $customer_note->getNoteTagsHtml();
+            $customer = $customer_note->getNoteCustomer($customer_note->getCustomerId());
+            ?>
+            <div>
+                <p>
+                    <?php 
+                        if( is_array($customer) && count($customer) > 0 ) {
+                            echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
+                        }
+                        
+                        echo date('F j, Y', strtotime($customer_note->getCreatedAt())) . ': ';
+                    
+                        echo '<strong>"' . $customer_note->getNote() . '"</strong>';
+                    ?>
+                    <a href="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>" class="edit-note" data-url="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>">Edit</a>
+                    or
+                    <a href="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>" class="trash-note" data-url="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>">Move to Trash</a>
+                    ;
+                    <a href="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>" class="note-history" data-url="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>">Show History</a>
+                </p>
+            </div>
+        <?php }
+    } else { ?>
+        <p>No notes found for this tag!</p>
+    <?php }
+} else { ?>
+    <p>The tag you have selected does not exist!</p>
+<?php }

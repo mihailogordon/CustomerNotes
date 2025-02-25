@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">notes_item_edit_form.notes_item_edit_form_data_source</item>
+            <item name="deps" xsi:type="string">notes_item_edit_form.notes_item_edit_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">General</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">notes_item_edit_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="buttons" xsi:type="array">
+            <item name="save" xsi:type="array">
+                <item name="name" xsi:type="string">save</item>
+                <item name="label" xsi:type="string" translate="true">Save</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/save</item>
+            </item>
+        </item>
+    </argument>
+    <dataSource name="notes_item_edit_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Krga\CustomerNotes\Ui\Component\DataProvider\CustomerNotesDataProviderEditForm</argument>
+            <argument name="name" xsi:type="string">notes_item_edit_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">note_id</argument>
+            <argument name="requestFieldName" xsi:type="string">note_id</argument>
+            <argument name="collectionFactory" xsi:type="object">Krga\CustomerNotes\Model\ResourceModel\Note\CollectionFactory</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="notes/item/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <fieldset name="general">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">General</item>
+            </item>
+        </argument>
+        <field name="note_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">hidden</item>
+                    <item name="formElement" xsi:type="string">hidden</item>
+                    <item name="dataScope" xsi:type="string">note_id</item>
+                    <item name="default" xsi:type="string">2</item>
+                </item>
+            </argument>
+        </field>
+        <field name="note">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Note</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">note</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="customer_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Krga\CustomerNotes\Model\Config\Source\Customers</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Customer</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="dataScope" xsi:type="string">customer_id</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="tag_ids">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Krga\CustomerNotes\Model\Config\Source\Tags</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Tags</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="dataScope" xsi:type="string">tag_ids</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">tags</item>
+                </item>
+            </argument>
+        </field>
+
+    </fieldset>
+</form>

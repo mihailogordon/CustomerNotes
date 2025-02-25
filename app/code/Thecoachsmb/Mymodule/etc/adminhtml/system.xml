@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+     <system>
+        <tab id="thecoachsmb" translate="label" sortOrder="200">
+           <label>Thecoachsmb</label>
+        </tab>
+        <section id="thecoachsmb" translate="label" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+           <class>separator-top</class>
+           <label>Mymodule</label>
+           <tab>thecoachsmb</tab>
+           <resource>Thecoachsmb_Mymodule::configuration</resource>
+           <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Configuration</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="0" showInStore="0">
+                     <label>Enable Module</label>
+                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+          </group>
+       </section>
+     </system>
+</config>

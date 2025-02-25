@@ -1,0 +1,3 @@
+type Query {
+    helloWorld: String @resolver(class: "Test\\GraphQl\\Model\\Resolver\\TestQuery")
+}

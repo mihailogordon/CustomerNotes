@@ -1,0 +1,10 @@
+<?php $posts = $block->getCollection();
+
+if( count( $posts ) > 0 ) { ?>
+    <h2>Krga's Posts</h1>
+    <?php foreach( $posts as $post ) { ?>
+        <h3><a href="<?php echo $block->getPostUrl($post->getPostId()); ?>"><?php echo $post->getPostTitle(); ?></a></h5>
+        <h6><?php echo date('F j, Y', strtotime($post->getCreatedAt())); ?></h6>
+        <p><?php echo $post->getPostContent(); ?></p>
+    <?php }
+}

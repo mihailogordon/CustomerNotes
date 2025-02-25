@@ -1,0 +1,23 @@
+<?php
+$noteId = $block->getNoteId();
+$noteHistoryItems = $block->getNoteHistoryItems();
+?>
+
+<h1>History of Note ID: <?= $noteId ?></h1>
+
+<?php if(is_array($noteHistoryItems) && count($noteHistoryItems) ) { ?>
+    <div>
+    <?php foreach($noteHistoryItems as $noteHistoryItem) { ?>
+        <p>
+            <?php echo $noteHistoryItem->getModifiedAt(); ?> - <?php echo $noteHistoryItem->getPreviousNote(); ?>
+            <a href="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="revert-note" data-url="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>">revert</a>
+            or
+            <a href="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="delete-history" data-url="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>">delete</a>
+        </p>
+    <?php } ?>
+    </div>
+<?php } else { ?>
+    <p>No history found for this note!</p>
+<?php } ?>
+
+<p><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>

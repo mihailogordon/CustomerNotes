@@ -1,0 +1,16 @@
+type Query {
+    getCustomerNotes(customerId: Int!): [Note]! @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\GetCustomerNotes")
+}
+
+type Mutation {
+    addCustomerNote(customerId: Int!, note: String!): Note @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\AddCustomerNote")
+    deleteCustomerNote(noteId: ID!): Boolean @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\DeleteCustomerNote")
+}
+
+type Note {
+    note_id: ID!
+    customer_id: Int!
+    note: String!
+    created_at: String
+    updated_at: String
+}
