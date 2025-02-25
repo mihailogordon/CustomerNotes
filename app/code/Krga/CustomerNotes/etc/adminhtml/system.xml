@@ -22,13 +22,16 @@
             <group id="general_settings" translate="label" sortOrder="10" showInDefault="1">
                 <label>General Settings</label>
 
-                <field id="show_in_menu" translate="label" type="select" sortOrder="10" showInDefault="1">
-                    <label>Show in Menu</label>
+                <field id="show_in_main_menu" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Show in Main Menu</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
                 <field id="menu_item_label" translate="label" type="text" sortOrder="20" showInDefault="1">
                     <label>Menu Item Label</label>
+                    <depends>
+                        <field id="show_in_main_menu">1</field>
+                    </depends>
                 </field>
             </group>
             
@@ -52,6 +55,54 @@
 
                 <field id="show_add_note_form_on_list" translate="label" type="select" sortOrder="40" showInDefault="1">
                     <label>Show Add Note Form</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            
+            <group id="tag_list_settings" translate="label" sortOrder="30" showInDefault="1">
+                <label>Tag List Settings</label>
+
+                <field id="tag_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Notes Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_tag_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            
+            <group id="trash_settings" translate="label" sortOrder="40" showInDefault="1">
+                <label>Trash Settings</label>
+
+                <field id="trash_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Notes Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_trash_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="history_settings" translate="label" sortOrder="50" showInDefault="1">
+                <label>History Settings</label>
+
+                <field id="histories_per_note" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Histories Saved Per Note</label>
+                    <validate>validate-number</validate>
+                    <comment><![CDATA[<strong>Note:</strong> Leave empty if you don't want limit. If limit is surprassed the oldes history of the note will be deleted.]]></comment>
+                </field>
+                
+                <field id="history_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Notes Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_history_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

@@ -3,41 +3,41 @@
 
 $customer_notes = $block->getNotes();
 $customer_notes_collection = $block->getNotesCollection();
-$customer_notes_page_size = $block->getPageSize();
+$customer_notes_page_size = $block->getListPageSize();
 $customers = $block->getCustomers();
 $isListTagsEnabled = $block->isListTagsEnabled();
 $isListPaginationEnabled = $block->isListPaginationEnabled();
 $isListAddNoteFormEnabled = $block->isListAddNoteFormEnabled();
 $tags = $block->getTags();
 
-if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
-    foreach( $customer_notes as $customer_note ) {
-        $noteTagsHtml = $isListTagsEnabled ? $customer_note->getNoteTagsHtml() : '';
-        $customer = $customer_note->getNoteCustomer($customer_note->getCustomerId());
-        ?>
-        <div>
-            <p>
-                <?php 
-                    if( is_array($customer) && count($customer) > 0 ) {
-                        echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
-                    }
+if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) { ?>
+    <div class="notes-holder">
+        <?php foreach( $customer_notes as $customer_note ) {
+            $noteTagsHtml = $isListTagsEnabled ? $customer_note->getNoteTagsHtml() : '';
+            $customer = $customer_note->getNoteCustomer($customer_note->getCustomerId());
+            ?>
+            <div>
+                <p>
+                    <?php 
+                        if( is_array($customer) && count($customer) > 0 ) {
+                            echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
+                        }
+                        
+                        echo date('F j, Y', strtotime($customer_note->getCreatedAt())) . ': ';
                     
-                    echo date('F j, Y', strtotime($customer_note->getCreatedAt())) . ': ';
-                
-                    echo '<strong>"' . $customer_note->getNote() . '"</strong>';
-                ?>
-                <a href="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>" class="edit-note" data-url="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>">Edit</a>
-                or
-                <a href="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>" class="trash-note" data-url="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>">Move to Trash</a>
-                ;
-                <a href="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>" class="note-history" data-url="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>">Show History</a>
-                <?php echo $noteTagsHtml; ?>
-            </p>
-        </div>
-    <?php }
-} ?>
-
-<p><a href="<?php echo $block->getUrl('notes/index/trashed'); ?>">View trashed notes</a></p>
+                        echo '<strong>"' . $customer_note->getNote() . '"</strong>';
+                    ?>
+                    <a href="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>" class="edit-note" data-url="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>">Edit</a>
+                    or
+                    <a href="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>" class="trash-note" data-url="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>">Move to Trash</a>
+                    ;
+                    <a href="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>" class="note-history" data-url="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>">Show History</a>
+                    <?php echo $noteTagsHtml; ?>
+                </p>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>
 
 <?php if ($isListPaginationEnabled) {
     $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
@@ -47,9 +47,11 @@ if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) {
     echo $pagerBlock->toHtml();
 } ?>
 
+<p><a href="<?php echo $block->getUrl('notes/index/trashed'); ?>">View trashed notes</a></p>
+
 <?php if ($isListAddNoteFormEnabled) { ?>
-    <h2>Add Customer Note:</h2>
-    <form id="add-note-form" action="<?php echo $block->getUrl('notes/index/add'); ?>" method="post">
+    <h4><a href="#" class="add-note-form-trigger">Add Customer Note</a></h2>
+    <form id="add-note-form" action="<?php echo $block->getUrl('notes/index/add'); ?>" method="post" style="display: none;">
         <label for="note">Note:</label>
         <textarea id="note" name="note" required></textarea>
         <br/>

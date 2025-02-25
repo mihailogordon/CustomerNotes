@@ -5,15 +5,27 @@
     <default>
         <customer_notes_settings>
             <general_settings>
-                <show_in_menu>1</show_in_menu>
+                <show_in_main_menu>1</show_in_main_menu>
                 <menu_item_label>Customer Notes</menu_item_label>
             </general_settings>
             <list_settings>
                 <page_size>8</page_size>
-                <show_pagination_on_list>1</show_pagination_on_list>
                 <show_tags_on_list>1</show_tags_on_list>
+                <show_pagination_on_list>1</show_pagination_on_list>
                 <show_add_note_form_on_list>1</show_add_note_form_on_list>
             </list_settings>
+            <tag_list_settings>
+                <tag_page_size>8</tag_page_size>
+                <show_pagination_on_tag_list>1</show_pagination_on_tag_list>
+            </tag_list_settings>
+            <trash_settings>
+                <trash_page_size>8</trash_page_size>
+                <show_pagination_on_trash_list>1</show_pagination_on_trash_list>
+            </trash_settings>
+            <history_settings>
+                <history_page_size>8</history_page_size>
+                <show_pagination_on_history_list>1</show_pagination_on_history_list>
+            </history_settings>
         </customer_notes_settings>
     </default>
 

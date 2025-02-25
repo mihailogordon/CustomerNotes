@@ -4,6 +4,7 @@ namespace Krga\CustomerNotes\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\App\RequestInterface;
+use Krga\CustomerNotes\Helper\Config;
 use Krga\CustomerNotes\Model\TagFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Tag as TagResourceModel;
 use Krga\CustomerNotes\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
@@ -14,17 +15,19 @@ use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerC
 class Tag extends Template
 {
     protected $request;
+    protected $configHelper;
     protected $tagFactory;
     protected $tagResourceModel;
     protected $tagRelationCollectionFactory;
     protected $noteFactory;
     protected $noteResourceModel;
     protected $customerCollectionFactory;
-    private $tag = null; // Cache loaded note
+    private $tag = null;
 
     public function __construct(
         Template\Context $context,
         RequestInterface $request,
+        Config $configHelper,
         TagFactory $tagFactory,
         TagResourceModel $tagResourceModel,
         TagRelationCollectionFactory $tagRelationCollectionFactory,
@@ -34,6 +37,7 @@ class Tag extends Template
         array $data = []
     ) {
         $this->request = $request;
+        $this->configHelper = $configHelper;
         $this->tagFactory = $tagFactory;
         $this->tagResourceModel = $tagResourceModel;
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
@@ -43,17 +47,21 @@ class Tag extends Template
         parent::__construct($context, $data);
     }
 
-    /**
-     * Get note ID from the request
-     */
+    public function getTagListPageSize()
+    {
+        return $this->configHelper->getTagListPageSize();
+    }
+    
+    public function isTagListPaginationEnabled()
+    {
+        return $this->configHelper->isTagListPaginationEnabled();
+    }
+
     public function getTagId()
     {
         return (int) $this->request->getParam('tag_id');
     }
 
-    /**
-     * Load Note from Database (Singleton Pattern)
-     */
     private function getTag()
     {
         if ($this->tag === null) {
@@ -68,28 +76,36 @@ class Tag extends Template
         return $this->tag;
     }
 
-    /**
-     * Get Note Content
-     */
     public function getTagName()
     {
         $tag = $this->getTag();
         return ($tag && $tag->getId()) ? $tag->getName() : '';
     }
 
-    public function getTagNotes() {
+    public function getTagNotesCollection() {
+        $page = (int)$this->getRequest()->getParam('p', 1);
         $tag = $this->getTag();
-        $tagNotes = array();
+        $tagRelations = array();
 
         if ($tag) {
-            $tagRelations = $this->tagRelationCollectionFactory->create()->addFieldToFilter('tag_id', array('eq' => $tag->getTagId()))->getItems();
-            
-            if (is_array($tagRelations) && count($tagRelations) > 0) {
-                foreach($tagRelations as $tagRelation) {
-                    $note = $this->noteFactory->create();
-                    $this->noteResourceModel->load($note, $tagRelation->getNoteId());
-                    $tagNotes[] = $note;
-                }
+            $tagRelations = $this->tagRelationCollectionFactory->create()
+            ->addFieldToFilter('tag_id', array('eq' => $tag->getTagId()))
+            ->setPageSize($this->getTagListPageSize())
+            ->setCurPage($page);
+        }
+
+        return $tagRelations;
+    }
+
+    public function getTagNotes() {
+        $tagRelations = $this->getTagNotesCollection()->getItems();
+        $tagNotes = array();
+
+        if (is_array($tagRelations) && count($tagRelations) > 0) {
+            foreach($tagRelations as $tagRelation) {
+                $note = $this->noteFactory->create();
+                $this->noteResourceModel->load($note, $tagRelation->getNoteId());
+                $tagNotes[] = $note;
             }
         }
 

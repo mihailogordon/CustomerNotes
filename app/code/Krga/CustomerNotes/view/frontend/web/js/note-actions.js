@@ -1,6 +1,8 @@
 require(['jquery', 'Magento_Ui/js/modal/confirm'], function ($, confirm) {
     $(document).ready(function () {
 
+        handleAddNoteFormOpen();
+
         // Handle Restore Confirmation
         $('.restore-note').on('click', function (e) {
             e.preventDefault(); // Prevent immediate navigation
@@ -64,21 +66,20 @@ require(['jquery', 'Magento_Ui/js/modal/confirm'], function ($, confirm) {
                 }
             });
         });
-
-        // Handle Permanent Delete Confirmation
-        $('.delete-history').on('click', function (e) {
-            e.preventDefault(); // Prevent immediate navigation
-            let url = $(this).data('url'); // Get the trash URL
-            confirm({
-                title: 'Delete Permanently?',
-                content: 'Are you sure you want to permanetly delete this history? This action can not be undone!',
-                actions: {
-                    confirm: function () {
-                        window.location.href = url; // Redirect if confirmed
-                    },
-                    cancel: function () {}
-                }
-            });
-        });
     });
+
+    const handleAddNoteFormOpen = () => {
+        const buttonTrigger = $('.add-note-form-trigger'),
+              form = $('#add-note-form');
+
+        if (buttonTrigger.length && form.length) {
+            buttonTrigger.each(function(){
+                const thisButton = $(this);
+
+                thisButton.on('click', function() {
+                    form.slideToggle();
+                })
+            })
+        }
+    }
 });

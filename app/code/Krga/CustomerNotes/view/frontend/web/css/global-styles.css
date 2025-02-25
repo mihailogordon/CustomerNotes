@@ -1,0 +1,21 @@
+.notes-holder {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 24px 17px;
+    box-shadow: 0 0 13px rgba(0, 0, 0, 0.12);
+    margin: 0 0 20px;
+}
+
+.notes-holder p {
+    margin: 0;
+}
+
+.pager {
+    overflow: hidden;
+    margin: 0 0 10px;
+}
+
+.pager .toolbar-amount {
+    margin-right: 10px;
+}

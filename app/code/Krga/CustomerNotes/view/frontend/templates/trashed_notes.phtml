@@ -1,33 +1,48 @@
 <h1>Trashed Customer Notes</h1>
 <?php 
+$trashed_notes = $block->getItems(); 
+$customer_notes_collection = $block->getItemsCollection();
+$customer_notes_page_size = $block->getTrashListPageSize();
+$isTrashListPaginationEnabled = $block->isTrashListPaginationEnabled();
+?>
 
-$trashed_notes = $block->getItems();
-
-if( is_array( $trashed_notes ) && count( $trashed_notes ) > 0 ) {
-    foreach( $trashed_notes as $trashed_note ) { 
-        $customer = $trashed_note->getNoteCustomer($trashed_note->getCustomerId());
-        ?>
-        <div>
-            <p>
-                <?php 
-                    if( is_array($customer) && count($customer) > 0 ) {
-                        echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
-                    }
+<div class="notes-holder trashed-notes">
+    <?php if( is_array( $trashed_notes ) && count( $trashed_notes ) > 0 ) { ?>
+        <?php foreach( $trashed_notes as $trashed_note ) { 
+            $customer = $trashed_note->getNoteCustomer($trashed_note->getCustomerId()); ?>
+            <div>
+                <p>
+                    <?php 
+                        if( is_array($customer) && count($customer) > 0 ) {
+                            echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
+                        }
+                        
+                        echo date('F j, Y', strtotime($trashed_note->getCreatedAt())) . ': ';
                     
-                    echo date('F j, Y', strtotime($trashed_note->getCreatedAt())) . ': ';
-                
-                    echo '<strong>"' . $trashed_note->getNote() . '"</strong>';
-                ?>
-                <a href="<?php echo $block->getUrl('notes/index/restore', ['note_id' => $trashed_note->getId()]); ?>" class="restore-note" data-url="<?php echo $block->getUrl('notes/index/restore', ['note_id' => $trashed_note->getId()]); ?>">
-                    Restore
-                </a>
-                or
-                <a href="<?php echo $block->getUrl('notes/index/delete', ['note_id' => $trashed_note->getId()]); ?>" class="delete-note" data-url="<?php echo $block->getUrl('notes/index/delete', ['note_id' => $trashed_note->getId()]); ?>">
-                    Delete Permanently
-                </a>
-            </p>
-        </div>
-    <?php }
+                        echo '<strong>"' . $trashed_note->getNote() . '"</strong>';
+                    ?>
+                    <a href="<?php echo $block->getUrl('notes/index/restore', ['note_id' => $trashed_note->getId()]); ?>" class="restore-note" data-url="<?php echo $block->getUrl('notes/index/restore', ['note_id' => $trashed_note->getId()]); ?>">
+                        Restore
+                    </a>
+                    or
+                    <a href="<?php echo $block->getUrl('notes/index/delete', ['note_id' => $trashed_note->getId()]); ?>" class="delete-note" data-url="<?php echo $block->getUrl('notes/index/delete', ['note_id' => $trashed_note->getId()]); ?>">
+                        Delete Permanently
+                    </a>
+                </p>
+            </div>
+        <?php 
+        }
+    } else { ?>
+    <p>No trashed notes at the moment!</p>
+<?php } ?>
+</div>
+
+<?php if ($isTrashListPaginationEnabled) {
+    $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
+    $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
+    $pagerBlock->setShowPerPage(true);
+    $pagerBlock->setCollection($customer_notes_collection);
+    echo $pagerBlock->toHtml();
 } ?>
 
-<p><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>
+<p class="back-to-notes"><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>

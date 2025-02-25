@@ -3,9 +3,11 @@ namespace Krga\CustomerNotes\Model;
 
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\DataObject\IdentityInterface;
+use Krga\CustomerNotes\Helper\Config;
 use Krga\CustomerNotes\Model\ResourceModel\Note as NoteResource;
 use Krga\CustomerNotes\Model\HistoryFactory;
 use Krga\CustomerNotes\Model\ResourceModel\History as HistoryResource;
+use Krga\CustomerNotes\Model\ResourceModel\History\CollectionFactory as HistoryCollectionFactory;
 use Krga\CustomerNotes\Model\TagFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Tag as TagResource;
 use Krga\CustomerNotes\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
@@ -18,8 +20,10 @@ class Note extends AbstractModel implements IdentityInterface
 
     protected $_cacheTag = self::CACHE_TAG;
     protected $_eventPrefix = 'note';
+    protected $configHelper;
     protected $historyFactory;
     protected $historyResource;
+    protected $historyCollectionFactory;
     protected $tagFactory;
     protected $tagResource;
     protected $tagRelationCollectionFactory;
@@ -28,8 +32,10 @@ class Note extends AbstractModel implements IdentityInterface
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
+        Config $configHelper,
         HistoryFactory $historyFactory,
         HistoryResource $historyResource,
+        HistoryCollectionFactory $historyCollectionFactory,
         TagFactory $tagFactory,
         TagResource $tagResource,
         TagRelationCollectionFactory $tagRelationCollectionFactory,
@@ -39,8 +45,10 @@ class Note extends AbstractModel implements IdentityInterface
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->configHelper = $configHelper;
         $this->historyFactory = $historyFactory;
         $this->historyResource = $historyResource;
+        $this->historyCollectionFactory = $historyCollectionFactory;
         $this->tagFactory = $tagFactory;
         $this->tagResource = $tagResource;
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
@@ -55,6 +63,10 @@ class Note extends AbstractModel implements IdentityInterface
     public function getIdentities()
     {
         return [self::CACHE_TAG . '_' . $this->getId()];
+    }
+
+    public function getHistoriesPerNoteLimit() {
+        return $this->configHelper->getHistoriesPerNoteLimit();
     }
 
     public function getNoteCustomer($customerId)
@@ -102,23 +114,35 @@ class Note extends AbstractModel implements IdentityInterface
         return $output;
     }
 
-    /**
-     * Before saving a note, store the previous version in history.
-     */
     public function beforeSave()
     {
-        if ($this->getId() && $this->hasDataChanges() && $this->dataHasChangedFor('note')) {
-            // Store the previous note version before updating
+        $limitPerNote = $this->getHistoriesPerNoteLimit();
+        $noteId = $this->getId();
+
+        if ($noteId && $this->hasDataChanges() && $this->dataHasChangedFor('note')) {
             $history = $this->historyFactory->create();
             $history->setData([
-                'note_id'       => $this->getId(),
+                'note_id'       => $noteId,
                 'customer_id'   => $this->getCustomerId(),
-                'previous_note' => $this->getOrigData('note'), // Fetch old note content
+                'previous_note' => $this->getOrigData('note'),
                 'modified_at'   => date('Y-m-d H:i:s'),
             ]);
-
-            // Save the history record
             $this->historyResource->save($history);
+
+            $historyCollection = $this->historyCollectionFactory->create()
+                ->addFieldToFilter('note_id', ['eq' => $noteId])
+                ->setOrder('modified_at', 'ASC');
+
+            if ($limitPerNote > 0 && $historyCollection->getSize() > $limitPerNote) {
+                $historyToDelete = $historyCollection
+                    ->setPageSize($historyCollection->getSize() - $limitPerNote)
+                    ->setCurPage(1)
+                    ->getItems();
+
+                foreach ($historyToDelete as $historyItem) {
+                    $this->historyResource->delete($historyItem);
+                }
+            }
         }
 
         return parent::beforeSave();

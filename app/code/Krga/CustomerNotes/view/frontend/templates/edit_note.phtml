@@ -21,7 +21,7 @@ $tagsIds = $block->getTagsIds();
     <br/>
     <?php if(is_array($allTags) && count($allTags) > 0) { ?>
         <label for="tags">Tags:</label>
-        <select id="tags" name="tags[]" required multiple>
+        <select id="tags" name="tags[]" multiple>
             <?php foreach($allTags as $tag) { ?>
                 <option value="<?php echo $tag->getTagId(); ?>" <?php echo in_array($tag->getTagId(), $tagsIds, true) ? 'selected' : ''; ?>><?php echo $tag->getName(); ?></option>
             <?php } ?>
@@ -32,4 +32,4 @@ $tagsIds = $block->getTagsIds();
     <button type="submit" class="action primary">Save Note</button>
 </form>
 <br/>
-<p><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>
+<p class="back-to-notes"><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>

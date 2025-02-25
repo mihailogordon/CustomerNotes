@@ -1,23 +1,34 @@
 <?php
 $noteId = $block->getNoteId();
 $noteHistoryItems = $block->getNoteHistoryItems();
+$customer_notes_collection = $block->getNoteHistoryCollection();
+$customer_notes_page_size = $block->getHistoryListPageSize();
+$isHistoryListPaginationEnabled = $block->isHistoryListPaginationEnabled();
 ?>
 
 <h1>History of Note ID: <?= $noteId ?></h1>
 
-<?php if(is_array($noteHistoryItems) && count($noteHistoryItems) ) { ?>
-    <div>
-    <?php foreach($noteHistoryItems as $noteHistoryItem) { ?>
-        <p>
-            <?php echo $noteHistoryItem->getModifiedAt(); ?> - <?php echo $noteHistoryItem->getPreviousNote(); ?>
-            <a href="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="revert-note" data-url="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>">revert</a>
-            or
-            <a href="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="delete-history" data-url="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>">delete</a>
-        </p>
+<div class="notes-holder note-history">
+    <?php if(is_array($noteHistoryItems) && count($noteHistoryItems) ) {
+        foreach($noteHistoryItems as $noteHistoryItem) { ?>
+            <div>
+                <?php echo $noteHistoryItem->getModifiedAt(); ?> - <?php echo $noteHistoryItem->getPreviousNote(); ?>
+                <a href="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="revert-note" data-url="<?php echo $block->getUrl('notes/index/revert', ['note_id' => $noteId, 'history_id' => $noteHistoryItem->getHistoryId()]); ?>">revert</a>
+                or
+                <a href="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>" class="delete-history" data-url="<?php echo $block->getUrl('notes/index/deletehistory', ['history_id' => $noteHistoryItem->getHistoryId()]); ?>">delete</a>
+            </div>
+        <?php }
+    } else { ?>
+        <p>No history found for this note!</p>
     <?php } ?>
-    </div>
-<?php } else { ?>
-    <p>No history found for this note!</p>
-<?php } ?>
+</div>
 
-<p><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>
+<?php if ($isHistoryListPaginationEnabled) {
+    $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
+    $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
+    $pagerBlock->setShowPerPage(true);
+    $pagerBlock->setCollection($customer_notes_collection);
+    echo $pagerBlock->toHtml();
+} ?>
+
+<p class="back-to-notes"><a href="<?php echo $block->getUrl('notes'); ?>">Back to Notes</a></p>
