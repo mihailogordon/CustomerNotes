@@ -55,14 +55,7 @@ class Deletehistory extends Action
             $noteId = $history->getNoteId();
             $this->historyResource->delete($history);
 
-            // Ensure cache is fully cleared
-            $types = ['block_html', 'full_page', 'layout', 'translate'];
-            foreach ($types as $type) {
-                $this->cacheTypeList->cleanType($type);
-            }
-            foreach ($this->cacheFrontendPool as $cacheFrontend) {
-                $cacheFrontend->getBackend()->clean();
-            }
+            $this->flushCache();
 
             $this->messageManager->addSuccessMessage(__('The history has been deleted permanently.'));
         } catch (\Exception $e) {
@@ -70,5 +63,16 @@ class Deletehistory extends Action
         }
 
         return $this->resultRedirectFactory->create()->setPath('notes/index/history/note_id/'.$noteId);
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
+        }
     }
 }

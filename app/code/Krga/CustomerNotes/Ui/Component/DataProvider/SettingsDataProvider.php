@@ -18,14 +18,12 @@ class SettingsDataProvider extends AbstractDataProvider
         array $meta = [],
         array $data = []
     ) {
-        // We pass empty strings so that the provider doesn't wrap data by record ID.
         $this->collection = $collectionFactory->create();
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
     }
 
     public function addFilter(Filter $filter)
     {
-        // Skip filters with an empty value.
         if (!$filter->getValue()) {
             return $this;
         }
@@ -40,11 +38,9 @@ class SettingsDataProvider extends AbstractDataProvider
 
         $settingsData = [];
         foreach ($this->collection->getItems() as $item) {
-            // Your model should have getOptionName() and getOptionValue() methods.
             $settingsData[$item->getOptionName()] = $item->getOptionValue();
         }
 
-        // Return data keyed by "notes_settings_form" to match the UI component's dataScope.
         $this->loadedData = ['notes_settings_form' => $settingsData];
         return $this->loadedData;
     }

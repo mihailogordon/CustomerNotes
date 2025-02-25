@@ -74,13 +74,7 @@ class Save extends Action
 
             $this->tagRelationFactory->create()->assignTags($noteId, $tagIds);
 
-            $types = ['block_html', 'full_page', 'layout', 'translate'];
-            foreach ($types as $type) {
-                $this->cacheTypeList->cleanType($type);
-            }
-            foreach ($this->cacheFrontendPool as $cacheFrontend) {
-                $cacheFrontend->getBackend()->clean();
-            }
+            $this->flushCache();
 
             // Success message
             $this->messageManager->addSuccessMessage(__('Note has been saved successfully.'));
@@ -90,6 +84,17 @@ class Save extends Action
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Error saving the note: %1', $e->getMessage()));
             return $this->resultRedirectFactory->create()->setPath('notes', ['note_id' => $noteId]);
+        }
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
         }
     }
 }

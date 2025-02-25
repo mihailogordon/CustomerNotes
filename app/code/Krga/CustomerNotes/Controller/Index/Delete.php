@@ -54,14 +54,7 @@ class Delete extends Action
         try {
             $this->noteResource->delete($note);
 
-            // Ensure cache is fully cleared
-            $types = ['block_html', 'full_page', 'layout', 'translate'];
-            foreach ($types as $type) {
-                $this->cacheTypeList->cleanType($type);
-            }
-            foreach ($this->cacheFrontendPool as $cacheFrontend) {
-                $cacheFrontend->getBackend()->clean();
-            }
+           $this->flushCache();
 
             $this->messageManager->addSuccessMessage(__('The note has been deleted permanently.'));
         } catch (\Exception $e) {
@@ -69,5 +62,16 @@ class Delete extends Action
         }
 
         return $this->resultRedirectFactory->create()->setPath('notes/index/trashed');
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
+        }
     }
 }

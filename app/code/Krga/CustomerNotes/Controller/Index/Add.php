@@ -66,14 +66,7 @@ class Add extends Action
 
             $this->tagRelationFactory->create()->assignTags($noteId, $tagIds);
 
-            // Ensure cache is fully cleared
-            $types = ['block_html', 'full_page', 'layout', 'translate'];
-            foreach ($types as $type) {
-                $this->cacheTypeList->cleanType($type);
-            }
-            foreach ($this->cacheFrontendPool as $cacheFrontend) {
-                $cacheFrontend->getBackend()->clean();
-            }
+            $this->flushCache();
 
             $this->messageManager->addSuccessMessage(__('Your note has been added successfully.'));
         } catch (\Exception $e) {
@@ -81,5 +74,16 @@ class Add extends Action
         }
 
         return $this->resultRedirectFactory->create()->setPath('notes/index/index');
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
+        }
     }
 }

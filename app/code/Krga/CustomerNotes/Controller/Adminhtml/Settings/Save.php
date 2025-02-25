@@ -5,24 +5,30 @@ namespace Krga\CustomerNotes\Controller\Adminhtml\Settings;
 use Krga\CustomerNotes\Model\SettingsFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Settings as SettingsResourceModel;
 use Magento\Backend\App\Action;
-use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Cache\Frontend\Pool;
 
 class Save extends Action
 {
     private $settingsFactory;
     private $settingsResourceModel;
-    private $unwatedFields = array(
-        'form_key'
-    );
+    private $cacheTypeList;
+    private $cacheFrontendPool;
+    
+    private $unwatedFields = ['form_key'];
 
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         SettingsFactory $settingsFactory,
-        SettingsResourceModel $settingsResourceModel
+        SettingsResourceModel $settingsResourceModel,
+        TypeListInterface $cacheTypeList,
+        Pool $cacheFrontendPool
     ) {
+        parent::__construct($context);
         $this->settingsFactory = $settingsFactory;
         $this->settingsResourceModel = $settingsResourceModel;
-        parent::__construct($context);
+        $this->cacheTypeList = $cacheTypeList;
+        $this->cacheFrontendPool = $cacheFrontendPool;
     }
 
     public function execute()
@@ -49,11 +55,24 @@ class Save extends Action
                 $this->settingsResourceModel->save($setting);
             }            
 
+            $this->flushCache();
+
             $this->messageManager->addSuccessMessage(__('Settings saved successfully.'));
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Error saving settings: ' . $e->getMessage()));
         }
 
         return $this->resultRedirectFactory->create()->setPath('*/*/index');
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
+        }
     }
 }

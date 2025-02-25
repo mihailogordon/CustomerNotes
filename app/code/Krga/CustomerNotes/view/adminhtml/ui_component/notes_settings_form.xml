@@ -40,16 +40,34 @@
     <fieldset name="general">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">General</item>
+                <item name="label" xsi:type="string" translate="true">General Settings</item>
+            </item>
+        </argument>
+    </fieldset>
+    <fieldset name="list_settings">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">List Settings</item>
             </item>
         </argument>
         <field name="page_size">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Page Size</item>
+                    <item name="label" xsi:type="string" translate="true">Number of notes</item>
                     <item name="formElement" xsi:type="string">input</item>
                     <item name="dataScope" xsi:type="string">page_size</item>
+                </item>
+            </argument>
+        </field>
+        <field name="show_pagination_on_list">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Krga\CustomerNotes\Model\Config\Source\YesNo</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Show Pagination</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="dataScope" xsi:type="string">show_pagination_on_list</item>
                 </item>
             </argument>
         </field>
@@ -57,10 +75,21 @@
             <argument name="data" xsi:type="array">
                 <item name="options" xsi:type="object">Krga\CustomerNotes\Model\Config\Source\YesNo</item>
                 <item name="config" xsi:type="array">
-                    <item name="label" xsi:type="string" translate="true">Show Tags on List</item>
+                    <item name="label" xsi:type="string" translate="true">Show Tags</item>
                     <item name="dataType" xsi:type="string">text</item>
                     <item name="formElement" xsi:type="string">select</item>
                     <item name="dataScope" xsi:type="string">show_tags_on_list</item>
+                </item>
+            </argument>
+        </field>
+        <field name="show_add_note_form_on_list">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Krga\CustomerNotes\Model\Config\Source\YesNo</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Show Add Note Form</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="dataScope" xsi:type="string">show_add_note_form_on_list</item>
                 </item>
             </argument>
         </field>

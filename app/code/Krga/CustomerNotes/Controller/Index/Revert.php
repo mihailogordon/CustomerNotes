@@ -78,14 +78,7 @@ class Revert extends Action
             $note->setNote($history->getPreviousNote());
             $this->noteResource->save($note);
 
-            // Ensure cache is fully cleared
-            $types = ['block_html', 'full_page', 'layout', 'translate'];
-            foreach ($types as $type) {
-                $this->cacheTypeList->cleanType($type);
-            }
-            foreach ($this->cacheFrontendPool as $cacheFrontend) {
-                $cacheFrontend->getBackend()->clean();
-            }
+            $this->flushCache();
 
             $this->messageManager->addSuccessMessage(__('The note has been restored successfully.'));
         } catch (\Exception $e) {
@@ -93,5 +86,16 @@ class Revert extends Action
         }
 
         return $this->resultRedirectFactory->create()->setPath('notes');
+    }
+
+    private function flushCache()
+    {
+        $types = ['block_html', 'full_page', 'layout', 'translate'];
+        foreach ($types as $type) {
+            $this->cacheTypeList->cleanType($type);
+        }
+        foreach ($this->cacheFrontendPool as $cacheFrontend) {
+            $cacheFrontend->getBackend()->clean();
+        }
     }
 }
