@@ -25,24 +25,43 @@ class Topmenu
 
     public function beforeGetHtml(MagentoGlobalTopMenu $subject, $outermostClass = '', $childrenWrapClass = '', $limit = 0)
     {
-        if ( $this->configHelper->isMenuItemEnabled() ) {
+        if ($this->configHelper->isMenuItemEnabled()) {
             $menuItemLabel = $this->configHelper->getMenuItemLabel();
 
-            $menuNode = $this->nodeFactory->create(
+            $mainMenuNode = $this->nodeFactory->create(
                 [
-                    'data' => $this->getNodeAsArray($menuItemLabel, "customerNotes"),
+                    'data' => $this->getNodeAsArray($menuItemLabel, "customerNotes", false),
                     'idField' => 'id',
                     'tree' => $subject->getMenu()->getTree(),
                 ]
             );
-    
-            $subject->getMenu()->addChild($menuNode);
+
+            $customerNotesNode = $this->nodeFactory->create(
+                [
+                    'data' => $this->getNodeAsArray("Customer Notes", "customer_notes", "notes"),
+                    'idField' => 'id',
+                    'tree' => $subject->getMenu()->getTree(),
+                ]
+            );
+
+            $noteTagsNode = $this->nodeFactory->create(
+                [
+                    'data' => $this->getNodeAsArray("Note Tags", "note_tags", "notes/tags/all"),
+                    'idField' => 'id',
+                    'tree' => $subject->getMenu()->getTree(),
+                ]
+            );
+
+            $mainMenuNode->addChild($customerNotesNode);
+            $mainMenuNode->addChild($noteTagsNode);
+
+            $subject->getMenu()->addChild($mainMenuNode);
         }
     }
 
-    protected function getNodeAsArray($name, $id)
+    protected function getNodeAsArray($name, $id, $urlPath = false)
     {
-        $url = $this->urlBuilder->getUrl("notes");
+        $url = $urlPath ? $this->urlBuilder->getUrl($urlPath) : false;
 
         return [
             'name' => __($name),

@@ -63,11 +63,25 @@
                 <label>Tag List Settings</label>
 
                 <field id="tag_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
-                    <label>Number of Notes Per Page</label>
+                    <label>Number of Tags Per Page</label>
                     <validate>validate-number</validate>
                 </field>
 
                 <field id="show_pagination_on_tag_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            
+            <group id="tag_single_settings" translate="label" sortOrder="40" showInDefault="1">
+                <label>Tag Single Settings</label>
+
+                <field id="tag_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Notes Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_tag_single" translate="label" type="select" sortOrder="20" showInDefault="1">
                     <label>Show Pagination</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

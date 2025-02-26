@@ -2,9 +2,9 @@
 $tagName = $block->getTagName();
 $customer_notes = $block->getTagNotes();
 $customer_notes_collection = $block->getTagNotesCollection();
-$customer_notes_page_size = $block->getTagListPageSize();
+$customer_notes_page_size = $block->getTagSinglePageSize();
 $customers = $block->getCustomers();
-$isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
+$isTagSinglePaginationEnabled = $block->isTagSinglePaginationEnabled();
 
 if ($tagName) { ?>
     <h1>Notes tagged as "<?= $tagName ?>"</h1>
@@ -36,7 +36,7 @@ if ($tagName) { ?>
             <?php } ?>
         </div>
         
-        <?php if ($isTagListPaginationEnabled) {
+        <?php if ($isTagSinglePaginationEnabled) {
             $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
             $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
             $pagerBlock->setShowPerPage(true);

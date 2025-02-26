@@ -1,0 +1,31 @@
+<?php
+$allTags = $block->getAllTags();
+$tags_collection = $block->getTagsCollection();
+$tag_list_page_size = $block->getTagListPageSize();
+$isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
+?>
+
+<h1>Tags</h1>
+<div class="notes-holder tags-holder">
+    <?php if( is_array( $allTags ) && count( $allTags ) > 0 ) { ?>
+        <?php foreach( $allTags as $tag ) {
+            ?>
+            <div>
+                <p>
+                    <a href="<?php echo $block->getUrl('notes/tags/index', ['tag_id' => $tag->getTagId()]); ?>">
+                        <?php echo $tag->getName(); ?>
+                    </a>
+                </p>
+            </div>
+        <?php }
+    } else { ?>
+    <p>No tags found!</p>
+<?php } ?>
+</div>
+<?php if ($isTagListPaginationEnabled) {
+    $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
+    $pagerBlock->setAvailableLimit([$tag_list_page_size => $tag_list_page_size]);
+    $pagerBlock->setShowPerPage(true);
+    $pagerBlock->setCollection($tags_collection);
+    echo $pagerBlock->toHtml();
+}

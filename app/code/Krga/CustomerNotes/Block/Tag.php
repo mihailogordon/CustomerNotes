@@ -47,14 +47,14 @@ class Tag extends Template
         parent::__construct($context, $data);
     }
 
-    public function getTagListPageSize()
+    public function getTagSinglePageSize()
     {
-        return $this->configHelper->getTagListPageSize();
+        return $this->configHelper->getTagSinglePageSize();
     }
     
-    public function isTagListPaginationEnabled()
+    public function isTagSinglePaginationEnabled()
     {
-        return $this->configHelper->isTagListPaginationEnabled();
+        return $this->configHelper->isTagSinglePaginationEnabled();
     }
 
     public function getTagId()
@@ -90,7 +90,7 @@ class Tag extends Template
         if ($tag) {
             $tagRelations = $this->tagRelationCollectionFactory->create()
             ->addFieldToFilter('tag_id', array('eq' => $tag->getTagId()))
-            ->setPageSize($this->getTagListPageSize())
+            ->setPageSize($this->getTagSinglePageSize())
             ->setCurPage($page);
         }
 

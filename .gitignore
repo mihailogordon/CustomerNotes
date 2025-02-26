@@ -3,6 +3,7 @@ dev/
 generated/
 lib/
 phpserver/
+pub/
 setup/
 vendor/
 .DS_Store

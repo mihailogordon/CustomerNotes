@@ -18,6 +18,10 @@
                 <tag_page_size>8</tag_page_size>
                 <show_pagination_on_tag_list>1</show_pagination_on_tag_list>
             </tag_list_settings>
+            <tag_single_settings>
+                <tag_page_size>8</tag_page_size>
+                <show_pagination_on_tag_single>1</show_pagination_on_tag_single>
+            </tag_single_settings>
             <trash_settings>
                 <trash_page_size>8</trash_page_size>
                 <show_pagination_on_trash_list>1</show_pagination_on_trash_list>

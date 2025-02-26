@@ -78,6 +78,22 @@ class Config extends AbstractHelper
         );
     }
     
+    public function getTagSinglePageSize()
+    {
+        return (int) $this->scopeConfig->getValue(
+            'customer_notes_settings/tag_single_settings/tag_page_size',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isTagSinglePaginationEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'customer_notes_settings/tag_single_settings/show_pagination_on_tag_single',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
     public function getTrashListPageSize()
     {
         return (int) $this->scopeConfig->getValue(
