@@ -1,10 +1,15 @@
 type Query {
     getCustomerNotes(customerId: Int!): [Note]! @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\GetCustomerNotes")
+    getNotesByTag(tagId: Int!): [Note]! @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\GetNotesByTag")
+    getNoteHistory(noteId: ID!): [History]! @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\GetNoteHistory")
+    getTrashedNotes(customerId: Int!): [Note]! @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\GetTrashedNotes")
 }
 
 type Mutation {
     addCustomerNote(customerId: Int!, note: String!): Note @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\AddCustomerNote")
+    updateCustomerNote(noteId: ID!, note: String!): Note @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\UpdateCustomerNote")
     deleteCustomerNote(noteId: ID!): Boolean @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\DeleteCustomerNote")
+    restoreCustomerNote(noteId: ID!): Boolean @resolver(class: "Krga\\CustomerNotes\\Model\\Resolver\\RestoreCustomerNote")
 }
 
 type Note {
@@ -13,4 +18,14 @@ type Note {
     note: String!
     created_at: String
     updated_at: String
+    is_deleted: Int!
+}
+
+type History {
+    history_id: ID!
+    note_id: Int!
+    customer_id: Int!
+    previous_note: String!
+    modified_by: Int!
+    modified_at: String
 }
