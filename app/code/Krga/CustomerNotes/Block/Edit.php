@@ -41,17 +41,11 @@ class Edit extends Template
         parent::__construct($context, $data);
     }
 
-    /**
-     * Get note ID from the request
-     */
     public function getNoteId()
     {
         return (int) $this->request->getParam('note_id');
     }
 
-    /**
-     * Load Note from Database (Singleton Pattern)
-     */
     private function getNote()
     {
         if ($this->note === null) {
@@ -66,27 +60,18 @@ class Edit extends Template
         return $this->note;
     }
 
-    /**
-     * Get Note Content
-     */
     public function getNoteContent()
     {
         $note = $this->getNote();
         return ($note && $note->getId()) ? $note->getNote() : '';
     }
 
-    /**
-     * Get Associated Customer ID
-     */
     public function getNoteCustomerId()
     {
         $note = $this->getNote();
         return ($note && $note->getId()) ? $note->getCustomerId() : null;
     }
 
-    /**
-     * Get Customer Information (First & Last Name)
-     */
     public function getNoteCustomer()
     {
         $customerId = $this->getNoteCustomerId();

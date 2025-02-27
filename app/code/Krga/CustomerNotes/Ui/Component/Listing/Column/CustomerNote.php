@@ -38,12 +38,6 @@ class CustomerNote extends Column
         return $dataSource;
     }
 
-    /**
-     * Fetch customer notes based on customer_id
-     *
-     * @param int $customerId
-     * @return string
-     */
     private function getCustomerNotes($customerId) {
         $collection = $this->customerNoteCollectionFactory->create();
         $collection->addFieldToFilter('customer_id', $customerId);

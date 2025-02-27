@@ -7,11 +7,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected $_eventPrefix = 'krga_customernotes_note_collection';
     protected $_eventObject = 'note_collection';
 
-    /**
-     * Define the resource model & the model.
-     *
-     * @return void
-     */
     protected function _construct()
     {
         $this->_init('Krga\CustomerNotes\Model\Note', 'Krga\CustomerNotes\Model\ResourceModel\Note');

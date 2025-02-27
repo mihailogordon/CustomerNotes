@@ -1,10 +1,11 @@
 <?php
-/** @var \Krga\CustomerNotes\Block\Edit $block */
+
 $noteId = $block->getNoteId();
 $note = $block->getNoteContent();
 $customer = $block->getNoteCustomer();
 $allTags = $block->getAllTags();
 $tagsIds = $block->getTagsIds();
+
 ?>
 
 <h1>Editing Note ID: <?= $noteId ?></h1>
