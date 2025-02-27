@@ -3,64 +3,60 @@ require(['jquery', 'Magento_Ui/js/modal/confirm'], function ($, confirm) {
 
         handleAddNoteFormOpen();
 
-        // Handle Restore Confirmation
         $('.restore-note').on('click', function (e) {
-            e.preventDefault(); // Prevent immediate navigation
-            let url = $(this).data('url'); // Get the restore URL
+            e.preventDefault();
+            let url = $(this).data('url');
             confirm({
                 title: 'Restore Note',
                 content: 'Are you sure you want to restore this note?',
                 actions: {
                     confirm: function () {
-                        window.location.href = url; // Redirect if confirmed
+                        window.location.href = url;
                     },
                     cancel: function () {}
                 }
             });
         });
 
-        // Handle Move to Trash Confirmation
         $('.trash-note').on('click', function (e) {
-            e.preventDefault(); // Prevent immediate navigation
-            let url = $(this).data('url'); // Get the trash URL
+            e.preventDefault();
+            let url = $(this).data('url');
             confirm({
                 title: 'Move to Trash',
                 content: 'Are you sure you want to move this note to trash?',
                 actions: {
                     confirm: function () {
-                        window.location.href = url; // Redirect if confirmed
+                        window.location.href = url;
                     },
                     cancel: function () {}
                 }
             });
         });
         
-        // Handle Permanent Delete Confirmation
         $('.delete-note').on('click', function (e) {
-            e.preventDefault(); // Prevent immediate navigation
-            let url = $(this).data('url'); // Get the trash URL
+            e.preventDefault();
+            let url = $(this).data('url');
             confirm({
                 title: 'Delete Permanently?',
                 content: 'Are you sure you want to permanetly delete this note? This action can not be undone!',
                 actions: {
                     confirm: function () {
-                        window.location.href = url; // Redirect if confirmed
+                        window.location.href = url;
                     },
                     cancel: function () {}
                 }
             });
         });
         
-        // Handle Revert Confirmation
         $('.revert-note').on('click', function (e) {
-            e.preventDefault(); // Prevent immediate navigation
-            let url = $(this).data('url'); // Get the trash URL
+            e.preventDefault();
+            let url = $(this).data('url');
             confirm({
                 title: 'Revert Note?',
                 content: 'Are you sure you want to revert note to this version?',
                 actions: {
                     confirm: function () {
-                        window.location.href = url; // Redirect if confirmed
+                        window.location.href = url;
                     },
                     cancel: function () {}
                 }

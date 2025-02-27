@@ -38,7 +38,7 @@ class Topmenu
 
             $customerNotesNode = $this->nodeFactory->create(
                 [
-                    'data' => $this->getNodeAsArray("Customer Notes", "customer_notes", "notes"),
+                    'data' => $this->getNodeAsArray("Notes", "customer_notes", "notes"),
                     'idField' => 'id',
                     'tree' => $subject->getMenu()->getTree(),
                 ]
@@ -46,7 +46,7 @@ class Topmenu
 
             $noteTagsNode = $this->nodeFactory->create(
                 [
-                    'data' => $this->getNodeAsArray("Note Tags", "note_tags", "notes/tags/all"),
+                    'data' => $this->getNodeAsArray("Tags", "note_tags", "notes/tags/all"),
                     'idField' => 'id',
                     'tree' => $subject->getMenu()->getTree(),
                 ]

@@ -1,19 +1,19 @@
 <?php
 $tagName = $block->getTagName();
-$customer_notes = $block->getTagNotes();
-$customer_notes_collection = $block->getTagNotesCollection();
-$customer_notes_page_size = $block->getTagSinglePageSize();
+$customerNotes = $block->getTagNotes();
+$customerNotesCollection = $block->getTagNotesCollection();
+$customerNotesPageSize = $block->getTagSinglePageSize();
 $customers = $block->getCustomers();
 $isTagSinglePaginationEnabled = $block->isTagSinglePaginationEnabled();
 
 if ($tagName) { ?>
     <h1>Notes tagged as "<?= $tagName ?>"</h1>
 
-    <?php if( is_array( $customer_notes ) && count( $customer_notes ) > 0 ) { ?>
+    <?php if( is_array( $customerNotes ) && count( $customerNotes ) > 0 ) { ?>
         <div class="notes-holder tagged-notes">
-            <?php foreach( $customer_notes as $customer_note ) {
-                $noteTagsHtml = $customer_note->getNoteTagsHtml();
-                $customer = $customer_note->getNoteCustomer($customer_note->getCustomerId());
+            <?php foreach( $customerNotes as $customerNote ) {
+                $noteTagsHtml = $customerNote->getNoteTagsHtml();
+                $customer = $customerNote->getNoteCustomer($customerNote->getCustomerId());
                 ?>
                 <div>
                     <p>
@@ -22,15 +22,15 @@ if ($tagName) { ?>
                                 echo '<strong>' . $customer['firstname'] . ' ' . $customer['lastname'] . '</strong> ( <em>' . $customer['email'] . '</em> )  @ ';
                             }
                             
-                            echo date('F j, Y', strtotime($customer_note->getCreatedAt())) . ': ';
+                            echo date('F j, Y', strtotime($customerNote->getCreatedAt())) . ': ';
                         
-                            echo '<strong>"' . $customer_note->getNote() . '"</strong>';
+                            echo '<strong>"' . $customerNote->getNote() . '"</strong>';
                         ?>
-                        <a href="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>" class="edit-note" data-url="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customer_note->getId()]); ?>">Edit</a>
+                        <a href="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customerNote->getId()]); ?>" class="edit-note" data-url="<?php echo $block->getUrl('notes/index/edit', ['note_id' => $customerNote->getId()]); ?>">Edit</a>
                         or
-                        <a href="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>" class="trash-note" data-url="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customer_note->getId()]); ?>">Move to Trash</a>
+                        <a href="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customerNote->getId()]); ?>" class="trash-note" data-url="<?php echo $block->getUrl('notes/index/trash', ['note_id' => $customerNote->getId()]); ?>">Move to Trash</a>
                         ;
-                        <a href="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>" class="note-history" data-url="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customer_note->getId()]); ?>">Show History</a>
+                        <a href="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customerNote->getId()]); ?>" class="note-history" data-url="<?php echo $block->getUrl('notes/index/history', ['note_id' => $customerNote->getId()]); ?>">Show History</a>
                     </p>
                 </div>
             <?php } ?>
@@ -38,9 +38,9 @@ if ($tagName) { ?>
         
         <?php if ($isTagSinglePaginationEnabled) {
             $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
-            $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
+            $pagerBlock->setAvailableLimit([$customerNotesPageSize => $customerNotesPageSize]);
             $pagerBlock->setShowPerPage(true);
-            $pagerBlock->setCollection($customer_notes_collection);
+            $pagerBlock->setCollection($customerNotesCollection);
             echo $pagerBlock->toHtml();
         }
 

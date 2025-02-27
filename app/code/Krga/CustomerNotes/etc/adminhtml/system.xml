@@ -43,17 +43,22 @@
                     <validate>validate-number</validate>
                 </field>
 
-                <field id="show_tags_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                <field id="show_tags_filter_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Tags Filter</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="show_tags_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
                     <label>Show Tags</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
+                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="40" showInDefault="1">
                     <label>Show Pagination</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-                <field id="show_add_note_form_on_list" translate="label" type="select" sortOrder="40" showInDefault="1">
+                <field id="show_add_note_form_on_list" translate="label" type="select" sortOrder="50" showInDefault="1">
                     <label>Show Add Note Form</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
@@ -87,7 +92,7 @@
                 </field>
             </group>
             
-            <group id="trash_settings" translate="label" sortOrder="40" showInDefault="1">
+            <group id="trash_settings" translate="label" sortOrder="50" showInDefault="1">
                 <label>Trash Settings</label>
 
                 <field id="trash_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
@@ -101,7 +106,7 @@
                 </field>
             </group>
 
-            <group id="history_settings" translate="label" sortOrder="50" showInDefault="1">
+            <group id="history_settings" translate="label" sortOrder="60" showInDefault="1">
                 <label>History Settings</label>
 
                 <field id="histories_per_note" translate="label" type="text" sortOrder="10" showInDefault="1">

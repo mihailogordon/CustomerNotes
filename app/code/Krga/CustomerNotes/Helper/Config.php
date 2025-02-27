@@ -38,6 +38,14 @@ class Config extends AbstractHelper
         );
     }
 
+    public function isListTagsFilterEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'customer_notes_settings/list_settings/show_tags_filter_on_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
     public function isListTagsEnabled()
     {
         return $this->scopeConfig->isSetFlag(

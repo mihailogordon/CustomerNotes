@@ -22,7 +22,6 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <!-- <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="tags_grid_data_source"> -->
         <dataProvider class="Krga\CustomerNotes\Ui\Component\DataProvider\TagDataProvider" name="tags_grid_data_source">
             <settings>
                 <requestFieldName>note_id</requestFieldName>

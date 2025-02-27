@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/Setup/Declaration/Schema/etc/db_schema.xsd">
 
-    <!-- Customer Notes Table -->
     <table name="customer_notes" resource="default" engine="innodb" comment="Customer Notes">
         <column name="note_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Note ID"/>
         <column name="customer_id" xsi:type="int" nullable="false" unsigned="true" comment="Customer ID"/>
@@ -15,7 +14,6 @@
         <constraint xsi:type="foreign" referenceId="FK_CUSTOMER_NOTES_CUSTOMER_ID" table="customer_notes" column="customer_id" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
     </table>
 
-    <!-- Customer Notes History Table -->
     <table name="customer_notes_history" resource="default" engine="innodb" comment="Customer Notes History">
         <column name="history_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="History ID"/>
         <column name="note_id" xsi:type="int" nullable="false" unsigned="true" comment="Note ID"/>
@@ -29,7 +27,6 @@
         <constraint xsi:type="foreign" referenceId="FK_CUSTOMER_NOTES_HISTORY_NOTE_ID" table="customer_notes" column="note_id" referenceTable="customer_notes" referenceColumn="note_id" onDelete="CASCADE"/>
     </table>
 
-    <!-- Customer Notes Tags Table -->
     <table name="customer_notes_tags" resource="default" engine="innodb" comment="Customer Notes Tags">
         <column name="tag_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Tag ID"/>
         <column name="name" xsi:type="varchar" length="255" nullable="false"  comment="Tag Name"/>
@@ -40,7 +37,6 @@
         </constraint>
     </table>
 
-    <!-- Customer Notes Tag Relation Table -->
     <table name="customer_notes_tag_relation" resource="default" engine="innodb" comment="Customer Notes Tag Relation">
         <column name="relation_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Relation ID"/>
         <column name="note_id" xsi:type="int" nullable="false" unsigned="true" comment="Note ID"/>

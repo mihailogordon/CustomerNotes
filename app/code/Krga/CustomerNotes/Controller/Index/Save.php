@@ -44,7 +44,6 @@ class Save extends Action
 
     public function execute()
     {
-        // Get parameters from the form
         $noteId = (int) $this->request->getParam('note_id');
         $noteContent = $this->request->getParam('note');
         $tagIds = is_array($this->request->getParam('tags')) ? $this->request->getParam('tags') : [];
@@ -55,20 +54,17 @@ class Save extends Action
         }
 
         try {
-            // Load existing note or create a new one
             $note = $this->noteFactory->create();
             
             if ($noteId) {
                 $this->noteResourceModel->load($note, $noteId);
                 
-                // Check if note exists before updating
                 if (!$note->getId()) {
                     $this->messageManager->addErrorMessage(__('Note does not exist.'));
                     return $this->resultRedirectFactory->create()->setPath('notes', ['note_id' => $noteId]);
                 }
             }
 
-            // Set or update note content
             $note->setNote($noteContent);
             $this->noteResourceModel->save($note);
 
@@ -76,10 +72,8 @@ class Save extends Action
 
             $this->flushCache();
 
-            // Success message
             $this->messageManager->addSuccessMessage(__('Note has been saved successfully.'));
 
-            // Redirect back to edit page
             return $this->resultRedirectFactory->create()->setPath('notes');
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Error saving the note: %1', $e->getMessage()));

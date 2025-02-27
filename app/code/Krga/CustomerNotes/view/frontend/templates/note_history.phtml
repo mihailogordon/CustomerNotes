@@ -1,8 +1,8 @@
 <?php
 $noteId = $block->getNoteId();
 $noteHistoryItems = $block->getNoteHistoryItems();
-$customer_notes_collection = $block->getNoteHistoryCollection();
-$customer_notes_page_size = $block->getHistoryListPageSize();
+$customerNotesCollection = $block->getNoteHistoryCollection();
+$customerNotesPageSize = $block->getHistoryListPageSize();
 $isHistoryListPaginationEnabled = $block->isHistoryListPaginationEnabled();
 ?>
 
@@ -25,9 +25,9 @@ $isHistoryListPaginationEnabled = $block->isHistoryListPaginationEnabled();
 
 <?php if ($isHistoryListPaginationEnabled) {
     $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
-    $pagerBlock->setAvailableLimit([$customer_notes_page_size => $customer_notes_page_size]);
+    $pagerBlock->setAvailableLimit([$customerNotesPageSize => $customerNotesPageSize]);
     $pagerBlock->setShowPerPage(true);
-    $pagerBlock->setCollection($customer_notes_collection);
+    $pagerBlock->setCollection($customerNotesCollection);
     echo $pagerBlock->toHtml();
 } ?>
 

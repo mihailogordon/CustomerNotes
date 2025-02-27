@@ -1,7 +1,7 @@
 <?php
 $allTags = $block->getAllTags();
-$tags_collection = $block->getTagsCollection();
-$tag_list_page_size = $block->getTagListPageSize();
+$tagsCollection = $block->getTagsCollection();
+$tagListPageSize = $block->getTagListPageSize();
 $isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
 ?>
 
@@ -24,8 +24,8 @@ $isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
 </div>
 <?php if ($isTagListPaginationEnabled) {
     $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'customer_notes_pager');
-    $pagerBlock->setAvailableLimit([$tag_list_page_size => $tag_list_page_size]);
+    $pagerBlock->setAvailableLimit([$tagListPageSize => $tagListPageSize]);
     $pagerBlock->setShowPerPage(true);
-    $pagerBlock->setCollection($tags_collection);
+    $pagerBlock->setCollection($tagsCollection);
     echo $pagerBlock->toHtml();
 }

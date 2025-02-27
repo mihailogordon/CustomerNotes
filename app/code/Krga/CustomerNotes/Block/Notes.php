@@ -7,6 +7,7 @@ use Krga\CustomerNotes\Helper\Config;
 use Krga\CustomerNotes\Model\ResourceModel\Note\CollectionFactory;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Tag\CollectionFactory as TagCollectionFactory;
+use Krga\CustomerNotes\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
 
 class Notes extends \Magento\Framework\View\Element\Template
 {
@@ -14,6 +15,7 @@ class Notes extends \Magento\Framework\View\Element\Template
     private $collectionFactory;
     private $customerCollectionFactory;
     private $tagCollectionFactory;
+    private $tagRelationCollectionFactory;
 
     public function __construct(
         Context $context,
@@ -21,6 +23,7 @@ class Notes extends \Magento\Framework\View\Element\Template
         CollectionFactory $collectionFactory,
         CustomerCollectionFactory $customerCollectionFactory,
         TagCollectionFactory $tagCollectionFactory,
+        TagRelationCollectionFactory $tagRelationCollectionFactory,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -28,6 +31,7 @@ class Notes extends \Magento\Framework\View\Element\Template
         $this->collectionFactory = $collectionFactory;
         $this->customerCollectionFactory = $customerCollectionFactory;
         $this->tagCollectionFactory = $tagCollectionFactory;
+        $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
     }
 
     public function getListPageSize() {
@@ -36,6 +40,10 @@ class Notes extends \Magento\Framework\View\Element\Template
     
     public function isListPaginationEnabled() {
         return $this->configHelper->isListPaginationEnabled();
+    }
+
+    public function isListTagsFilterEnabled() {
+        return $this->configHelper->isListTagsFilterEnabled();
     }
     
     public function isListTagsEnabled() {
@@ -48,12 +56,26 @@ class Notes extends \Magento\Framework\View\Element\Template
 
     public function getNotesCollection() {
         $page = (int)$this->getRequest()->getParam('p', 1);
+        $noteIds = array();
+        $tagId = (int)$this->getRequest()->getParam('tag_id');
 
         $collection = $this->collectionFactory->create()
-        ->addFieldToFilter('is_deleted', ['eq' => 0])
-        ->setOrder('created_at', 'DESC')
-        ->setPageSize($this->getListPageSize())
-        ->setCurPage($page);
+            ->addFieldToFilter('is_deleted', ['eq' => 0])
+            ->setOrder('created_at', 'DESC')
+            ->setPageSize($this->getListPageSize())
+            ->setCurPage($page);
+
+        if ($tagId) {
+            $tagRelationItems = $this->tagRelationCollectionFactory->create()
+            ->addFieldToFilter('tag_id', ['eq' => $tagId])->getItems();
+            if (is_array($tagRelationItems) && count($tagRelationItems)) {
+                foreach ($tagRelationItems as $tagRelationItem) {
+                    $noteIds[] = $tagRelationItem->getNoteId();
+                }
+            }
+
+            $collection->addFieldToFilter('note_id', ['in' => $noteIds]);
+        }
 
         return $collection;
     }

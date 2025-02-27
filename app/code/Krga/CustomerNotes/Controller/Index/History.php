@@ -20,10 +20,6 @@ class History extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        // $noteId = (int) $this->request->getParam('note_id');
-
-        // var_dump($noteId); exit;
-
         return $this->resultFactory->create( ResultFactory::TYPE_PAGE);
     }
 }

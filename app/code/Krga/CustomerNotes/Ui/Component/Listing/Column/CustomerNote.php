@@ -17,12 +17,12 @@ class CustomerNote extends Column
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
         SearchCriteriaBuilder $criteria,
-        CollectionFactory $customerNoteCollectionFactory, // Inject the collection factory
+        CollectionFactory $customerNoteCollectionFactory,
         array $components = [], 
         array $data = []
     ) {
         $this->_searchCriteria = $criteria;
-        $this->customerNoteCollectionFactory = $customerNoteCollectionFactory; // Initialize the factory
+        $this->customerNoteCollectionFactory = $customerNoteCollectionFactory;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
