@@ -2,17 +2,29 @@
 
 namespace Krga\CustomerNotes\Model\Resolver;
 
-use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\GraphQl\Config\Element\Field;
 use Magento\Framework\GraphQl\Query\ResolverInterface;
 use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
+use Krga\CustomerNotes\Model\NoteFactory;
+use Krga\CustomerNotes\Model\ResourceModel\Note as NoteResourceModel;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class AddCustomerNote implements ResolverInterface {
-    private $resourceConnection;
+    
+    protected $noteFactory;
+    protected $noteResourceModel;
+    protected $customerRepository;
 
-    public function __construct(ResourceConnection $resourceConnection)
-    {
-        $this->resourceConnection = $resourceConnection;
+    public function __construct(
+        NoteFactory $noteFactory,
+        NoteResourceModel $noteResourceModel,
+        CustomerRepositoryInterface $customerRepository
+    ) {
+        $this->noteFactory = $noteFactory;
+        $this->noteResourceModel = $noteResourceModel;
+        $this->customerRepository = $customerRepository;
     }
 
     public function resolve(
@@ -20,47 +32,30 @@ class AddCustomerNote implements ResolverInterface {
         $context, 
         ResolveInfo $info, 
         ?array $value = null, 
-        ?array $args = null)
-    {
-        $customer_id = $args['customerId'] ?? null;
+        ?array $args = null
+    ) {
+        $customerId = $args['customerId'] ?? null;
         $note = $args['note'] ?? null;
 
-        if (empty($customer_id) || empty($note)) {
-            throw new \Exception(__('Customer ID and note are required.'));
+        if (empty($customerId) || empty($note)) {
+            throw new LocalizedException(__('Customer ID and note are required.'));
         }
 
-        $connection = $this->resourceConnection->getConnection();
-        $customerTable = $this->resourceConnection->getTableName('customer_entity');
-        $notesTable = $this->resourceConnection->getTableName('customer_notes');
-
-        $customerExists = $connection->fetchOne(
-            $connection->select()
-                ->from($customerTable, ['entity_id'])
-                ->where('entity_id = ?', $customer_id)
-        );
-
-        if (!$customerExists) {
-            throw new \Exception(__('Customer with ID %1 does not exist.', $customer_id));
+        try {
+            $this->customerRepository->getById($customerId);
+        } catch (NoSuchEntityException $e) {
+            throw new LocalizedException(__('Customer with ID %1 does not exist.', $customerId));
         }
 
-        $data = [
-            'customer_id' => $customer_id,
-            'note' => $note
-        ];
+        try {
+            $newNote = $this->noteFactory->create();
+            $newNote->setCustomerId($customerId);
+            $newNote->setNote($note);
+            $this->noteResourceModel->save($newNote);
 
-        $result = $connection->insert($notesTable, $data);
-
-        if ($result) {
-            $note_id = $connection->lastInsertId($notesTable);
-
-            if ($note_id) {
-                $select = $connection->select()->from($notesTable)->where('note_id = ?', $note_id);
-                $updated_item = $connection->fetchRow($select);
-
-                return $updated_item;
-            }
+            return $newNote;
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Failed to add customer note: %1', $e->getMessage()));
         }
-
-        throw new \Exception(__('Failed to add customer note.'));
     }
 }

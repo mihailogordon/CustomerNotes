@@ -10,8 +10,6 @@ use Krga\CustomerNotes\Model\ResourceModel\History\CollectionFactory as HistoryC
 class GetNoteHistory implements ResolverInterface
 {
     protected $historyCollectionFactory;
-    protected $noteFactory;
-    protected $noteResourceModel;
 
     public function __construct(
         HistoryCollectionFactory $historyCollectionFactory,
