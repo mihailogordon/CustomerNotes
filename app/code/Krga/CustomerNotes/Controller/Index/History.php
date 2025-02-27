@@ -2,20 +2,17 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\App\RequestInterface;
 
-class History extends \Magento\Framework\App\Action\Action
+class History implements HttpGetActionInterface
 {
-    protected $request;
+    protected $resultFactory;
 
     public function __construct(
-        Context $context,
-        RequestInterface $request
+        ResultFactory $resultFactory
     ) {
-        parent::__construct($context);
-        $this->request = $request;
+        $this->resultFactory = $resultFactory;
     }
 
     public function execute()

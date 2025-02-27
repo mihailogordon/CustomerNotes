@@ -2,21 +2,25 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Message\ManagerInterface;
 
-class Edit extends Action
+class Edit implements HttpGetActionInterface
 {
     protected $request;
+    protected $messageManager;
+    protected $resultFactory;
 
     public function __construct(
-        Context $context,
-        RequestInterface $request
+        RequestInterface $request,
+        ManagerInterface $messageManager,
+        ResultFactory $resultFactory
     ) {
-        parent::__construct($context);
         $this->request = $request;
+        $this->messageManager = $messageManager;
+        $this->resultFactory = $resultFactory;
     }
 
     public function execute()

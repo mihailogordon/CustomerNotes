@@ -2,47 +2,52 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
+use Magento\Framework\Message\ManagerInterface;
 use Krga\CustomerNotes\Model\NoteFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Note as NoteResource;
 use Krga\CustomerNotes\Model\TagRelationFactory;
 
-class Add extends Action
+class Add implements HttpPostActionInterface
 {
+    protected $request;
     protected $noteFactory;
     protected $noteResource;
     protected $resultRedirectFactory;
     protected $cacheTypeList;
     protected $cacheFrontendPool;
     protected $tagRelationFactory;
+    protected $messageManager;
 
     public function __construct(
-        Context $context,
+        RequestInterface $request,
         NoteFactory $noteFactory,
         NoteResource $noteResource,
         RedirectFactory $resultRedirectFactory,
         TypeListInterface $cacheTypeList,
         Pool $cacheFrontendPool,
-        TagRelationFactory $tagRelationFactory
+        TagRelationFactory $tagRelationFactory,
+        ManagerInterface $messageManager
     ) {
-        parent::__construct($context);
+        $this->request = $request;
         $this->noteFactory = $noteFactory;
         $this->noteResource = $noteResource;
         $this->resultRedirectFactory = $resultRedirectFactory;
         $this->cacheTypeList = $cacheTypeList;
         $this->cacheFrontendPool = $cacheFrontendPool;
         $this->tagRelationFactory = $tagRelationFactory;
+        $this->messageManager = $messageManager;
     }
 
     public function execute()
     {
-        $customer = $this->getRequest()->getParam('customer');
-        $noteText = trim($this->getRequest()->getParam('note'));
-        $tagIds = is_array($this->getRequest()->getParam('tags')) ? $this->getRequest()->getParam('tags') : [];
+        $customer = $this->request->getParam('customer');
+        $noteText = trim($this->request->getParam('note'));
+        $tagIds = is_array($this->request->getParam('tags')) ? $this->request->getParam('tags') : [];
         
         if (!$customer) {
             $this->messageManager->addErrorMessage(__('Please select a customer.'));

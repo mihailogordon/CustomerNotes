@@ -2,21 +2,25 @@
 
 namespace Krga\CustomerNotes\Controller\Tags;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Message\ManagerInterface;
 
-class Index extends Action
+class Index implements HttpGetActionInterface
 {
     protected $request;
+    protected $resultFactory;
+    protected $messageManager;
 
     public function __construct(
-        Context $context,
-        RequestInterface $request
+        RequestInterface $request,
+        ResultFactory $resultFactory,
+        ManagerInterface $messageManager
     ) {
-        parent::__construct($context);
         $this->request = $request;
+        $this->resultFactory = $resultFactory;
+        $this->messageManager = $messageManager;
     }
 
     public function execute()

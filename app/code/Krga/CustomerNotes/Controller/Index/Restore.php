@@ -2,16 +2,19 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Message\ManagerInterface;
 use Krga\CustomerNotes\Model\NoteFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Note as NoteResource;
 
-class Restore extends Action
+class Restore implements HttpGetActionInterface
 {
+    protected $request;
+    protected $messageManager;
     protected $noteFactory;
     protected $noteResource;
     protected $resultRedirectFactory;
@@ -19,14 +22,16 @@ class Restore extends Action
     protected $cacheFrontendPool;
 
     public function __construct(
-        Context $context,
+        RequestInterface $request,
+        ManagerInterface $messageManager,
         NoteFactory $noteFactory,
         NoteResource $noteResource,
         RedirectFactory $resultRedirectFactory,
         TypeListInterface $cacheTypeList,
         Pool $cacheFrontendPool
     ) {
-        parent::__construct($context);
+        $this->request = $request;
+        $this->messageManager = $messageManager;
         $this->noteFactory = $noteFactory;
         $this->noteResource = $noteResource;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -36,7 +41,7 @@ class Restore extends Action
 
     public function execute()
     {
-        $noteId = $this->getRequest()->getParam('note_id');
+        $noteId = $this->request->getParam('note_id');
 
         if (!$noteId) {
             $this->messageManager->addErrorMessage(__('Invalid note ID.'));

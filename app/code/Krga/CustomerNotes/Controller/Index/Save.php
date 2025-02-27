@@ -2,8 +2,8 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\RequestInterface;
 use Krga\CustomerNotes\Model\NoteFactory;
 use Krga\CustomerNotes\Model\ResourceModel\Note as NoteResourceModel;
@@ -12,7 +12,7 @@ use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
 use Krga\CustomerNotes\Model\TagRelationFactory;
 
-class Save extends Action
+class Save implements HttpPostActionInterface
 {
     protected $request;
     protected $noteFactory;
@@ -21,9 +21,9 @@ class Save extends Action
     protected $messageManager;
     protected $cacheTypeList;
     protected $cacheFrontendPool;
+    protected $resultRedirectFactory;
 
     public function __construct(
-        Context $context,
         RequestInterface $request,
         NoteFactory $noteFactory,
         NoteResourceModel $noteResourceModel,
@@ -31,8 +31,8 @@ class Save extends Action
         ManagerInterface $messageManager,
         TypeListInterface $cacheTypeList,
         Pool $cacheFrontendPool,
+        RedirectFactory $resultRedirectFactory
     ) {
-        parent::__construct($context);
         $this->request = $request;
         $this->noteFactory = $noteFactory;
         $this->noteResourceModel = $noteResourceModel;
@@ -40,6 +40,7 @@ class Save extends Action
         $this->messageManager = $messageManager;
         $this->cacheTypeList = $cacheTypeList;
         $this->cacheFrontendPool = $cacheFrontendPool;
+        $this->resultRedirectFactory = $resultRedirectFactory;
     }
 
     public function execute()

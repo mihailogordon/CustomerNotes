@@ -2,16 +2,19 @@
 
 namespace Krga\CustomerNotes\Controller\Index;
 
-use Magento\Framework\App\Action\Action;
-use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Cache\TypeListInterface;
 use Magento\Framework\App\Cache\Frontend\Pool;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Message\ManagerInterface;
 use Krga\CustomerNotes\Model\HistoryFactory;
 use Krga\CustomerNotes\Model\ResourceModel\History as HistoryResource;
 
-class Deletehistory extends Action
+class Deletehistory implements HttpGetActionInterface
 {
+    protected $request;
+    protected $messageManager;
     protected $historyFactory;
     protected $historyResource;
     protected $resultRedirectFactory;
@@ -19,14 +22,16 @@ class Deletehistory extends Action
     protected $cacheFrontendPool;
 
     public function __construct(
-        Context $context,
+        RequestInterface $request,
+        ManagerInterface $messageManager,
         HistoryFactory $historyFactory,
         HistoryResource $historyResource,
         RedirectFactory $resultRedirectFactory,
         TypeListInterface $cacheTypeList,
         Pool $cacheFrontendPool
     ) {
-        parent::__construct($context);
+        $this->request = $request;
+        $this->messageManager = $messageManager;
         $this->historyFactory = $historyFactory;
         $this->historyResource = $historyResource;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -36,7 +41,7 @@ class Deletehistory extends Action
 
     public function execute()
     {
-        $historyId = $this->getRequest()->getParam('history_id');
+        $historyId = $this->request->getParam('history_id');
 
         if (!$historyId) {
             $this->messageManager->addErrorMessage(__('Invalid history ID.'));
