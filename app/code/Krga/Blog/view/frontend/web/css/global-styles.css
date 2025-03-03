@@ -1,0 +1,55 @@
+.posts-list-filter-holder {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin: 0 0 20px;
+}
+
+.posts-list-filter-holder .filter-item.active a {
+    text-decoration: underline;
+}
+
+.posts-holder {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin: 0 0 20px;
+}
+
+.posts-holder .post-holder {
+    position: relative;
+    padding: 20px 24px 17px;
+    box-shadow: 0 0 13px rgba(0, 0, 0, 0.12);
+}
+
+.posts-holder .post-holder .post-link-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.posts-holder .post-title {
+    margin: 0 0 10px;
+}
+
+.posts-holder .post-tags {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 7px;
+}
+
+.posts-holder p {
+    margin: 0;
+}
+
+.pager {
+    overflow: hidden;
+    margin: 0 0 10px;
+}
+
+.pager .toolbar-amount {
+    margin-right: 10px;
+}

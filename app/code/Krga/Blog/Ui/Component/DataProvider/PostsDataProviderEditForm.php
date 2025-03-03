@@ -35,9 +35,9 @@ class PostsDataProviderEditForm extends AbstractDataProvider
         $postId = $this->request->getParam('post_id');
 
         if ($postId) {
-            $note = $this->collection->getItemById($postId);
-            if ($note) {
-                $data[$postId] = $note->getData();
+            $post = $this->collection->getItemById($postId);
+            if ($post) {
+                $data[$postId] = $post->getData();
             }
         }
 

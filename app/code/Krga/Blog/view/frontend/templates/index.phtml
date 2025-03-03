@@ -1,0 +1,85 @@
+<div class="posts-list-outer-holder">
+    <h1>Posts</h1>
+    <?php 
+
+    $posts = $block->getPosts();
+    $postsCollection = $block->getPostsCollection();
+    $postsPageSize = $block->getListPageSize();
+    $isListTagsFilterEnabled = $block->isListTagsFilterEnabled();
+    $isListTagsEnabled = $block->isListTagsEnabled();
+    $isListPaginationEnabled = $block->isListPaginationEnabled();
+    $allTags = $block->getAllTags(); 
+    $currentTagId = $this->getRequest()->getParam('tag_id');
+
+    ?>
+
+    <?php if ($isListTagsFilterEnabled && is_array($allTags) && count($allTags) > 0) { ?>
+        <div class="posts-list-filter-holder tag-filters">
+            <div class="filter-intro">
+                <span class="">Filter by tags:</span>
+            </div>
+            <div class="filter-item <?php echo !$currentTagId ? 'active' : ''; ?>">
+                <a href="<?php echo $block->getUrl('posts'); ?>">
+                    All
+                </a>
+            </div>
+            <?php foreach ($allTags as $tag) { 
+                $isActive = ($currentTagId == $tag->getTagId()) ? 'active' : '';
+            ?>
+                <div class="filter-item <?php echo $isActive; ?>">
+                    <a href="<?php echo $block->getUrl('posts', ['tag_id' => $tag->getTagId()]); ?>">
+                        <?php echo $tag->getTagName(); ?>
+                    </a>
+                </div>
+            <?php } ?>
+        </div>
+    <?php } ?>
+
+    <div class="posts-holder">
+        <?php if( is_array( $posts ) && count( $posts ) > 0 ) { ?>
+            <?php foreach( $posts as $post ) {
+                $postTagsHtml = $isListTagsEnabled ? $post->getPostTagsHtml() : '';
+                $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+                ?>
+                <div class="post-holder">
+                    <div class="post-holder-inner">
+                        <h3 class="post-title">
+                            <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
+                                <?php echo $post->getPostTitle(); ?>
+                            </a>
+                        </h3>
+
+                        <?php if ($isListTagsEnabled) { ?>
+                            <h6 class="post-tags">
+                                <?php echo $postTagsHtml; ?>
+                            </h6>
+                        <?php } ?>
+
+                        <p class="post-excerpt"><?php echo $post->getPostExcerpt(); ?></p>
+                        
+                        <div class="post-info">
+                            <?php 
+                                if( is_array($author) && count($author) > 0 ) {
+                                    echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
+                                }
+                                
+                                echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
+                            ?>
+                        </div>
+                    </div>
+                    <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>"></a>
+                </div>
+            <?php } ?>
+        <?php } else { ?>
+            <p>No posts found matching provided criteria.</p>
+        <?php } ?>
+    </div>
+
+    <?php if ($isListPaginationEnabled) {
+        $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'posts_pager');
+        $pagerBlock->setAvailableLimit([$postsPageSize => $postsPageSize]);
+        $pagerBlock->setShowPerPage(true);
+        $pagerBlock->setCollection($postsCollection);
+        echo $pagerBlock->toHtml();
+    } ?>
+</div>

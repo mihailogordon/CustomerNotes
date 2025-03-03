@@ -36,7 +36,7 @@ class Topmenu
                 ]
             );
 
-            $customerNotesNode = $this->nodeFactory->create(
+            $blogNode = $this->nodeFactory->create(
                 [
                     'data' => $this->getNodeAsArray("Posts", "blog_posts", "posts"),
                     'idField' => 'id',
@@ -44,7 +44,7 @@ class Topmenu
                 ]
             );
 
-            $noteTagsNode = $this->nodeFactory->create(
+            $blogTagsNode = $this->nodeFactory->create(
                 [
                     'data' => $this->getNodeAsArray("Tags", "blog_tags", "posts/tags/all"),
                     'idField' => 'id',
@@ -52,8 +52,8 @@ class Topmenu
                 ]
             );
 
-            $mainMenuNode->addChild($customerNotesNode);
-            $mainMenuNode->addChild($noteTagsNode);
+            $mainMenuNode->addChild($blogNode);
+            $mainMenuNode->addChild($blogTagsNode);
 
             $subject->getMenu()->addChild($mainMenuNode);
         }

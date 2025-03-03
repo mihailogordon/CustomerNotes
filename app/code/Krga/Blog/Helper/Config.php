@@ -29,4 +29,68 @@ class Config extends AbstractHelper
             ScopeInterface::SCOPE_STORE
         );
     }
+
+    public function getListPageSize()
+    {
+        return (int) $this->scopeConfig->getValue(
+            'blog_settings/list_settings/page_size',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isListTagsFilterEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/list_settings/show_tags_filter_on_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
+    public function isListTagsEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/list_settings/show_tags_on_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isListPaginationEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/list_settings/show_pagination_on_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getTagListPageSize()
+    {
+        return (int) $this->scopeConfig->getValue(
+            'blog_settings/tag_list_settings/tag_page_size',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isTagListPaginationEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/tag_list_settings/show_pagination_on_tag_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getTagSinglePageSize()
+    {
+        return (int) $this->scopeConfig->getValue(
+            'blog_settings/tag_single_settings/tag_page_size',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isTagSinglePaginationEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/tag_single_settings/show_pagination_on_tag_single',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
 }

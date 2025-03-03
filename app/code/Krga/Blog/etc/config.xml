@@ -8,6 +8,20 @@
                 <show_in_main_menu>1</show_in_main_menu>
                 <menu_item_label>Blog</menu_item_label>
             </general_settings>
+            <list_settings>
+                <page_size>8</page_size>
+                <show_tags_filter_on_list>1</show_tags_filter_on_list>
+                <show_tags_on_list>1</show_tags_on_list>
+                <show_pagination_on_list>1</show_pagination_on_list>
+            </list_settings>
+            <tag_list_settings>
+                <tag_page_size>8</tag_page_size>
+                <show_pagination_on_tag_list>1</show_pagination_on_tag_list>
+            </tag_list_settings>
+            <tag_single_settings>
+                <tag_page_size>8</tag_page_size>
+                <show_pagination_on_tag_single>1</show_pagination_on_tag_single>
+            </tag_single_settings>
         </blog_settings>
     </default>
 

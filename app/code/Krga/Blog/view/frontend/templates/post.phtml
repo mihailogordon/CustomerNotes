@@ -1,0 +1,24 @@
+<div class="post-single-outer-holder">
+    <?php
+    $post = $block->getPost();
+    ?>
+
+    <?php if ($post) { 
+        $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+        ?>
+        <h1 class="post-title"><?php echo $post->getPostTitle(); ?></h1>
+        <h6 class="post-tags"><?php echo $post->getPostTagsHtml(); ?></h6>
+        <div class="post-content">
+            <?php echo $post->getPostContent(); ?>
+        </div>
+        <div class="post-info">
+            <?php 
+                if( is_array($author) && count($author) > 0 ) {
+                    echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
+                }
+                
+                echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
+            ?>
+        </div>
+    <?php } ?>
+</div>

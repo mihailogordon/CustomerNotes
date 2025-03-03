@@ -1,0 +1,32 @@
+<?php
+$allTags = $block->getAllTags();
+$tagsCollection = $block->getTagsCollection();
+$tagListPageSize = $block->getTagListPageSize();
+$isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
+?>
+
+<h1>Tags</h1>
+<div class="tags-holder">
+    <?php if( is_array( $allTags ) && count( $allTags ) > 0 ) { ?>
+        <?php foreach( $allTags as $tag ) {
+            ?>
+            <div>
+                <p>
+                    <a href="<?php echo $block->getUrl('posts/tags/index', ['tag_id' => $tag->getTagId()]); ?>">
+                        <?php echo $tag->getTagName(); ?>
+                        <span>(<?php echo $tag->getTagPostsCount(); ?>)</span>
+                    </a>
+                </p>
+            </div>
+        <?php }
+    } else { ?>
+    <p>No tags found!</p>
+<?php } ?>
+</div>
+<?php if ($isTagListPaginationEnabled) {
+    $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'post_tags_pager');
+    $pagerBlock->setAvailableLimit([$tagListPageSize => $tagListPageSize]);
+    $pagerBlock->setShowPerPage(true);
+    $pagerBlock->setCollection($tagsCollection);
+    echo $pagerBlock->toHtml();
+}

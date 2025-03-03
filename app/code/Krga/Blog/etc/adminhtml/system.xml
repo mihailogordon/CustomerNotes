@@ -34,6 +34,58 @@
                     </depends>
                 </field>
             </group>
+
+            <group id="list_settings" translate="label" sortOrder="20" showInDefault="1">
+                <label>List Settings</label>
+
+                <field id="page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Posts Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_tags_filter_on_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Tags Filter</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="show_tags_on_list" translate="label" type="select" sortOrder="30" showInDefault="1">
+                    <label>Show Tags in Post Info</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="show_pagination_on_list" translate="label" type="select" sortOrder="40" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="tag_list_settings" translate="label" sortOrder="30" showInDefault="1">
+                <label>Tag List Settings</label>
+
+                <field id="tag_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Tags Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_tag_list" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="tag_single_settings" translate="label" sortOrder="40" showInDefault="1">
+                <label>Tag Single Settings</label>
+
+                <field id="tag_page_size" translate="label" type="text" sortOrder="10" showInDefault="1">
+                    <label>Number of Posts Per Page</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="show_pagination_on_tag_single" translate="label" type="select" sortOrder="20" showInDefault="1">
+                    <label>Show Pagination</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
         </section>
     </system>
 </config>

@@ -33,7 +33,7 @@ class Delete extends Action
 
         if (!$tagId) {
             $this->messageManager->addErrorMessage(__('Invalid tag ID.'));
-            return $this->resultRedirectFactory->create()->setPath('notes/tags/index');
+            return $this->resultRedirectFactory->create()->setPath('posts/tags/index');
         }
 
         $tag = $this->tagFactory->create();
@@ -41,7 +41,7 @@ class Delete extends Action
 
         if (!$tag->getId()) {
             $this->messageManager->addErrorMessage(__('The tag no longer exists.'));
-            return $this->resultRedirectFactory->create()->setPath('notes/tags/index');
+            return $this->resultRedirectFactory->create()->setPath('posts/tags/index');
         }
 
         try {
