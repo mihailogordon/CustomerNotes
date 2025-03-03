@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Krga_Blog::posts_parent" title="Blog"
+             module="Krga_Blog" resource="Krga_Blog::posts"
+             translate="title" sortOrder="900"/>
+        <add id="Krga_Blog::posts" title="Posts"
+             module="Krga_Blog" parent="Krga_Blog::posts_parent"
+             resource="Krga_Blog::posts" translate="title"
+             action="posts" sortOrder="910"/>
+        <add id="Krga_Blog::post_tags" title="Tags"
+             module="Krga_Blog" parent="Krga_Blog::posts_parent"
+             resource="Krga_Blog::posts" translate="title"
+             action="posts/tags" sortOrder="930"/>
+        <add id="Krga_Blog::settings" title="General Settings"
+             module="Krga_Blog" parent="Krga_Blog::posts_parent"
+             resource="Krga_Blog::settings" translate="title"
+             action="adminhtml/system_config/edit/section/blog_settings"
+             sortOrder="940"/>
+    </menu>
+</config>

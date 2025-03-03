@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    
+    <system>
+        <tab id="blog" translate="label" sortOrder="100">
+            <label>Blog</label>
+        </tab>
+
+        <section id="blog_settings"
+                 translate="label"
+                 type="text"
+                 sortOrder="10"
+                 showInDefault="1"
+                 showInWebsite="0"
+                 showInStore="0">
+                 
+            <label>Settings</label>
+            <tab>blog</tab>
+            <resource>Krga_Blog::settings</resource>
+
+            <group id="general_settings" translate="label" sortOrder="10" showInDefault="1">
+                <label>General Settings</label>
+
+                <field id="show_in_main_menu" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Show in Main Menu</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="menu_item_label" translate="label" type="text" sortOrder="20" showInDefault="1">
+                    <label>Menu Item Label</label>
+                    <depends>
+                        <field id="show_in_main_menu">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

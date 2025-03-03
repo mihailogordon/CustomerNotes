@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/Setup/Declaration/Schema/etc/db_schema.xsd">
+
+    <table name="blog_posts" resource="default" engine="innodb" comment="Blog Posts">
+        <column name="post_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Post ID"/>
+        <column name="post_title" xsi:type="text" nullable="false" comment="Post Title"/>
+        <column name="post_excerpt" xsi:type="text" nullable="false" comment="Post Excerpt"/>
+        <column name="post_content" xsi:type="text" nullable="false" comment="Post Content"/>
+        <column name="post_author" xsi:type="int" nullable="false" unsigned="true" comment="Author ID"/>
+        <column name="is_deleted" xsi:type="smallint" nullable="false" default="0" comment="Soft Delete Flag (0 = Active, 1 = Deleted)"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="post_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_BLOG_POSTS_CUSTOMER_ID" table="blog_posts" column="post_author" referenceTable="customer_entity" referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="blog_tags" resource="default" engine="innodb" comment="Blog Tags">
+        <column name="tag_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Tag ID"/>
+        <column name="tag_name" xsi:type="varchar" length="255" nullable="false"  comment="Tag Name"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="tag_id"/>
+        </constraint>
+    </table>
+
+    <table name="blog_tag_relation" resource="default" engine="innodb" comment="Blog Tag Relation">
+        <column name="relation_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Relation ID"/>
+        <column name="post_id" xsi:type="int" nullable="false" unsigned="true" comment="Post ID"/>
+        <column name="tag_id" xsi:type="int" nullable="false" unsigned="true" comment="Tag ID"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="relation_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_POST_ID" table="blog_posts" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_TAG_ID" table="blog_tags" column="tag_id" referenceTable="blog_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
+    </table>
+    
+</schema>
