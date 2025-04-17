@@ -4,6 +4,7 @@ namespace Krga\Blog\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\UrlInterface;
 use Krga\Blog\Helper\Config;
 use Krga\Blog\Model\TagFactory;
 use Krga\Blog\Model\ResourceModel\Tag as TagResourceModel;
@@ -106,5 +107,15 @@ class Tag extends Template
         }
 
         return $tagPosts;
+    }
+
+    public function getImageUrl($imagePath)
+    {
+        if (!$imagePath) {
+            return '';
+        }
+
+        $imagePath = ltrim($imagePath, '/');
+        return $this->_storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'posts/' . $imagePath;
     }
 }

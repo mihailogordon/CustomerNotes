@@ -67,6 +67,20 @@
                 </item>
             </argument>
         </field>
+        <field name="post_image">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Post Image</item>
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">fileUploader</item>
+                    <item name="source" xsi:type="string">note</item>
+                    <item name="dataScope" xsi:type="string">post_image</item>
+                    <item name="uploaderConfig" xsi:type="array">
+                        <item name="url" xsi:type="url" path="posts/item/upload"/>
+                    </item>
+                </item>
+            </argument>
+        </field>
         <field name="post_content">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

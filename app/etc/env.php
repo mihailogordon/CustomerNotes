@@ -176,5 +176,17 @@ return [
                 ]
             ]
         ]
+    ],
+    'csp' => [
+        'mode' => 'report-only',
+        'policies' => [
+            'img-src' => [
+                'sources' => [
+                    'self' => true,
+                    'data:' => true,
+                    'blob:' => true
+                ]
+            ]
+        ]
     ]
 ];

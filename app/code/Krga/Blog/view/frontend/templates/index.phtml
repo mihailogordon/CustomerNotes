@@ -43,6 +43,16 @@
                 ?>
                 <div class="post-holder">
                     <div class="post-holder-inner">
+                        <?php 
+                            $featuredImage = $block->getImageUrl($post->getPostImage());
+
+                            if (!empty($featuredImage)) { ?>
+                                <div class="post-image">
+                                    <img src="<?= $featuredImage; ?>" alt="Post Image" />
+                                </div>
+                            <?php }
+                        
+                        ?>
                         <h3 class="post-title">
                             <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
                                 <?php echo $post->getPostTitle(); ?>

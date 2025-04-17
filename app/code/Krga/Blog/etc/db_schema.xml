@@ -7,6 +7,7 @@
         <column name="post_excerpt" xsi:type="text" nullable="false" comment="Post Excerpt"/>
         <column name="post_content" xsi:type="text" nullable="false" comment="Post Content"/>
         <column name="post_author" xsi:type="int" nullable="false" unsigned="true" comment="Author ID"/>
+        <column name="post_image" xsi:type="varchar" length="255" nullable="true" comment="Post Image"/>
         <column name="is_deleted" xsi:type="smallint" nullable="false" default="0" comment="Soft Delete Flag (0 = Active, 1 = Deleted)"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>

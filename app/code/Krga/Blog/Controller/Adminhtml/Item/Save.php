@@ -42,6 +42,14 @@ class Save extends Action
                 $this->postResourceModel->load($post, $data['post_id']);
             }
 
+            if (!empty($data['post_image']) && is_array($data['post_image'])) {
+                if (!empty($data['post_image'][0]['file'])) {
+                    $data['post_image'] = $data['post_image'][0]['file'];
+                } else {
+                    unset($data['post_image']);
+                }
+            }
+
             $post->setData($data);
             $this->postResourceModel->save($post);
 

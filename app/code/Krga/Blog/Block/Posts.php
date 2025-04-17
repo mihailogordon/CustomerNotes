@@ -4,6 +4,7 @@ namespace Krga\Blog\Block;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
+use Magento\Framework\UrlInterface;
 use Krga\Blog\Helper\Config;
 use Krga\Blog\Model\ResourceModel\Post\CollectionFactory;
 use Krga\Blog\Model\ResourceModel\Tag\CollectionFactory as TagCollectionFactory;
@@ -81,5 +82,15 @@ class Posts extends Template
 
     public function getAllTags() {
         return $this->tagCollectionFactory->create()->getItems();
+    }
+
+    public function getImageUrl($imagePath)
+    {
+        if (!$imagePath) {
+            return '';
+        }
+
+        $imagePath = ltrim($imagePath, '/'); // Clean up leading slash if present
+        return $this->_storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'posts/' . $imagePath;
     }
 }

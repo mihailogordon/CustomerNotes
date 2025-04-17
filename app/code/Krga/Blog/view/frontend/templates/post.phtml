@@ -6,6 +6,16 @@
     <?php if ($post) { 
         $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
         ?>
+        <?php 
+            $featuredImage = $block->getImageUrl($post->getPostImage());
+
+            if (!empty($featuredImage)) { ?>
+                <div class="post-image">
+                    <img src="<?= $featuredImage; ?>" alt="Post Image" />
+                </div>
+            <?php }
+        
+        ?>
         <h1 class="post-title"><?php echo $post->getPostTitle(); ?></h1>
         <h6 class="post-tags"><?php echo $post->getPostTagsHtml(); ?></h6>
         <div class="post-content">

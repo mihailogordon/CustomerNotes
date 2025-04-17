@@ -31,18 +31,30 @@
     height: 100%;
 }
 
-.posts-holder .post-title {
+.post-image {
     margin: 0 0 10px;
 }
 
-.posts-holder .post-tags {
+.post-image img {
+    display: block;
+}
+
+.post-title {
+    margin: 0 0 10px;
+}
+
+.post-tags {
     position: relative;
     z-index: 1;
     margin: 0 0 7px;
 }
 
-.posts-holder p {
-    margin: 0;
+.post-excerpt {
+    margin: 0 0 7px;
+}
+
+.post-content {
+    margin: 0 0 7px;
 }
 
 .pager {
