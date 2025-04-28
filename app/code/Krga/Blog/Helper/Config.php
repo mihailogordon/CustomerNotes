@@ -38,6 +38,14 @@ class Config extends AbstractHelper
         );
     }
 
+    public function isListFeaturedImageEnabled()
+    {
+        return $this->scopeConfig->isSetFlag(
+            'blog_settings/list_settings/show_featured_image_on_list',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+    
     public function isListTagsFilterEnabled()
     {
         return $this->scopeConfig->isSetFlag(

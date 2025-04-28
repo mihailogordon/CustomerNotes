@@ -40,6 +40,10 @@ class Posts extends Template
         return $this->configHelper->isListPaginationEnabled();
     }
 
+    public function isListFeaturedImageEnabled() {
+        return $this->configHelper->isListFeaturedImageEnabled();
+    }
+    
     public function isListTagsFilterEnabled() {
         return $this->configHelper->isListTagsFilterEnabled();
     }

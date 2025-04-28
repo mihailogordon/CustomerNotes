@@ -10,6 +10,7 @@
             </general_settings>
             <list_settings>
                 <page_size>8</page_size>
+                <show_featured_image_on_list>1</show_featured_image_on_list>
                 <show_tags_filter_on_list>1</show_tags_filter_on_list>
                 <show_tags_on_list>1</show_tags_on_list>
                 <show_pagination_on_list>1</show_pagination_on_list>

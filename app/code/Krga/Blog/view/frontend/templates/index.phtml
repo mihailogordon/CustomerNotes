@@ -5,6 +5,7 @@
     $posts = $block->getPosts();
     $postsCollection = $block->getPostsCollection();
     $postsPageSize = $block->getListPageSize();
+    $isListFeaturedImageEnabled = $block->isListFeaturedImageEnabled();
     $isListTagsFilterEnabled = $block->isListTagsFilterEnabled();
     $isListTagsEnabled = $block->isListTagsEnabled();
     $isListPaginationEnabled = $block->isListPaginationEnabled();
@@ -43,15 +44,16 @@
                 ?>
                 <div class="post-holder">
                     <div class="post-holder-inner">
-                        <?php 
-                            $featuredImage = $block->getImageUrl($post->getPostImage());
+                        <?php
+                            if ($isListFeaturedImageEnabled) {
+                                $featuredImage = $block->getImageUrl($post->getPostImage());
 
-                            if (!empty($featuredImage)) { ?>
-                                <div class="post-image">
-                                    <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                                </div>
-                            <?php }
-                        
+                                if (!empty($featuredImage)) { ?>
+                                    <div class="post-image">
+                                        <img src="<?= $featuredImage; ?>" alt="Post Image" />
+                                    </div>
+                                <?php }
+                            }
                         ?>
                         <h3 class="post-title">
                             <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
