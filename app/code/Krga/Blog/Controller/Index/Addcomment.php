@@ -54,8 +54,10 @@ class Addcomment implements HttpPostActionInterface
                 $comment->setContent($content);
                 $comment->setAuthorName($authorName);
                 $comment->setAuthorEmail($authorEmail);
+                $comment->setIsApproved(0);
                 $this->commentResource->save($comment);
                 $this->flushCache();
+                $this->messageManager->addSuccessMessage(__('The comment has been submited. Please wait until it is approved by admin. Thank you for your patience!'));
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage(__('An error occurred while adding the note.'));
             }

@@ -8,6 +8,10 @@
              module="Krga_Blog" parent="Krga_Blog::posts_parent"
              resource="Krga_Blog::posts" translate="title"
              action="posts" sortOrder="910"/>
+        <add id="Krga_Blog::comments" title="Comments"
+             module="Krga_Blog" parent="Krga_Blog::posts_parent"
+             resource="Krga_Blog::comments" translate="title"
+             action="posts/comments" sortOrder="920"/>
         <add id="Krga_Blog::post_tags" title="Tags"
              module="Krga_Blog" parent="Krga_Blog::posts_parent"
              resource="Krga_Blog::posts" translate="title"

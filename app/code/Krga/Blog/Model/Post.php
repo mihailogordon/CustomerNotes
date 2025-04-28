@@ -97,7 +97,10 @@ class Post extends AbstractModel
         $postComments = array();
 
         if (!empty($postId)) {
-            $postComments = $this->commentCollectionFactory->create()->addFieldToFilter('post_id', array('eq' => $postId))->getItems();
+            $postComments = $this->commentCollectionFactory->create()
+                ->addFieldToFilter('post_id', array('eq' => $postId))
+                ->addFieldToFilter('is_approved', array('eq' => 1))
+                ->getItems();
         }
         
         return $postComments;
