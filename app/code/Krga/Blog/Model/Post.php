@@ -8,6 +8,8 @@ use Krga\Blog\Model\ResourceModel\Post as PostResource;
 use Krga\Blog\Model\TagFactory;
 use Krga\Blog\Model\ResourceModel\Tag as TagResource;
 use Krga\Blog\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
+use Krga\Blog\Model\ResourceModel\Comment\CollectionFactory as CommentCollectionFactory;
+use Magento\TestFramework\Utility\ChildrenClassesSearch\A;
 
 class Post extends AbstractModel
 {
@@ -16,6 +18,7 @@ class Post extends AbstractModel
     protected $tagFactory;
     protected $tagResource;
     protected $tagRelationCollectionFactory;
+    protected $commentCollectionFactory;
     protected $urlBuilder;
 
     public function __construct(
@@ -24,6 +27,7 @@ class Post extends AbstractModel
         TagFactory $tagFactory,
         TagResource $tagResource,
         TagRelationCollectionFactory $tagRelationCollectionFactory,
+        CommentCollectionFactory $commentCollectionFactory,
         UrlInterface $urlBuilder,
         \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
@@ -33,6 +37,7 @@ class Post extends AbstractModel
         $this->tagFactory = $tagFactory;
         $this->tagResource = $tagResource;
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
+        $this->commentCollectionFactory = $commentCollectionFactory;
         $this->urlBuilder = $urlBuilder;
     }
 
@@ -84,5 +89,17 @@ class Post extends AbstractModel
         }
 
         return $output;
+    }
+
+    public function getPostComments()
+    {
+        $postId = $this->getPostId();
+        $postComments = array();
+
+        if (!empty($postId)) {
+            $postComments = $this->commentCollectionFactory->create()->addFieldToFilter('post_id', array('eq' => $postId))->getItems();
+        }
+        
+        return $postComments;
     }
 }

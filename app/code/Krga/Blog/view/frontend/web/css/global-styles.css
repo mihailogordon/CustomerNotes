@@ -65,3 +65,47 @@
 .pager .toolbar-amount {
     margin-right: 10px;
 }
+
+.post-comments-outer {
+    margin: 30px 0 0;
+}
+
+.comments-title {
+    margin: 0 0 20px;
+}
+
+.post-comments {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.post-comment {
+    position: relative;
+    padding: 25px 25px 22px;
+    box-shadow: 0 0 13px rgba(0, 0, 0, 0.12);
+}
+
+.comment-author-name {
+    margin: 0 0 10px;
+}
+
+.comment-author-mail {
+    margin: 0 0 8px;
+}
+
+.comment-date {
+    font-size: 0.8em;
+}
+
+.comment-author-text {
+    margin: 0;
+}
+
+.post-comment-form {
+    margin: 30px 0 0;
+}
+
+.post-comment-form-title {
+    margin: 0 0 15px;
+}

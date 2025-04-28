@@ -5,6 +5,7 @@
 
     <?php if ($post) { 
         $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+        $postComments = $post->getPostComments();
         ?>
         <?php 
             $featuredImage = $block->getImageUrl($post->getPostImage());
@@ -29,6 +30,46 @@
                 
                 echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
             ?>
+        </div>
+        <div class="post-comments-outer">
+            <?php if(count($postComments)>0) { ?>
+                <h3 class="comments-title">
+                    <?php
+                        $count = count($postComments);
+                        echo $count . ' ' . ($count === 1 ? 'comment' : 'comments') . ' for this post:';
+                    ?>
+                </h3>
+                <div class="post-comments">
+                    <?php foreach ($postComments as $comment) { ?>
+                        <div class="post-comment">
+                            <h4 class="comment-author-name"><?php echo $comment->getAuthorName(); ?></h4>
+                            <h5 class="comment-author-mail"><?php echo $comment->getAuthorEmail(); ?></h5>
+                            <p class="comment-date">Commented at <?php echo date('F j, Y', strtotime($comment->getCreatedAt())); ?></p>
+                            <p class="comment-author-text"><?php echo $comment->getContent(); ?></p>
+                        </div>
+                    <?php } ?>
+                </div>
+            <?php } else { ?>
+                <h3 class="comments-title no-comments">No comments for this post.</h3>
+            <?php } ?>
+            <div class="post-comment-form">
+                <h4 class="post-comment-form-title">Write a comment:</h2>
+                <form id="add-post-comment-form" action="<?php //echo $block->getUrl('notes/index/add'); ?>" method="post">
+                    <label for="author_name">Name:</label>
+                    <input type="text" id="author_name" name="author_name" required />
+                    <br/>
+                    <br/>
+                    <label for="author_email">Email:</label>
+                    <input type="email" id="author_email" name="author_email" required />
+                    <br/>
+                    <br/>
+                    <label for="content">Comment:</label>
+                    <textarea id="content" name="content" required></textarea>
+                    <br/>
+                    <br/>
+                    <button class="action primary" type="submit">Submit</button>
+                </form>
+            </div>
         </div>
     <?php } ?>
 </div>

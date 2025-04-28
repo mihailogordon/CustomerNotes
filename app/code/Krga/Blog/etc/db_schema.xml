@@ -38,5 +38,19 @@
         <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_POST_ID" table="blog_posts" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_TAG_ID" table="blog_tags" column="tag_id" referenceTable="blog_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
     </table>
+
+    <table name="blog_comments" resource="default" engine="innodb" comment="Blog Comments">
+        <column name="comment_id" xsi:type="int" nullable="false" identity="true" unsigned="true" comment="Comment ID"/>
+        <column name="post_id" xsi:type="int" nullable="false" unsigned="true" comment="Post ID"/>
+        <column name="author_name" xsi:type="varchar" length="255" nullable="false" comment="Author Name"/>
+        <column name="author_email" xsi:type="varchar" length="255" nullable="false" comment="Author Email"/>
+        <column name="content" xsi:type="text" nullable="false" comment="Comment Content"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="foreign" referenceId="BLOG_COMMENTS_POST_ID_BLOG_POSTS_POST_ID" table="blog_comments" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="comment_id"/>
+        </constraint>
+    </table>
     
 </schema>
