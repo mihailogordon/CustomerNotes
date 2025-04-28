@@ -54,7 +54,7 @@
             <?php } ?>
             <div class="post-comment-form">
                 <h4 class="post-comment-form-title">Write a comment:</h2>
-                <form id="add-post-comment-form" action="<?php //echo $block->getUrl('notes/index/add'); ?>" method="post">
+                <form id="add-post-comment-form" action="<?php echo $block->getUrl('posts/index/addcomment'); ?>" method="post">
                     <label for="author_name">Name:</label>
                     <input type="text" id="author_name" name="author_name" required />
                     <br/>
@@ -67,6 +67,7 @@
                     <textarea id="content" name="content" required></textarea>
                     <br/>
                     <br/>
+                    <input type="hidden" name="post_id" value="<?php echo $post->getId(); ?>" />
                     <button class="action primary" type="submit">Submit</button>
                 </form>
             </div>
