@@ -35,8 +35,8 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="relation_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_POST_ID" table="blog_posts" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
-        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_TAG_ID" table="blog_tags" column="tag_id" referenceTable="blog_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_RELATION_POST_ID" table="blog_tag_relation" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
+        <constraint xsi:type="foreign" referenceId="FK_BLOG_TAG_RELATION_TAG_ID" table="blog_tag_relation" column="tag_id" referenceTable="blog_tags" referenceColumn="tag_id" onDelete="CASCADE"/>
     </table>
 
     <table name="blog_comments" resource="default" engine="innodb" comment="Blog Comments">
