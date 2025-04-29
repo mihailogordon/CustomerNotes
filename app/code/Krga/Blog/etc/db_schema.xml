@@ -48,6 +48,7 @@
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
         <column name="is_approved" xsi:type="smallint" nullable="false" default="0" comment="Approved Flag (0 = Unaproved, 1 = Approved)"/>
+        <column name="parent_id" xsi:type="int" nullable="true" comment="Parent Comment ID" />
         <constraint xsi:type="foreign" referenceId="BLOG_COMMENTS_POST_ID_BLOG_POSTS_POST_ID" table="blog_comments" column="post_id" referenceTable="blog_posts" referenceColumn="post_id" onDelete="CASCADE"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="comment_id"/>

@@ -9,7 +9,6 @@ use Krga\Blog\Model\TagFactory;
 use Krga\Blog\Model\ResourceModel\Tag as TagResource;
 use Krga\Blog\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
 use Krga\Blog\Model\ResourceModel\Comment\CollectionFactory as CommentCollectionFactory;
-use Magento\TestFramework\Utility\ChildrenClassesSearch\A;
 
 class Post extends AbstractModel
 {
@@ -100,10 +99,30 @@ class Post extends AbstractModel
             $postComments = $this->commentCollectionFactory->create()
                 ->addFieldToFilter('post_id', array('eq' => $postId))
                 ->addFieldToFilter('is_approved', array('eq' => 1))
+                ->setOrder('created_at', 'ASC')
                 ->getItems();
         }
         
         return $postComments;
+    }
+
+    public function getGroupedPostComments()
+    {
+        $postComments = $this->getPostComments();
+
+        $groupedComments = [];
+
+        foreach ($postComments as $comment) {
+            $parentId = $comment->getParentId() ?: 0;
+            $groupedComments[$parentId][] = $comment;
+        }
+
+        return $groupedComments;
+    }
+    
+    public function getPostCommentCount()
+    {
+        return count($this->getPostComments());
     }
     
     public function getPostCommentCountInfo()
@@ -114,5 +133,22 @@ class Post extends AbstractModel
         $output .= '</span>';
 
         return $output;
+    }
+
+    public function renderComments($grouped, $parentId = 0)
+    {
+        if (!isset($grouped[$parentId])) {
+            return;
+        }
+        
+        foreach ($grouped[$parentId] as $comment) {
+            echo '<div class="post-comment">';
+            echo '<h4 class="comment-author-name">' . $comment->getAuthorName() . '</h4>';
+            echo '<h5 class="comment-author-mail">' . $comment->getAuthorEmail() . '</h5>';
+            echo '<p class="comment-date">Commented at ' . date('F j, Y', strtotime($comment->getCreatedAt())) . '</p>';
+            echo '<p class="comment-author-text">' . $comment->getContent() . '</p>';
+            $this->renderComments($grouped, $comment->getId());
+            echo '</div>';
+        }
     }
 }

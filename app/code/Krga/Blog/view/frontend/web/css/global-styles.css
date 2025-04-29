@@ -90,6 +90,10 @@
     box-shadow: 0 0 13px rgba(0, 0, 0, 0.12);
 }
 
+.post-comment > .post-comment {
+    margin: 15px 0 0;
+}
+
 .comment-author-name {
     margin: 0 0 10px;
 }

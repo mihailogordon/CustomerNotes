@@ -5,7 +5,8 @@
 
     <?php if ($post) { 
         $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
-        $postComments = $post->getPostComments();
+        $postCommentsGrouped = $post->getGroupedPostComments();
+        $postCommentsCount = $post->getPostCommentCount();
         ?>
         <?php 
             $featuredImage = $block->getImageUrl($post->getPostImage());
@@ -32,22 +33,12 @@
             ?>
         </div>
         <div class="post-comments-outer">
-            <?php if(count($postComments)>0) { ?>
+            <?php if($postCommentsCount>0) { ?>
                 <h3 class="comments-title">
-                    <?php
-                        $count = count($postComments);
-                        echo $count . ' ' . ($count === 1 ? 'comment' : 'comments') . ' for this post:';
-                    ?>
+                    <?php echo $postCommentsCount . ' ' . ($postCommentsCount === 1 ? 'comment' : 'comments') . ' for this post:'; ?>
                 </h3>
                 <div class="post-comments">
-                    <?php foreach ($postComments as $comment) { ?>
-                        <div class="post-comment">
-                            <h4 class="comment-author-name"><?php echo $comment->getAuthorName(); ?></h4>
-                            <h5 class="comment-author-mail"><?php echo $comment->getAuthorEmail(); ?></h5>
-                            <p class="comment-date">Commented at <?php echo date('F j, Y', strtotime($comment->getCreatedAt())); ?></p>
-                            <p class="comment-author-text"><?php echo $comment->getContent(); ?></p>
-                        </div>
-                    <?php } ?>
+                    <?php $post->renderComments($postCommentsGrouped); ?>
                 </div>
             <?php } else { ?>
                 <h3 class="comments-title no-comments">No comments for this post.</h3>
