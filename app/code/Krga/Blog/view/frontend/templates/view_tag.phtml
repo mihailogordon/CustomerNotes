@@ -15,6 +15,7 @@
         <?php if( is_array( $posts ) && count( $posts ) > 0 ) { ?>
             <?php foreach( $posts as $post ) {
                 $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+                $commentsCountInfo = $post->getPostCommentCountInfo();
                 ?>
                 <div class="post-holder">
                     <div class="post-holder-inner">
@@ -48,6 +49,7 @@
                                 
                                 echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
                             ?>
+                            <?php echo $commentsCountInfo; ?>
                         </div>
                     </div>
                     <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>"></a>

@@ -53,6 +53,10 @@
     margin: 0 0 7px;
 }
 
+.post-info:has(.comments-number) .date:after {
+    content: ';';
+}
+
 .post-content {
     margin: 0 0 7px;
 }
