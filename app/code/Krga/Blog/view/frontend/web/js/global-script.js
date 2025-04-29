@@ -18,7 +18,7 @@ require(['jquery'], function($) {
                     var $commentForm = $thisButton.siblings('.post-comment-form');
 
                     if ($commentForm.length) {
-                        $('.post-comment-form').not($commentForm).slideUp();
+                        $('.post-comment-reply-form').not($commentForm).slideUp();
                         $commentForm.slideDown();
                         var $cancelReply = $commentForm.find('.comment-reply-cancel');
 
