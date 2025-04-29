@@ -114,6 +114,10 @@
     margin: 30px 0 0;
 }
 
+.post-comment-form.post-comment-reply-form {
+    display: none;
+}
+
 .post-comment-form-title {
     margin: 0 0 15px;
 }

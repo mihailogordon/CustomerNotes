@@ -2,5 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework/View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Krga_Blog::css/global-styles.css"/>
+        <script src="Krga_Blog::js/global-script.js"/>
     </head>
 </page>

@@ -46,6 +46,7 @@ class Addcomment implements HttpPostActionInterface
         $content = trim($this->request->getParam('content'));
         $authorName = trim($this->request->getParam('author_name'));
         $authorEmail = trim($this->request->getParam('author_email'));
+        $parentId = intval($this->request->getParam('parent_id'));
 
         if (!empty($postId) && !empty($content) && !empty($authorName) && !empty($authorEmail)) {
             try {
@@ -55,6 +56,9 @@ class Addcomment implements HttpPostActionInterface
                 $comment->setAuthorName($authorName);
                 $comment->setAuthorEmail($authorEmail);
                 $comment->setIsApproved(0);
+                if ($parentId !== 0) {
+                    $comment->setParentId($parentId);
+                }
                 $this->commentResource->save($comment);
                 $this->flushCache();
                 $this->messageManager->addSuccessMessage(__('The comment has been submited. Please wait until it is approved by admin. Thank you for your patience!'));
