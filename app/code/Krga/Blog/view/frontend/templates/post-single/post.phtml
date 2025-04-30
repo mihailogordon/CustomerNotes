@@ -20,7 +20,6 @@
                     <img src="<?= $featuredImage; ?>" alt="Post Image" />
                 </div>
             <?php }
-        
         ?>
         <h1 class="post-title"><?php echo $post->getPostTitle(); ?></h1>
         <h6 class="post-tags"><?php echo $post->getPostTagsHtml(); ?></h6>
@@ -74,12 +73,12 @@
                 <h3 class="recent-posts-intro-title">Recent Posts</h3>
                 <div class="posts-holder recent-posts">
                     <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
-                        ->setTemplate('Krga_Blog::post/_postList.phtml')
-                        ->setData([
-                            'posts' => $recentPosts,
-                            'parent_block' => $block
-                        ])
-                        ->toHtml(); ?>
+                            ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'posts' => $recentPosts
+                            ])
+                            ->toHtml(); ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -89,12 +88,12 @@
                 <h3 class="related-posts-intro-title">Related Posts</h3>
                 <div class="posts-holder related-posts">
                     <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
-                        ->setTemplate('Krga_Blog::post/_postList.phtml')
-                        ->setData([
-                            'posts' => $relatedPosts,
-                            'parent_block' => $block
-                        ])
-                        ->toHtml(); ?>
+                            ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'posts' => $relatedPosts
+                            ])
+                            ->toHtml(); ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -104,10 +103,10 @@
                 <h3 class="popular-posts-intro-title">Popular Posts</h3>
                 <div class="posts-holder popular-posts">
                     <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
-                            ->setTemplate('Krga_Blog::post/_postList.phtml')
+                            ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
                             ->setData([
-                                'posts' => $popularPosts,
-                                'parent_block' => $block
+                                'parent_block' => $block,
+                                'posts' => $popularPosts
                             ])
                             ->toHtml(); ?>
                 </div>

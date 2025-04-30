@@ -1,6 +1,7 @@
 <?php
-$posts = $block->getData('posts');
+
 $parentBlock = $block->getData('parent_block');
+$posts = $block->getData('posts');
 
 if (!empty($posts) && is_array($posts)) : ?>
     <?php foreach ($posts as $post) : 
