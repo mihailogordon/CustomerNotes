@@ -33,6 +33,7 @@
                 
                 echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
             ?>
+            <span class="views">Loading views...</span>
         </div>
         <div class="post-comments-outer">
             <?php if($postCommentsCount>0) { ?>
@@ -169,3 +170,23 @@
         <?php } ?>
     <?php } ?>
 </div>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            const postId = <?= (int) $block->getPostId(); ?>;
+            $.get('/posts/post/viewcounter', { post_id: postId });
+            $.get('/posts/post/viewcounter', { post_id: postId, mode: 'get' }, function (response) {
+                if (response.views !== undefined) {
+                    $('.views').text(formatViews(response.views) + ' views');
+                }
+            });
+        });
+
+        function formatViews(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return n;
+        }
+    });
+</script>

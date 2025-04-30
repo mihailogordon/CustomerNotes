@@ -29,6 +29,11 @@ class Post extends Template
         $this->postResourceModel = $postResourceModel;
     }
 
+    public function getPostId()
+    {
+        return (int)$this->getRequest()->getParam('post_id');
+    }
+
     public function getPost() {
         $postId = (int)$this->getRequest()->getParam('post_id');
         $post = false;
