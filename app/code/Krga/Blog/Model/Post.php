@@ -16,7 +16,7 @@ class Post extends AbstractModel
     const TAGS_PATH = 'posts/tags/index';
     const COMMENTS_DEPTH_LIMIT = 4;
     const RECENT_POSTS_LIMIT = 3;
-    const RELATED_POSTS_LIMIT = 2;
+    const RELATED_POSTS_LIMIT = 3;
 
     protected $postCollectionFactory;
     protected $tagFactory;
