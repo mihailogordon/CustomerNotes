@@ -9,6 +9,7 @@
         $postCommentsCount = $post->getPostCommentCount();
         $recentPosts = $post->getRecentPosts();
         $relatedPosts = $post->getRelatedPosts();
+        $readTime = $post->getReadTime();
         ?>
         <?php 
             $featuredImage = $block->getImageUrl($post->getPostImage());
@@ -33,6 +34,7 @@
                 
                 echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
             ?>
+            <span class="reading-time"><?php echo $readTime === 1 ? $readTime . ' minute read' : $readTime . ' minutes read' ?></span>
             <span class="views">Loading views...</span>
         </div>
         <div class="post-comments-outer">

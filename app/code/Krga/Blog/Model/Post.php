@@ -254,4 +254,9 @@ class Post extends AbstractModel
 
         return $relatedPosts;
     }
+
+    public function getReadTime()
+    {
+        return max(1, (int) ceil(str_word_count($this->getPostContent()) / 200));
+    }
 }

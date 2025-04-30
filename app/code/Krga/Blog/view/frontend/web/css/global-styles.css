@@ -53,7 +53,8 @@
     margin: 0 0 7px;
 }
 
-.post-info .date:after {
+.post-info .date:after, 
+.post-info .reading-time:after {
     content: ';';
 }
 
