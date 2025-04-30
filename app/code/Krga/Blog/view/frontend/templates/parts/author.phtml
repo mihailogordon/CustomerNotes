@@ -1,0 +1,10 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+$author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+
+if( is_array($author) && count($author) > 0 ) { ?>
+    <span class="author">Written by <?php echo $author['firstname'] . ' ' . $author['lastname']; ?></span>
+<?php }

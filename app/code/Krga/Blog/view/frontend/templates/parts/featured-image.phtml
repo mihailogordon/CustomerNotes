@@ -1,0 +1,17 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+$type = $block->getData('type');
+
+$isFeaturedImageEnabled = $type === 'list' ? $parentBlock->isListFeaturedImageEnabled() : true;
+
+if ($isFeaturedImageEnabled) {
+    $featuredImage = $parentBlock->getImageUrl($post->getPostImage());
+
+    if (!empty($featuredImage)) { ?>
+        <div class="post-image">
+            <img src="<?php echo $featuredImage; ?>" alt="Post Image" />
+        </div>
+    <?php }
+}

@@ -32,11 +32,11 @@ class Posts extends Template
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
     }
 
-    public function getListPageSize() {
+    public function getPageSize() {
         return $this->configHelper->getListPageSize();
     }
     
-    public function isListPaginationEnabled() {
+    public function isPaginationEnabled() {
         return $this->configHelper->isListPaginationEnabled();
     }
 
@@ -52,7 +52,7 @@ class Posts extends Template
         return $this->configHelper->isListTagsEnabled();
     }
 
-    public function getPostsCollection() {
+    public function getCollection() {
         $page = (int)$this->getRequest()->getParam('p', 1);
         $postIds = array();
         $tagId = (int)$this->getRequest()->getParam('tag_id');
@@ -60,7 +60,7 @@ class Posts extends Template
         $collection = $this->collectionFactory->create()
             ->addFieldToFilter('is_deleted', ['eq' => 0])
             ->setOrder('created_at', 'DESC')
-            ->setPageSize($this->getListPageSize())
+            ->setPageSize($this->getPageSize())
             ->setCurPage($page);
 
         if ($tagId) {
@@ -79,7 +79,7 @@ class Posts extends Template
     }
 
     public function getPosts() {
-        $collection = $this->getPostsCollection();
+        $collection = $this->getCollection();
         
         return $collection->getItems();
     }

@@ -1,9 +1,4 @@
-<?php
-$allTags = $block->getAllTags();
-$tagsCollection = $block->getTagsCollection();
-$tagListPageSize = $block->getTagListPageSize();
-$isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
-?>
+<?php $allTags = $block->getAllTags(); ?>
 
 <h1>Tags</h1>
 <div class="tags-holder">
@@ -23,10 +18,12 @@ $isTagListPaginationEnabled = $block->isTagListPaginationEnabled();
     <p>No tags found!</p>
 <?php } ?>
 </div>
-<?php if ($isTagListPaginationEnabled) {
-    $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'post_tags_pager');
-    $pagerBlock->setAvailableLimit([$tagListPageSize => $tagListPageSize]);
-    $pagerBlock->setShowPerPage(true);
-    $pagerBlock->setCollection($tagsCollection);
-    echo $pagerBlock->toHtml();
-}
+
+<?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+    ->setTemplate('Krga_Blog::parts/pagination.phtml')
+    ->setData([
+        'parent_block' => $block,
+        'type' => 'tags_list'
+    ])
+    ->toHtml(); 
+?>

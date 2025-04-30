@@ -131,16 +131,6 @@ class Post extends AbstractModel
     {
         return count($this->getPostComments());
     }
-    
-    public function getPostCommentCountInfo()
-    {
-        $commentsCount = count($this->getPostComments());
-        $output = '<span class="comments-number">' . $commentsCount;
-        $output .= $commentsCount === 1 ? ' comment' : ' comments';
-        $output .= '</span>';
-
-        return $output;
-    }
 
     public function renderComments($grouped, $parentId = 0, $depth = 0)
     {

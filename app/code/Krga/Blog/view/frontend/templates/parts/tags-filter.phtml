@@ -1,0 +1,29 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+
+$isTagsFilterEnabled = $parentBlock->isListTagsFilterEnabled();
+$allTags = $parentBlock->getAllTags();
+$currentTagId = $this->getRequest()->getParam('tag_id');
+
+if ($isTagsFilterEnabled && is_array($allTags) && count($allTags) > 0) { ?>
+    <div class="posts-list-filter-holder tag-filters">
+        <div class="filter-intro">
+            <span class="">Filter by tags:</span>
+        </div>
+        <div class="filter-item <?php echo !$currentTagId ? 'active' : ''; ?>">
+            <a href="<?php echo $parentBlock->getUrl('posts'); ?>">
+                All
+            </a>
+        </div>
+        <?php foreach ($allTags as $tag) { 
+            $isActive = ($currentTagId == $tag->getTagId()) ? 'active' : '';
+        ?>
+            <div class="filter-item <?php echo $isActive; ?>">
+                <a href="<?php echo $parentBlock->getUrl('posts', ['tag_id' => $tag->getTagId()]); ?>">
+                    <?php echo $tag->getTagName(); ?>
+                </a>
+            </div>
+        <?php } ?>
+    </div>
+<?php }

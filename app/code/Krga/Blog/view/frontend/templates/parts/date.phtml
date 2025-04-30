@@ -1,0 +1,8 @@
+<?php 
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+?>
+
+<span class="date"><?php echo date('F j, Y', strtotime($post->getCreatedAt())); ?></span>

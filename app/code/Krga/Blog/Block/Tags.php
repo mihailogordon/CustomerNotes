@@ -26,28 +26,28 @@ class Tags extends Template
         parent::__construct($context, $data);
     }
 
-    public function getTagListPageSize()
+    public function getPageSize()
     {
         return $this->configHelper->getTagListPageSize();
     }
     
-    public function isTagListPaginationEnabled()
+    public function isPaginationEnabled()
     {
         return $this->configHelper->isTagListPaginationEnabled();
     }
 
-    public function getTagsCollection() {
+    public function getCollection() {
         $page = (int)$this->getRequest()->getParam('p', 1);
         
         $collection = $this->tagCollectionFactory->create()
-        ->setPageSize($this->getTagListPageSize())
+        ->setPageSize($this->getPageSize())
         ->setCurPage($page);
 
         return $collection;
     }
 
     public function getAllTags() {
-        return $this->getTagsCollection()->getItems();
+        return $this->getCollection()->getItems();
     }
     
 }

@@ -1,85 +1,79 @@
+<?php $posts = $block->getPosts(); ?>
+
 <div class="posts-list-outer-holder">
     <h1>Posts</h1>
-    <?php 
-
-    $posts = $block->getPosts();
-    $postsCollection = $block->getPostsCollection();
-    $postsPageSize = $block->getListPageSize();
-    $isListFeaturedImageEnabled = $block->isListFeaturedImageEnabled();
-    $isListTagsFilterEnabled = $block->isListTagsFilterEnabled();
-    $isListPaginationEnabled = $block->isListPaginationEnabled();
-    $allTags = $block->getAllTags(); 
-    $currentTagId = $this->getRequest()->getParam('tag_id');
-
+    
+    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+            ->setTemplate('Krga_Blog::parts/tags-filter.phtml')
+            ->setData([
+                'parent_block' => $block
+            ])
+            ->toHtml();
     ?>
-
-    <?php if ($isListTagsFilterEnabled && is_array($allTags) && count($allTags) > 0) { ?>
-        <div class="posts-list-filter-holder tag-filters">
-            <div class="filter-intro">
-                <span class="">Filter by tags:</span>
-            </div>
-            <div class="filter-item <?php echo !$currentTagId ? 'active' : ''; ?>">
-                <a href="<?php echo $block->getUrl('posts'); ?>">
-                    All
-                </a>
-            </div>
-            <?php foreach ($allTags as $tag) { 
-                $isActive = ($currentTagId == $tag->getTagId()) ? 'active' : '';
-            ?>
-                <div class="filter-item <?php echo $isActive; ?>">
-                    <a href="<?php echo $block->getUrl('posts', ['tag_id' => $tag->getTagId()]); ?>">
-                        <?php echo $tag->getTagName(); ?>
-                    </a>
-                </div>
-            <?php } ?>
-        </div>
-    <?php } ?>
 
     <div class="posts-holder">
         <?php if( is_array( $posts ) && count( $posts ) > 0 ) { ?>
-            <?php foreach( $posts as $post ) {
-                $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
-                $commentsCountInfo = $post->getPostCommentCountInfo();
-                ?>
+            <?php foreach( $posts as $post ) { ?>
                 <div class="post-holder">
                     <div class="post-holder-inner">
-                        <?php
-                            if ($isListFeaturedImageEnabled) {
-                                $featuredImage = $block->getImageUrl($post->getPostImage());
-
-                                if (!empty($featuredImage)) { ?>
-                                    <div class="post-image">
-                                        <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                                    </div>
-                                <?php }
-                            }
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                ->setTemplate('Krga_Blog::parts/featured-image.phtml')
+                                ->setData([
+                                    'parent_block' => $block,
+                                    'post' => $post,
+                                    'type' => 'list'
+                                ])
+                                ->toHtml();
                         ?>
-                        <h3 class="post-title">
-                            <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
-                                <?php echo $post->getPostTitle(); ?>
-                            </a>
-                        </h3>
+                        
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                ->setTemplate('Krga_Blog::parts/title.phtml')
+                                ->setData([
+                                    'parent_block' => $block,
+                                    'post' => $post,
+                                    'type' => 'list'
+                                ])
+                                ->toHtml();
+                        ?>
 
-                        <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
                             ->setTemplate('Krga_Blog::parts/tags.phtml')
                             ->setData([
                                 'parent_block' => $block,
                                 'post' => $post,
                                 'type' => 'list'
                             ])
-                            ->toHtml(); ?>
+                            ->toHtml(); 
+                        ?>
 
                         <p class="post-excerpt"><?php echo $post->getPostExcerpt(); ?></p>
                         
                         <div class="post-info">
                             <?php 
-                                if( is_array($author) && count($author) > 0 ) {
-                                    echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
-                                }
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/author.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
                                 
-                                echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/date.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
+                                    
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/comments-count.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
                             ?>
-                            <?php echo $commentsCountInfo; ?>
                         </div>
                     </div>
                     <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>"></a>
@@ -90,11 +84,12 @@
         <?php } ?>
     </div>
 
-    <?php if ($isListPaginationEnabled) {
-        $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'posts_pager');
-        $pagerBlock->setAvailableLimit([$postsPageSize => $postsPageSize]);
-        $pagerBlock->setShowPerPage(true);
-        $pagerBlock->setCollection($postsCollection);
-        echo $pagerBlock->toHtml();
-    } ?>
+    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+        ->setTemplate('Krga_Blog::parts/pagination.phtml')
+        ->setData([
+            'parent_block' => $block,
+            'type' => 'list'
+        ])
+        ->toHtml(); 
+    ?>
 </div>

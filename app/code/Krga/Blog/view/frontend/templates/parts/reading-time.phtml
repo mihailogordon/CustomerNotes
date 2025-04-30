@@ -1,0 +1,12 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+$readTime = $post->getReadTime();
+
+?>
+
+<span class="reading-time">
+    <?php echo $readTime === 1 ? $readTime . ' minute read' : $readTime . ' minutes read' ?>
+</span>

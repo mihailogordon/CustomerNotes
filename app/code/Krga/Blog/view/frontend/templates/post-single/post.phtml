@@ -1,93 +1,105 @@
-<div class="post-single-outer-holder">
-    <?php
+<?php
     $post = $block->getPost();
-    ?>
+?>
 
+<div class="post-single-outer-holder">
     <?php if ($post) { 
-        $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
-        $readTime = $post->getReadTime();
-        $postCommentsGrouped = $post->getGroupedPostComments();
-        $postCommentsCount = $post->getPostCommentCount();
         $recentPosts = $post->getRecentPosts();
         $relatedPosts = $post->getRelatedPosts();
         $popularPosts = $post->getPopularPosts();
+    ?>
+        
+        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                ->setTemplate('Krga_Blog::parts/featured-image.phtml')
+                ->setData([
+                    'parent_block' => $block,
+                    'post' => $post,
+                    'type' => 'single'
+                ])
+                ->toHtml();
         ?>
-        <?php 
-            $featuredImage = $block->getImageUrl($post->getPostImage());
 
-            if (!empty($featuredImage)) { ?>
-                <div class="post-image">
-                    <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                </div>
-            <?php }
+        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                ->setTemplate('Krga_Blog::parts/title.phtml')
+                ->setData([
+                    'parent_block' => $block,
+                    'post' => $post,
+                    'type' => 'single'
+                ])
+                ->toHtml();
         ?>
-        <h1 class="post-title"><?php echo $post->getPostTitle(); ?></h1>
 
-        <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
                 ->setTemplate('Krga_Blog::parts/tags.phtml')
                 ->setData([
                     'parent_block' => $block,
                     'post' => $post,
                     'type' => 'single'
                 ])
-                ->toHtml(); ?>
+                ->toHtml(); 
+        ?>
 
         <div class="post-content">
             <?php echo $post->getPostContent(); ?>
         </div>
+
         <div class="post-info">
             <?php 
-                if( is_array($author) && count($author) > 0 ) {
-                    echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
-                }
+                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/author.phtml')
+                    ->setData([
+                        'parent_block' => $block,
+                        'post' => $post
+                    ])
+                    ->toHtml();
+
+                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/date.phtml')
+                    ->setData([
+                        'parent_block' => $block,
+                        'post' => $post
+                    ])
+                    ->toHtml();
+
+                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/reading-time.phtml')
+                    ->setData([
+                        'parent_block' => $block,
+                        'post' => $post
+                    ])
+                    ->toHtml();
                 
-                echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
+                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/views.phtml')
+                    ->setData([
+                        'parent_block' => $block,
+                        'post' => $post
+                    ])
+                    ->toHtml();
             ?>
-            <span class="reading-time"><?php echo $readTime === 1 ? $readTime . ' minute read' : $readTime . ' minutes read' ?></span>
-            <span class="views">Loading views...</span>
         </div>
-        <div class="post-comments-outer">
-            <?php if($postCommentsCount>0) { ?>
-                <h3 class="comments-title">
-                    <?php echo $postCommentsCount . ' ' . ($postCommentsCount === 1 ? 'comment' : 'comments') . ' for this post:'; ?>
-                </h3>
-                <div class="post-comments">
-                    <?php $post->renderComments($postCommentsGrouped); ?>
-                </div>
-            <?php } else { ?>
-                <h3 class="comments-title no-comments">No comments for this post.</h3>
-            <?php } ?>
-            <div class="post-comment-form">
-                <h3 class="post-comment-form-title">Write a comment:</h3>
-                <form class="add-post-comment-form" action="<?php echo $block->getUrl('posts/index/addcomment'); ?>" method="post">
-                    <label for="author_name">Name:</label>
-                    <input type="text" class="author_name" name="author_name" required />
-                    <br/>
-                    <br/>
-                    <label for="author_email">Email:</label>
-                    <input type="email" class="author_email" name="author_email" required />
-                    <br/>
-                    <br/>
-                    <label for="content">Comment:</label>
-                    <textarea class="content" name="content" required></textarea>
-                    <br/>
-                    <br/>
-                    <input type="hidden" name="post_id" value="<?php echo $post->getId(); ?>" />
-                    <button class="action primary" type="submit">Submit</button>
-                </form>
-            </div>
-        </div>
+        
+        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+            ->setTemplate('Krga_Blog::parts/comments.phtml')
+            ->setData([
+                'parent_block' => $block,
+                'post' => $post
+            ])
+            ->toHtml(); 
+        ?>
+
         <?php if (count($recentPosts)) : ?>
             <div class="recent-posts-outer">
                 <h3 class="recent-posts-intro-title">Recent Posts</h3>
                 <div class="posts-holder recent-posts">
-                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
                             ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
                             ->setData([
                                 'parent_block' => $block,
                                 'posts' => $recentPosts
                             ])
-                            ->toHtml(); ?>
+                            ->toHtml(); 
+                    ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -96,13 +108,14 @@
             <div class="related-posts-outer">
                 <h3 class="related-posts-intro-title">Related Posts</h3>
                 <div class="posts-holder related-posts">
-                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
                             ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
                             ->setData([
                                 'parent_block' => $block,
                                 'posts' => $relatedPosts
                             ])
-                            ->toHtml(); ?>
+                            ->toHtml(); 
+                    ?>
                 </div>
             </div>
         <?php endif; ?>
@@ -111,36 +124,17 @@
             <div class="popular-posts-outer">
                 <h3 class="popular-posts-intro-title">Popular Posts</h3>
                 <div class="posts-holder popular-posts">
-                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
                             ->setTemplate('Krga_Blog::post-single/parts/post-list.phtml')
                             ->setData([
                                 'parent_block' => $block,
                                 'posts' => $popularPosts
                             ])
-                            ->toHtml(); ?>
+                            ->toHtml(); 
+                    ?>
                 </div>
             </div>
         <?php endif; ?>
 
     <?php } ?>
 </div>
-
-<script type="text/javascript">
-    require(['jquery'], function ($) {
-        $(document).ready(function () {
-            const postId = <?= (int) $block->getPostId(); ?>;
-            $.get('/posts/post/viewcounter', { post_id: postId });
-            $.get('/posts/post/viewcounter', { post_id: postId, mode: 'get' }, function (response) {
-                if (response.views !== undefined) {
-                    $('.views').text(formatViews(response.views) + ' views');
-                }
-            });
-        });
-
-        function formatViews(n) {
-            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
-            return n;
-        }
-    });
-</script>

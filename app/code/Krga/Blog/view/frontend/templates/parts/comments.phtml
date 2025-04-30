@@ -1,0 +1,41 @@
+<?php 
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+$postCommentsGrouped = $post->getGroupedPostComments();
+$postCommentsCount = $post->getPostCommentCount();
+
+?>
+
+<div class="post-comments-outer">
+    <?php if($postCommentsCount>0) { ?>
+        <h3 class="comments-title">
+            <?php echo $postCommentsCount . ' ' . ($postCommentsCount === 1 ? 'comment' : 'comments') . ' for this post:'; ?>
+        </h3>
+        <div class="post-comments">
+            <?php $post->renderComments($postCommentsGrouped); ?>
+        </div>
+    <?php } else { ?>
+        <h3 class="comments-title no-comments">No comments for this post.</h3>
+    <?php } ?>
+    <div class="post-comment-form">
+        <h3 class="post-comment-form-title">Write a comment:</h3>
+        <form class="add-post-comment-form" action="<?php echo $parentBlock->getUrl('posts/index/addcomment'); ?>" method="post">
+            <label for="author_name">Name:</label>
+            <input type="text" class="author_name" name="author_name" required />
+            <br/>
+            <br/>
+            <label for="author_email">Email:</label>
+            <input type="email" class="author_email" name="author_email" required />
+            <br/>
+            <br/>
+            <label for="content">Comment:</label>
+            <textarea class="content" name="content" required></textarea>
+            <br/>
+            <br/>
+            <input type="hidden" name="post_id" value="<?php echo $post->getId(); ?>" />
+            <button class="action primary" type="submit">Submit</button>
+        </form>
+    </div>
+</div>

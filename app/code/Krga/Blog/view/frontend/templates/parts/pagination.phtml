@@ -1,0 +1,17 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$type = $block->getData('type');
+
+$collection = $parentBlock->getCollection();
+$pageSize = $parentBlock->getPageSize();
+$isPaginationEnabled = $parentBlock->isPaginationEnabled();
+
+if ($isPaginationEnabled) {
+    $pagerBlock = $parentBlock->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, $type . '_pager');
+    $pagerBlock->setAvailableLimit([$pageSize => $pageSize]);
+    $pagerBlock->setShowPerPage(true);
+    $pagerBlock->setCollection($collection);
+    
+    echo $pagerBlock->toHtml();
+}

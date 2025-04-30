@@ -1,0 +1,19 @@
+<?php 
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+$type = $block->getData('type');
+
+$titleTag = $type === 'list' ? 'h3' : 'h1';
+
+?>
+
+<<?php echo $titleTag; ?> class="post-title">
+    <?php if( $type === 'list' ) { ?>
+        <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
+    <?php } ?>
+            <?php echo $post->getPostTitle(); ?>
+    <?php if( $type === 'list' ) { ?>
+        </a>
+    <?php } ?>
+</<?php echo $titleTag; ?>>

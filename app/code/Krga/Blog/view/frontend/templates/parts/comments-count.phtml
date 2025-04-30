@@ -1,0 +1,13 @@
+<?php 
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+$commentsCount = $post->getPostCommentCount();
+
+?>
+
+<span class="comments-number">
+    <?php echo $commentsCount; ?>
+    <?php echo $commentsCount === 1 ? ' comment' : ' comments'; ?>
+</span>

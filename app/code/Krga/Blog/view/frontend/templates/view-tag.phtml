@@ -1,15 +1,11 @@
+<?php
+
+$tagName = $block->getTagName();
+$posts = $block->getTagPosts();
+
+?>
+
 <div class="posts-list-outer-holder">
-    
-    <?php 
-
-    $tagName = $block->getTagName();
-    $posts = $block->getTagPosts();
-    $postsCollection = $block->getTagPostsCollection();
-    $postsPageSize = $block->getTagSinglePageSize();
-    $isListPaginationEnabled = $block->isTagSinglePaginationEnabled();
-
-    ?>
-
     <h1>Posts tagged as: <?php echo $tagName; ?></h1>
     <div class="posts-holder">
         <?php if( is_array( $posts ) && count( $posts ) > 0 ) { ?>
@@ -60,11 +56,12 @@
         <?php } ?>
     </div>
 
-    <?php if ($isListPaginationEnabled) {
-        $pagerBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class, 'tagged_posts_pager');
-        $pagerBlock->setAvailableLimit([$postsPageSize => $postsPageSize]);
-        $pagerBlock->setShowPerPage(true);
-        $pagerBlock->setCollection($postsCollection);
-        echo $pagerBlock->toHtml();
-    } ?>
+    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+        ->setTemplate('Krga_Blog::parts/pagination.phtml')
+        ->setData([
+            'parent_block' => $block,
+            'type' => 'tag_single'
+        ])
+        ->toHtml(); 
+    ?>
 </div>

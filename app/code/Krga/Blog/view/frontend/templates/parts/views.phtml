@@ -1,0 +1,28 @@
+<?php 
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+?>
+
+<span class="views">Loading views...</span>
+
+<script type="text/javascript">
+    require(['jquery'], function ($) {
+        $(document).ready(function () {
+            const postId = <?= (int) $parentBlock->getPostId(); ?>;
+            $.get('/posts/post/viewcounter', { post_id: postId });
+            $.get('/posts/post/viewcounter', { post_id: postId, mode: 'get' }, function (response) {
+                if (response.views !== undefined) {
+                    $('.views').text(formatViews(response.views) + ' views');
+                }
+            });
+        });
+
+        function formatViews(n) {
+            if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+            if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+            return n;
+        }
+    });
+</script>

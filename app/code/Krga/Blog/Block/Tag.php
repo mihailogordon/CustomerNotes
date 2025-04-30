@@ -44,12 +44,12 @@ class Tag extends Template
         parent::__construct($context, $data);
     }
 
-    public function getTagSinglePageSize()
+    public function getPageSize()
     {
         return $this->configHelper->getTagSinglePageSize();
     }
     
-    public function isTagSinglePaginationEnabled()
+    public function isPaginationEnabled()
     {
         return $this->configHelper->isTagSinglePaginationEnabled();
     }
@@ -79,7 +79,7 @@ class Tag extends Template
         return ($tag && $tag->getId()) ? $tag->getTagName() : '';
     }
 
-    public function getTagPostsCollection() {
+    public function getCollection() {
         $page = (int)$this->getRequest()->getParam('p', 1);
         $tag = $this->getTag();
         $tagRelations = array();
@@ -87,7 +87,7 @@ class Tag extends Template
         if ($tag) {
             $tagRelations = $this->tagRelationCollectionFactory->create()
             ->addFieldToFilter('tag_id', array('eq' => $tag->getTagId()))
-            ->setPageSize($this->getTagSinglePageSize())
+            ->setPageSize($this->getPageSize())
             ->setCurPage($page);
         }
 
@@ -95,7 +95,7 @@ class Tag extends Template
     }
 
     public function getTagPosts() {
-        $tagRelations = $this->getTagPostsCollection()->getItems();
+        $tagRelations = $this->getCollection()->getItems();
         $tagPosts = array();
 
         if (is_array($tagRelations) && count($tagRelations) > 0) {
