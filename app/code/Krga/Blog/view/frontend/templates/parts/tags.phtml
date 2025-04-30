@@ -1,0 +1,21 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+$type = $block->getData('type');
+
+$areTagsEnabled = $type === 'list' ? $parentBlock->isListTagsEnabled() : true;
+$tags = $areTagsEnabled ? $post->getPostTags() : array();
+
+if ($areTagsEnabled && count($tags)>0) { ?>
+    <h6 class="post-tags post-tags-<?php echo $type; ?>">
+        <?php
+            if (is_array($tags) && count($tags) > 0) { ?>
+                <span class="post-tag-items">Tagged as:
+                    <?php foreach($tags as $tag) { ?>
+                        <a href="<?php echo $block->getUrl('posts/tags/index', ['tag_id' => $tag->getTagId()]); ?>"><?php echo $tag->getTagName(); ?></a>
+                    <?php } ?>
+                </span>
+        <?php } ?>
+    </h6>
+<?php }

@@ -22,7 +22,16 @@
             <?php }
         ?>
         <h1 class="post-title"><?php echo $post->getPostTitle(); ?></h1>
-        <h6 class="post-tags"><?php echo $post->getPostTagsHtml(); ?></h6>
+
+        <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                ->setTemplate('Krga_Blog::parts/tags.phtml')
+                ->setData([
+                    'parent_block' => $block,
+                    'post' => $post,
+                    'type' => 'single'
+                ])
+                ->toHtml(); ?>
+
         <div class="post-content">
             <?php echo $post->getPostContent(); ?>
         </div>

@@ -7,7 +7,6 @@
     $postsPageSize = $block->getListPageSize();
     $isListFeaturedImageEnabled = $block->isListFeaturedImageEnabled();
     $isListTagsFilterEnabled = $block->isListTagsFilterEnabled();
-    $isListTagsEnabled = $block->isListTagsEnabled();
     $isListPaginationEnabled = $block->isListPaginationEnabled();
     $allTags = $block->getAllTags(); 
     $currentTagId = $this->getRequest()->getParam('tag_id');
@@ -39,7 +38,6 @@
     <div class="posts-holder">
         <?php if( is_array( $posts ) && count( $posts ) > 0 ) { ?>
             <?php foreach( $posts as $post ) {
-                $postTagsHtml = $isListTagsEnabled ? $post->getPostTagsHtml() : '';
                 $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
                 $commentsCountInfo = $post->getPostCommentCountInfo();
                 ?>
@@ -62,11 +60,14 @@
                             </a>
                         </h3>
 
-                        <?php if ($isListTagsEnabled) { ?>
-                            <h6 class="post-tags">
-                                <?php echo $postTagsHtml; ?>
-                            </h6>
-                        <?php } ?>
+                        <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/tags.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post,
+                                'type' => 'list'
+                            ])
+                            ->toHtml(); ?>
 
                         <p class="post-excerpt"><?php echo $post->getPostExcerpt(); ?></p>
                         

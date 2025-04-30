@@ -72,30 +72,24 @@ class Post extends AbstractModel
         }
     }
 
-    public function getPostTagsHtml() {
+    public function getPostTags() {
         $postId = $this->getPostId();
-        $output = '';
-        $outputItems = array();
+        $tags = array();
 
         if($postId) {
-            $tags = $this->tagRelationCollectionFactory->create()->addFieldToFilter('post_id', array('eq' => $postId))->getItems();
+            $tagRelations = $this->tagRelationCollectionFactory->create()->addFieldToFilter('post_id', array('eq' => $postId))->getItems();
 
-            if (is_array($tags) && count($tags) > 0) {
-                $output .= '<span class="post-tags">Tagged as: ';
-                
-                foreach ($tags as $tag) {
-                    $tagId = $tag->getTagId();
+            if (is_array($tagRelations) && count($tagRelations) > 0) {
+                foreach ($tagRelations as $tagRelation) {
+                    $tagId = $tagRelation->getTagId();
                     $tagObject = $this->tagFactory->create();
                     $this->tagResource->load($tagObject, $tagId);
-                    $outputItems[] = '<a class="post-tag" href="' . $this->urlBuilder->getUrl(self::TAGS_PATH, ['tag_id' => $tagId]) . '">' . $tagObject->getTagName() . '</a>';
+                    $tags[] = $tagObject;
                 }
-
-                $output .= implode(', ', $outputItems);
-                $output .= '</span>';
             }
         }
 
-        return $output;
+        return $tags;
     }
 
     public function getReadTime()
