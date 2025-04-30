@@ -121,3 +121,27 @@
 .post-comment-form-title {
     margin: 0 0 15px;
 }
+
+.recent-posts-outer {
+    margin: 30px 0 0;
+}
+
+.recent-posts {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.recent-posts-intro-title {
+    margin: 0 0 20px;
+}
+
+.related-posts-outer {
+    margin: 30px 0 0;
+}
+
+.related-posts {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.related-posts-intro-title {
+    margin: 0 0 20px;
+}

@@ -5,6 +5,7 @@ namespace Krga\Blog\Model;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\UrlInterface;
 use Krga\Blog\Model\ResourceModel\Post as PostResource;
+use Krga\Blog\Model\ResourceModel\Post\CollectionFactory as PostCollectionFactory; 
 use Krga\Blog\Model\TagFactory;
 use Krga\Blog\Model\ResourceModel\Tag as TagResource;
 use Krga\Blog\Model\ResourceModel\TagRelation\CollectionFactory as TagRelationCollectionFactory;
@@ -13,7 +14,11 @@ use Krga\Blog\Model\ResourceModel\Comment\CollectionFactory as CommentCollection
 class Post extends AbstractModel
 {
     const TAGS_PATH = 'posts/tags/index';
+    const COMMENTS_DEPTH_LIMIT = 4;
+    const RECENT_POSTS_LIMIT = 3;
+    const RELATED_POSTS_LIMIT = 2;
 
+    protected $postCollectionFactory;
     protected $tagFactory;
     protected $tagResource;
     protected $tagRelationCollectionFactory;
@@ -23,6 +28,7 @@ class Post extends AbstractModel
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
+        PostCollectionFactory $postCollectionFactory,
         TagFactory $tagFactory,
         TagResource $tagResource,
         TagRelationCollectionFactory $tagRelationCollectionFactory,
@@ -33,6 +39,7 @@ class Post extends AbstractModel
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->postCollectionFactory = $postCollectionFactory;
         $this->tagFactory = $tagFactory;
         $this->tagResource = $tagResource;
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
@@ -135,7 +142,7 @@ class Post extends AbstractModel
         return $output;
     }
 
-    public function renderComments($grouped, $parentId = 0)
+    public function renderComments($grouped, $parentId = 0, $depth = 0)
     {
         if (!isset($grouped[$parentId])) {
             return;
@@ -147,7 +154,9 @@ class Post extends AbstractModel
             echo '<h5 class="comment-author-mail">' . $comment->getAuthorEmail() . '</h5>';
             echo '<p class="comment-date">Commented at ' . date('F j, Y', strtotime($comment->getCreatedAt())) . '</p>';
             echo '<p class="comment-author-text">' . $comment->getContent() . '</p>';
-            echo '<a href="#" class="comment-reply">Reply</a>';
+            if ($depth < self::COMMENTS_DEPTH_LIMIT) {
+                echo '<a href="#" class="comment-reply">Reply</a>';
+            }
             echo '<div class="post-comment-form post-comment-reply-form">';
             echo '<h4 class="post-comment-form-title">Write a reply:</h2>';
             echo '<form class="add-post-comment-form" action="' . $this->urlBuilder->getUrl("posts/index/addcomment") . '" method="post">';
@@ -171,8 +180,78 @@ class Post extends AbstractModel
             echo '<a href="#" class="comment-reply comment-reply-cancel">Cancel Reply</a>';
             echo '</form>';
             echo '</div>';
-            $this->renderComments($grouped, $comment->getId());
+            if ($depth < self::COMMENTS_DEPTH_LIMIT) {
+                $this->renderComments($grouped, $comment->getId(), $depth + 1);
+            }
             echo '</div>';
         }
+    }
+
+    public function getRecentPosts()
+    {
+        $postId = $this->getPostId();
+        $collection = $this->postCollectionFactory->create()
+            ->addFieldToFilter('is_deleted', ['eq' => 0])
+            ->setOrder('created_at', 'DESC')
+            ->setPageSize(self::RECENT_POSTS_LIMIT);
+
+        if (!empty($postId)) {
+            $collection->addFieldToFilter('post_id', ['neq' => $postId]);
+        }
+
+        return $collection->getItems();
+    }
+    
+    public function getRelatedPosts()
+    {
+        $postId = $this->getPostId();
+        $tagRelationIds = array();
+        $allRelatedPostIds = array();
+        $relatedPostIds = array();
+        $relatedPosts = array();
+        
+        $tagRelations = $this->tagRelationCollectionFactory->create()
+            ->addFieldToFilter('post_id', array('eq' => $postId))
+            ->getItems();
+
+        if (count($tagRelations)>0) {
+            foreach ($tagRelations as $relation) {
+                $tagRelationIds[] = $relation->getTagId();
+            }
+        }
+
+        $newTagRelations = $this->tagRelationCollectionFactory->create()
+                ->addFieldToFilter('tag_id', array('in' => $tagRelationIds))
+                ->addFieldToFilter('post_id', array('neq' => $postId))
+                ->getItems();
+
+        if (count($newTagRelations)>0) {
+            foreach ($newTagRelations as $newTagRelation) {
+                $relatedPostId = $newTagRelation->getPostId();
+                
+                if (!in_array($relatedPostId, $allRelatedPostIds)) {
+                    $allRelatedPostIds[] = $relatedPostId;
+                }
+            }
+        }
+
+        if (count($allRelatedPostIds)>0) {
+            if (count($allRelatedPostIds) >= self::RELATED_POSTS_LIMIT) {
+                $chosenKeys = array_rand($allRelatedPostIds, self::RELATED_POSTS_LIMIT);
+                foreach($chosenKeys as $chosenKey) {
+                    $relatedPostIds[] = $allRelatedPostIds[$chosenKey];
+                }
+            } else {
+                $relatedPostIds = $allRelatedPostIds;
+            }
+        }
+
+        if (count($relatedPostIds)>0) {
+            $relatedPosts = $this->postCollectionFactory->create()
+                ->addFieldToFilter('post_id', array('in', $relatedPostIds))
+                ->getItems();
+        }
+
+        return $relatedPosts;
     }
 }
