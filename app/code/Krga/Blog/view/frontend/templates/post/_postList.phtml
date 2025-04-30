@@ -1,0 +1,37 @@
+<?php
+$posts = $block->getData('posts');
+$parentBlock = $block->getData('parent_block');
+
+if (!empty($posts) && is_array($posts)) : ?>
+    <?php foreach ($posts as $post) : 
+        $postTagsHtml = $post->getPostTagsHtml();
+        $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+        $commentsCountInfo = $post->getPostCommentCountInfo();
+        $featuredImage = $parentBlock->getImageUrl($post->getPostImage());
+    ?>
+        <div class="post-holder">
+            <div class="post-holder-inner">
+                <?php if (!empty($featuredImage)) : ?>
+                    <div class="post-image">
+                        <img src="<?= $featuredImage ?>" alt="Post Image" />
+                    </div>
+                <?php endif; ?>
+                <h3 class="post-title">
+                    <a class="post-link" href="<?= $parentBlock->getUrl('posts/post/index', ['post_id' => $post->getPostId()]) ?>">
+                        <?= $post->getPostTitle() ?>
+                    </a>
+                </h3>
+                <h6 class="post-tags"><?= $postTagsHtml ?></h6>
+                <p class="post-excerpt"><?= $post->getPostExcerpt() ?></p>
+                <div class="post-info">
+                    <?php if (is_array($author) && count($author)) : ?>
+                        <span class="author">Written by <?= $author['firstname'] . ' ' . $author['lastname'] ?></span>
+                    <?php endif; ?>
+                    <span class="date"> at <?= date('F j, Y', strtotime($post->getCreatedAt())) ?></span>
+                    <?= $commentsCountInfo ?>
+                </div>
+            </div>
+            <a class="post-link post-link-overlay" href="<?= $parentBlock->getUrl('posts/post/index', ['post_id' => $post->getPostId()]) ?>"></a>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

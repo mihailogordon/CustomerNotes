@@ -146,3 +146,15 @@
 .related-posts-intro-title {
     margin: 0 0 20px;
 }
+
+.popular-posts-outer {
+    margin: 30px 0 0;
+}
+
+.popular-posts {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.popular-posts-intro-title {
+    margin: 0 0 20px;
+}

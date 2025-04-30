@@ -17,6 +17,7 @@ class Post extends AbstractModel
     const COMMENTS_DEPTH_LIMIT = 4;
     const RECENT_POSTS_LIMIT = 3;
     const RELATED_POSTS_LIMIT = 3;
+    const POPULAR_POSTS_LIMIT = 3;
 
     protected $postCollectionFactory;
     protected $tagFactory;
@@ -95,6 +96,11 @@ class Post extends AbstractModel
         }
 
         return $output;
+    }
+
+    public function getReadTime()
+    {
+        return max(1, (int) ceil(str_word_count($this->getPostContent()) / 200));
     }
 
     public function getPostComments()
@@ -255,8 +261,18 @@ class Post extends AbstractModel
         return $relatedPosts;
     }
 
-    public function getReadTime()
+    public function getPopularPosts()
     {
-        return max(1, (int) ceil(str_word_count($this->getPostContent()) / 200));
+        $postId = $this->getPostId();
+        $collection = $this->postCollectionFactory->create()
+            ->addFieldToFilter('is_deleted', ['eq' => 0])
+            ->setOrder('views', 'DESC')
+            ->setPageSize(self::POPULAR_POSTS_LIMIT);
+
+        if (!empty($postId)) {
+            $collection->addFieldToFilter('post_id', ['neq' => $postId]);
+        }
+
+        return $collection->getItems();
     }
 }

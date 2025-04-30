@@ -5,11 +5,12 @@
 
     <?php if ($post) { 
         $author = $post->getPostAuthorFullInfo($post->getPostAuthor());
+        $readTime = $post->getReadTime();
         $postCommentsGrouped = $post->getGroupedPostComments();
         $postCommentsCount = $post->getPostCommentCount();
         $recentPosts = $post->getRecentPosts();
         $relatedPosts = $post->getRelatedPosts();
-        $readTime = $post->getReadTime();
+        $popularPosts = $post->getPopularPosts();
         ?>
         <?php 
             $featuredImage = $block->getImageUrl($post->getPostImage());
@@ -68,108 +69,51 @@
                 </form>
             </div>
         </div>
-        <?php if (count($recentPosts)>0) { ?>
+        <?php if (count($recentPosts)) : ?>
             <div class="recent-posts-outer">
                 <h3 class="recent-posts-intro-title">Recent Posts</h3>
                 <div class="posts-holder recent-posts">
-                    <?php if(is_array($recentPosts)) { ?>
-                        <?php foreach( $recentPosts as $recentPost ) {
-                            $postTagsHtml = $recentPost->getPostTagsHtml();
-                            $author = $recentPost->getPostAuthorFullInfo($recentPost->getPostAuthor());
-                            $commentsCountInfo = $recentPost->getPostCommentCountInfo();
-                            ?>
-                            <div class="post-holder">
-                                <div class="post-holder-inner">
-                                    <?php
-                                        $featuredImage = $block->getImageUrl($recentPost->getPostImage());
-
-                                        if (!empty($featuredImage)) { ?>
-                                            <div class="post-image">
-                                                <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                                            </div>
-                                        <?php }
-                                    ?>
-                                    <h3 class="post-title">
-                                        <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $recentPost->getPostId()]); ?>">
-                                            <?php echo $recentPost->getPostTitle(); ?>
-                                        </a>
-                                    </h3>
-
-                                    <h6 class="post-tags">
-                                        <?php echo $postTagsHtml; ?>
-                                    </h6>
-
-                                    <p class="post-excerpt"><?php echo $recentPost->getPostExcerpt(); ?></p>
-                                    
-                                    <div class="post-info">
-                                        <?php 
-                                            if( is_array($author) && count($author) > 0 ) {
-                                                echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
-                                            }
-                                            
-                                            echo '<span class="date"> at ' . date('F j, Y', strtotime($recentPost->getCreatedAt())) . '</span>';
-                                        ?>
-                                        <?php echo $commentsCountInfo; ?>
-                                    </div>
-                                </div>
-                                <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $recentPost->getPostId()]); ?>"></a>
-                            </div>
-                        <?php } ?>
-                    <?php } ?>
+                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                        ->setTemplate('Krga_Blog::post/_postList.phtml')
+                        ->setData([
+                            'posts' => $recentPosts,
+                            'parent_block' => $block
+                        ])
+                        ->toHtml(); ?>
                 </div>
             </div>
-        <?php } ?>
-        <?php if (count($relatedPosts)>0) { ?>
+        <?php endif; ?>
+
+        <?php if (count($relatedPosts)) : ?>
             <div class="related-posts-outer">
                 <h3 class="related-posts-intro-title">Related Posts</h3>
                 <div class="posts-holder related-posts">
-                    <?php if(is_array($relatedPosts)) { ?>
-                        <?php foreach( $relatedPosts as $relatedPost ) {
-                            $postTagsHtml = $relatedPost->getPostTagsHtml();
-                            $author = $relatedPost->getPostAuthorFullInfo($relatedPost->getPostAuthor());
-                            $commentsCountInfo = $relatedPost->getPostCommentCountInfo();
-                            ?>
-                            <div class="post-holder">
-                                <div class="post-holder-inner">
-                                    <?php
-                                        $featuredImage = $block->getImageUrl($relatedPost->getPostImage());
-
-                                        if (!empty($featuredImage)) { ?>
-                                            <div class="post-image">
-                                                <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                                            </div>
-                                        <?php }
-                                    ?>
-                                    <h3 class="post-title">
-                                        <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $relatedPost->getPostId()]); ?>">
-                                            <?php echo $relatedPost->getPostTitle(); ?>
-                                        </a>
-                                    </h3>
-
-                                    <h6 class="post-tags">
-                                        <?php echo $postTagsHtml; ?>
-                                    </h6>
-
-                                    <p class="post-excerpt"><?php echo $relatedPost->getPostExcerpt(); ?></p>
-                                    
-                                    <div class="post-info">
-                                        <?php 
-                                            if( is_array($author) && count($author) > 0 ) {
-                                                echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
-                                            }
-                                            
-                                            echo '<span class="date"> at ' . date('F j, Y', strtotime($relatedPost->getCreatedAt())) . '</span>';
-                                        ?>
-                                        <?php echo $commentsCountInfo; ?>
-                                    </div>
-                                </div>
-                                <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $relatedPost->getPostId()]); ?>"></a>
-                            </div>
-                        <?php } ?>
-                    <?php } ?>
+                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                        ->setTemplate('Krga_Blog::post/_postList.phtml')
+                        ->setData([
+                            'posts' => $relatedPosts,
+                            'parent_block' => $block
+                        ])
+                        ->toHtml(); ?>
                 </div>
             </div>
-        <?php } ?>
+        <?php endif; ?>
+
+        <?php if (count($popularPosts)) : ?>
+            <div class="popular-posts-outer">
+                <h3 class="popular-posts-intro-title">Popular Posts</h3>
+                <div class="posts-holder popular-posts">
+                    <?= $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::post/_postList.phtml')
+                            ->setData([
+                                'posts' => $popularPosts,
+                                'parent_block' => $block
+                            ])
+                            ->toHtml(); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
     <?php } ?>
 </div>
 
