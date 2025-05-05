@@ -87,7 +87,10 @@
                 </div>
             <?php } ?>
         <?php } else { ?>
-            <p>No posts found matching provided criteria.</p>
+            <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                ->setTemplate('Krga_Blog::parts/no-results.phtml')
+                ->toHtml();
+            ?>
         <?php } ?>
     </div>
 

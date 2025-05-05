@@ -15,7 +15,10 @@
             </div>
         <?php }
     } else { ?>
-    <p>No tags found!</p>
+        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+            ->setTemplate('Krga_Blog::parts/no-results.phtml')
+            ->toHtml();
+        ?>
 <?php } ?>
 </div>
 
