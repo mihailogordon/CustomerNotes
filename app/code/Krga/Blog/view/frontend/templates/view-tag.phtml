@@ -45,7 +45,14 @@ $posts = $block->getTagPosts();
                             ->toHtml(); 
                         ?>
 
-                        <p class="post-excerpt"><?php echo $post->getPostExcerpt(); ?></p>
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/excerpt.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post,
+                            ])
+                            ->toHtml();
+                        ?>
                         
                         <div class="post-info">
                             <?php 
