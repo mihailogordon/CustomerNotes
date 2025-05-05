@@ -15,37 +15,64 @@ $posts = $block->getTagPosts();
                 ?>
                 <div class="post-holder">
                     <div class="post-holder-inner">
-                        <?php 
-                            $featuredImage = $block->getImageUrl($post->getPostImage());
-
-                            if (!empty($featuredImage)) { ?>
-                                <div class="post-image">
-                                    <img src="<?= $featuredImage; ?>" alt="Post Image" />
-                                </div>
-                            <?php }
-                        
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                ->setTemplate('Krga_Blog::parts/featured-image.phtml')
+                                ->setData([
+                                    'parent_block' => $block,
+                                    'post' => $post,
+                                    'type' => 'tag_single'
+                                ])
+                                ->toHtml();
                         ?>
-                        <h3 class="post-title">
-                            <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
-                                <?php echo $post->getPostTitle(); ?>
-                            </a>
-                        </h3>
+                        
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                ->setTemplate('Krga_Blog::parts/title.phtml')
+                                ->setData([
+                                    'parent_block' => $block,
+                                    'post' => $post,
+                                    'type' => 'tag_single'
+                                ])
+                                ->toHtml();
+                        ?>
 
-                        <h6 class="post-tags">
-                            <?php echo $post->getPostTagsHtml(); ?>
-                        </h6>
+                        <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/tags.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post,
+                                'type' => 'tag_single'
+                            ])
+                            ->toHtml(); 
+                        ?>
 
                         <p class="post-excerpt"><?php echo $post->getPostExcerpt(); ?></p>
                         
                         <div class="post-info">
                             <?php 
-                                if( is_array($author) && count($author) > 0 ) {
-                                    echo '<span class="author">Written by ' . $author['firstname'] . ' ' . $author['lastname'] . '</span>';
-                                }
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/author.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
                                 
-                                echo '<span class="date"> at ' . date('F j, Y', strtotime($post->getCreatedAt())) . '</span>';
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/date.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
+                                    
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Krga_Blog::parts/comments-count.phtml')
+                                    ->setData([
+                                        'parent_block' => $block,
+                                        'post' => $post
+                                    ])
+                                    ->toHtml();
                             ?>
-                            <?php echo $commentsCountInfo; ?>
                         </div>
                     </div>
                     <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>"></a>
