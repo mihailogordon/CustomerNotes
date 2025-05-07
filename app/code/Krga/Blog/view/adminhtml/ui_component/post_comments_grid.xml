@@ -30,6 +30,11 @@
         <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="post_comments_grid">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>comment_id</indexField>
+            </settings>
+        </selectionsColumn>
         <column name="comment_id">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

@@ -38,6 +38,11 @@
         <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="post_tags_grid">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>tag_id</indexField>
+            </settings>
+        </selectionsColumn>
         <column name="tag_id">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
