@@ -1,0 +1,16 @@
+type Query {
+    posts: [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPosts")
+    post(postId: Int!): Post! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPost")
+}
+
+type Post {
+    post_id: ID!
+    post_title: String!
+    post_excerpt: String!
+    post_content: String!
+    post_author: String!
+    is_deleted: Int!
+    created_at: String
+    updated_at: String
+    views: Int!
+}
