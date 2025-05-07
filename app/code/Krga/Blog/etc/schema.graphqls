@@ -1,16 +1,38 @@
 type Query {
     posts: [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPosts")
     post(postId: Int!): Post! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPost")
+    postComments(postId: Int!): [Comment]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostComments")
+    postTags(postId: Int!): [Tag]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostTags")
+    taggedPosts(tagName: String!): [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetTaggedPosts")
 }
 
 type Post {
     post_id: ID!
     post_title: String!
-    post_excerpt: String!
+    post_excerpt: String
     post_content: String!
     post_author: String!
     is_deleted: Int!
     created_at: String
     updated_at: String
-    views: Int!
+    views: Int
+}
+
+type Comment {
+    comment_id: ID!
+    post_id: Int!
+    author_name: String!
+    author_email: String!
+    content: String!
+    is_approved: Int!
+    parent_id: Int
+    created_at: String
+    updated_at: String
+}
+
+type Tag {
+    tag_id: ID!
+    tag_name: String!
+    created_at: String
+    updated_at: String
 }
