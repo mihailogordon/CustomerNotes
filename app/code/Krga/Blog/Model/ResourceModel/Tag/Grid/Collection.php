@@ -26,4 +26,22 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
             $resourceModel
         );
     }
+
+    protected function _initSelect()
+    {
+        parent::_initSelect();
+
+        $this->getSelect()
+            ->joinLeft(
+                ['relation' => $this->getTable('blog_tag_relation')],
+                'main_table.tag_id = relation.tag_id',
+                []
+            )
+            ->columns([
+                'count' => new \Zend_Db_Expr('COUNT(relation.post_id)')
+            ])
+            ->group('main_table.tag_id');
+
+        return $this;
+    }
 }
