@@ -6,6 +6,11 @@ type Query {
     taggedPosts(tagName: String!): [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetTaggedPosts")
 }
 
+type Mutation {
+    trashPost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\TrashPost")
+    restorePost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\RestorePost")
+}
+
 type Post {
     post_id: ID!
     post_title: String!
