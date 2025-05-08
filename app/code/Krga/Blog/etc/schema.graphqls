@@ -1,14 +1,14 @@
 type Query {
-    posts: [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPosts")
-    post(postId: Int!): Post! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPost")
-    postComments(postId: Int!): [Comment]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostComments")
-    postTags(postId: Int!): [Tag]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostTags")
-    taggedPosts(tagName: String!): [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetTaggedPosts")
+    posts: [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPosts") @doc(description: "Return all active posts.")
+    post(postId: Int!): Post! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPost") @doc(description: "Return specified post.")
+    postComments(postId: Int!): [Comment]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostComments") @doc(description: "Return all approved comments for specified post.")
+    postTags(postId: Int!): [Tag]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetPostTags") @doc(description: "Return all tags assigned to specified post.")
+    taggedPosts(tagName: String!): [Post]! @resolver(class: "Krga\\Blog\\Model\\Resolver\\GetTaggedPosts") @doc(description: "Return posts assigned to specified tag.")
 }
 
 type Mutation {
-    trashPost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\TrashPost")
-    restorePost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\RestorePost")
+    trashPost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\TrashPost") @doc(description: "Moving specified post to trash.")
+    restorePost(postId: Int!): Boolean @resolver(class: "Krga\\Blog\\Model\\Resolver\\RestorePost") @doc(description: "Restoring specified post from trash.")
 }
 
 type Post {

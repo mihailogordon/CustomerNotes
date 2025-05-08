@@ -8,22 +8,18 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 use Magento\Framework\GraphQl\Exception\GraphQlNoSuchEntityException;
 use Krga\Blog\Model\PostFactory;
 use Krga\Blog\Model\ResourceModel\Post as PostResourceModel;
-use Krga\Blog\Model\ResourceModel\Post\CollectionFactory as PostCollectionFactory;
 
 class TrashPost implements ResolverInterface
 {
     protected $postFactory;
     protected $postResourceModel;
-    protected $postCollectionFactory;
 
     public function __construct(
         PostFactory $postFactory,
         PostResourceModel $postResourceModel,
-        PostCollectionFactory $postCollectionFactory,
     ) {
         $this->postFactory = $postFactory;
         $this->postResourceModel = $postResourceModel;
-        $this->postCollectionFactory = $postCollectionFactory;
     }
 
     public function resolve(
