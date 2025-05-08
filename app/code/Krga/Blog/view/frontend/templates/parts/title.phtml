@@ -10,7 +10,7 @@ $titleTag = $type === 'single' ? 'h1' : 'h3';
 
 <<?php echo $titleTag; ?> class="post-title">
     <?php if( $type !== 'single' ) { ?>
-        <a class="post-link" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>">
+        <a class="post-link" href="<?php $block->getUrl($post->getPostSlug()); ?>">
     <?php } ?>
             <?php echo $post->getPostTitle(); ?>
     <?php if( $type !== 'single' ) { ?>

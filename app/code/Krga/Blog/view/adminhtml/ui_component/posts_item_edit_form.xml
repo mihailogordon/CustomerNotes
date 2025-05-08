@@ -144,5 +144,15 @@
                 </item>
             </argument>
         </field>
+        <field name="post_slug">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">URL Rewrite</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">post_slug</item>
+                </item>
+            </argument>
+        </field>
     </fieldset>
 </form>

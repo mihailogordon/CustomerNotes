@@ -10,6 +10,7 @@
         <column name="post_image" xsi:type="varchar" length="255" nullable="true" comment="Post Image"/>
         <column name="is_deleted" xsi:type="smallint" nullable="false" default="0" comment="Soft Delete Flag (0 = Active, 1 = Deleted)"/>
         <column name="views" xsi:type="int" unsigned="true" nullable="false" default="0" comment="Number of views for the post"/>
+        <column name="post_slug" xsi:type="varchar" length="255" nullable="true" comment="Post Slug"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false"  default="CURRENT_TIMESTAMP" comment="Updated At"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

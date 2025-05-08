@@ -12,27 +12,84 @@ if (!empty($posts) && is_array($posts)) : ?>
     ?>
         <div class="post-holder">
             <div class="post-holder-inner">
-                <?php if (!empty($featuredImage)) : ?>
-                    <div class="post-image">
-                        <img src="<?= $featuredImage ?>" alt="Post Image" />
-                    </div>
-                <?php endif; ?>
-                <h3 class="post-title">
-                    <a class="post-link" href="<?= $parentBlock->getUrl('posts/post/index', ['post_id' => $post->getPostId()]) ?>">
-                        <?= $post->getPostTitle() ?>
-                    </a>
-                </h3>
-                <h6 class="post-tags"><?= $postTagsHtml ?></h6>
-                <p class="post-excerpt"><?= $post->getPostExcerpt() ?></p>
+                
+                <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/featured-image.phtml')
+                    ->setData([
+                        'parent_block' => $parentBlock,
+                        'post' => $post,
+                        'type' => 'single'
+                    ])
+                    ->toHtml();
+                ?>
+
+                <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/title.phtml')
+                    ->setData([
+                        'parent_block' => $parentBlock,
+                        'post' => $post,
+                        'type' => 'list'
+                    ])
+                    ->toHtml();
+                ?>
+
+                <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/tags.phtml')
+                    ->setData([
+                        'parent_block' => $parentBlock,
+                        'post' => $post,
+                        'type' => 'single'
+                    ])
+                    ->toHtml(); 
+                ?>
+
+                <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/excerpt.phtml')
+                    ->setData([
+                        'parent_block' => $parentBlock,
+                        'post' => $post,
+                    ])
+                    ->toHtml(); 
+                ?>
+
                 <div class="post-info">
-                    <?php if (is_array($author) && count($author)) : ?>
-                        <span class="author">Written by <?= $author['firstname'] . ' ' . $author['lastname'] ?></span>
-                    <?php endif; ?>
-                    <span class="date"> at <?= date('F j, Y', strtotime($post->getCreatedAt())) ?></span>
-                    <?= $commentsCountInfo ?>
+                    <?php 
+                        echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/author.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post
+                            ])
+                            ->toHtml();
+                        
+                        echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/date.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post
+                            ])
+                            ->toHtml();
+                            
+                        echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/comments-count.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post
+                            ])
+                            ->toHtml();
+                    ?>
                 </div>
             </div>
-            <a class="post-link post-link-overlay" href="<?= $parentBlock->getUrl('posts/post/index', ['post_id' => $post->getPostId()]) ?>"></a>
+            
+            <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                    ->setTemplate('Krga_Blog::parts/link-overlay.phtml')
+                    ->setData([
+                        'parent_block' => $parentBlock,
+                        'post' => $post
+                    ])
+                    ->toHtml();
+            ?>
+
         </div>
     <?php endforeach; ?>
 <?php endif; ?>

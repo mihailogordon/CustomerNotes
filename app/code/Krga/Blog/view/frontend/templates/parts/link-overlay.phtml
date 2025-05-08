@@ -1,0 +1,8 @@
+<?php
+
+$parentBlock = $block->getData('parent_block');
+$post = $block->getData('post');
+
+?>
+
+<a class="post-link post-link-overlay" href="<?php echo $block->getUrl($post->getPostSlug()); ?>"></a>

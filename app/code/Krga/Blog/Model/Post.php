@@ -4,6 +4,8 @@ namespace Krga\Blog\Model;
 
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\UrlInterface;
+use Magento\UrlRewrite\Model\UrlRewriteFactory;
+use Magento\Store\Model\StoreManagerInterface;
 use Krga\Blog\Model\ResourceModel\Post as PostResource;
 use Krga\Blog\Model\ResourceModel\Post\CollectionFactory as PostCollectionFactory; 
 use Krga\Blog\Model\TagFactory;
@@ -25,6 +27,8 @@ class Post extends AbstractModel
     protected $tagRelationCollectionFactory;
     protected $commentCollectionFactory;
     protected $urlBuilder;
+    protected $urlRewriteFactory;
+    protected $storeManager;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -35,18 +39,20 @@ class Post extends AbstractModel
         TagRelationCollectionFactory $tagRelationCollectionFactory,
         CommentCollectionFactory $commentCollectionFactory,
         UrlInterface $urlBuilder,
-        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        UrlRewriteFactory $urlRewriteFactory,
+        StoreManagerInterface $storeManager,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        parent::__construct($context, $registry, null, null, $data);
         $this->postCollectionFactory = $postCollectionFactory;
         $this->tagFactory = $tagFactory;
         $this->tagResource = $tagResource;
         $this->tagRelationCollectionFactory = $tagRelationCollectionFactory;
         $this->commentCollectionFactory = $commentCollectionFactory;
         $this->urlBuilder = $urlBuilder;
-    }
+        $this->urlRewriteFactory = $urlRewriteFactory;
+        $this->storeManager = $storeManager;
+    }    
 
     protected function _construct()
     {
@@ -258,5 +264,62 @@ class Post extends AbstractModel
         }
 
         return $collection->getItems();
+    }
+
+    public function afterSave()
+    {
+        parent::afterSave();
+
+        $slug = trim($this->getPostSlug(), '/');
+
+        // If slug is empty, auto-generate it from the title
+        if (!$slug) {
+            $title = $this->getPostTitle();
+            if ($title) {
+                // Convert title to slug: lowercase, spaces to -, remove special chars
+                $slug = strtolower(trim($title));
+                $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug); // Remove non-alphanum
+                $slug = preg_replace('/[\s-]+/', '-', $slug); // Spaces/double-dashes to single dash
+
+                $this->setData('post_slug', $slug);
+
+                // Save it directly using the ResourceModel connection
+                /** @var \Krga\Blog\Model\ResourceModel\Post $postResource */
+                $postResource = $this->_getResource();
+                $postResource->getConnection()->update(
+                    $postResource->getMainTable(),
+                    ['post_slug' => $slug],
+                    ['post_id = ?' => $this->getId()]
+                );
+
+            }
+        }
+
+        if ($slug) {
+            $requestPath = $slug;
+            $targetPath = 'posts/post/index/post_id/' . $this->getId();
+            $storeId = $this->storeManager->getStore()->getId();
+
+            // Clean old URL rewrites (if any)
+            $urlRewriteCollection = $this->urlRewriteFactory->create()->getCollection()
+                ->addFieldToFilter('entity_type', 'custom_post')
+                ->addFieldToFilter('entity_id', $this->getId());
+
+            foreach ($urlRewriteCollection as $rewrite) {
+                $rewrite->delete();
+            }
+
+            // Create new URL rewrite
+            $urlRewrite = $this->urlRewriteFactory->create();
+            $urlRewrite->setStoreId($storeId)
+                ->setIsSystem(0)
+                ->setEntityType('custom_post')
+                ->setEntityId($this->getId())
+                ->setRequestPath($requestPath)
+                ->setTargetPath($targetPath)
+                ->save();
+        }
+
+        return $this;
     }
 }

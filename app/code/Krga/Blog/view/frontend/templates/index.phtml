@@ -83,7 +83,16 @@
                             ?>
                         </div>
                     </div>
-                    <a class="post-link post-link-overlay" href="<?php echo $block->getUrl('posts/post/index', ['post_id' => $post->getPostId()]); ?>"></a>
+                    
+                    <?php echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                            ->setTemplate('Krga_Blog::parts/link-overlay.phtml')
+                            ->setData([
+                                'parent_block' => $block,
+                                'post' => $post
+                            ])
+                            ->toHtml();
+                    ?>
+
                 </div>
             <?php } ?>
         <?php } else { ?>
