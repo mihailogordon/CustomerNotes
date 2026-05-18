@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Yemora\IntesaPayment\Block\Payment\Redirect;
+
+/** @var Redirect $block */
+/** @var Escaper $escaper */
+
+$fields = $block->getPaymentFields();
+?>
+<form id="intesa-payment-form"
+      action="<?= $escaper->escapeUrl($block->getGatewayUrl()) ?>"
+      method="post"
+      accept-charset="utf-8">
+    <?php foreach ($fields as $name => $value): ?>
+        <input type="hidden"
+               name="<?= $escaper->escapeHtmlAttr($name) ?>"
+               value="<?= $escaper->escapeHtmlAttr($value) ?>">
+    <?php endforeach; ?>
+
+    <button type="submit" class="action primary">
+        <span><?= $escaper->escapeHtml(__('Continue to payment')) ?></span>
+    </button>
+</form>
+<script>
+    document.getElementById('intesa-payment-form').submit();
+</script>

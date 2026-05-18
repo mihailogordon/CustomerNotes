@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <intesa>
+                <active>0</active>
+                <model>Yemora\IntesaPayment\Model\Payment\Intesa</model>
+                <payment_action>authorize_capture</payment_action>
+                <order_status>pending_payment</order_status>
+                <title>Intesa card payment</title>
+                <description>You will be redirected to Intesa to complete the payment.</description>
+                <environment>test</environment>
+                <test_gateway_url>https://testsecurepay.eway2pay.com/fim/est3Dgate</test_gateway_url>
+                <prod_gateway_url>https://securepay.eway2pay.com/fim/est3Dgate</prod_gateway_url>
+                <lang>auto</lang>
+                <allowspecific>0</allowspecific>
+                <sort_order>50</sort_order>
+                <group>online</group>
+            </intesa>
+        </payment>
+    </default>
+</config>

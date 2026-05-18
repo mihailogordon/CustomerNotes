@@ -1,0 +1,31 @@
+{
+  "name": "yemora/module-intesa-payment",
+  "description": "Intesa payment gateway integration for Magento 2.",
+  "require": {
+    "php": "^8.2.0",
+    "magento/framework": "^103.0",
+    "magento/module-checkout": "*",
+    "magento/module-payment": "*",
+    "magento/module-sales": "*",
+    "magento/module-store": "*"
+  },
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Yemora",
+      "email": "support@yemora.com",
+      "homepage": "https://www.yemora.com",
+      "role": "Technical Support"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Yemora\\IntesaPayment\\": ""
+    }
+  }
+}

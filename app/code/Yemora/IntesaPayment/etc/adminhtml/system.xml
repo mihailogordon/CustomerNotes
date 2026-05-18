@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="intesa" translate="label comment" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Yemora Intesa Payment</label>
+                <comment>Yemora integration for Intesa payment.</comment>
+                <fieldset_css>yemora-intesa-payment-section</fieldset_css>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+                <attribute type="displayIn">recommended_solutions</attribute>
+                <attribute type="activity_path">payment/intesa/active</attribute>
+
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Title</label>
+                </field>
+
+                <field id="description" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Description</label>
+                    <comment>Shown under the payment method in the default Magento checkout.</comment>
+                </field>
+
+                <field id="payment_action" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Action</label>
+                    <comment>Authorize sends a pre-authorization to Intesa. Authorize and Capture captures the amount immediately and creates an invoice after the successful callback.</comment>
+                    <source_model>Yemora\IntesaPayment\Model\Config\Source\PaymentAction</source_model>
+                </field>
+
+                <field id="environment" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Environment</label>
+                    <source_model>Yemora\IntesaPayment\Model\Config\Source\Environment</source_model>
+                </field>
+
+                <field id="test_gateway_url" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Gateway URL</label>
+                    <validate>required-entry validate-url</validate>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="test_merchant_id" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test Merchant ID</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="test_store_key" translate="label comment" type="obscure" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test StoreKey</label>
+                    <comment>Secret StoreKey used only for hash generation. It is not posted to Intesa.</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="prod_gateway_url" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production Gateway URL</label>
+                    <validate>required-entry validate-url</validate>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="prod_merchant_id" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production Merchant ID</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="prod_store_key" translate="label comment" type="obscure" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production StoreKey</label>
+                    <comment>Secret StoreKey used only for hash generation. It is not posted to Intesa.</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="lang" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment Page Language</label>
+                    <comment>Auto resolves language from the store locale. Supported values sent to Intesa are sr and en.</comment>
+                    <source_model>Yemora\IntesaPayment\Model\Config\Source\Language</source_model>
+                </field>
+
+                <field id="sort_order" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sort Order</label>
+                    <validate>validate-number</validate>
+                </field>
+
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment from Applicable Countries</label>
+                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+                </field>
+
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Payment from Specific Countries</label>
+                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                    <can_be_empty>1</can_be_empty>
+                    <depends>
+                        <field id="allowspecific">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
