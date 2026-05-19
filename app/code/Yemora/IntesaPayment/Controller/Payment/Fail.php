@@ -11,10 +11,12 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Psr\Log\LoggerInterface;
+use Yemora\IntesaPayment\Model\Response\HashValidator;
 
 class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
 {
@@ -24,6 +26,7 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly OrderFactory $orderFactory,
         private readonly CheckoutSession $checkoutSession,
         private readonly ManagerInterface $messageManager,
+        private readonly HashValidator $hashValidator,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -31,10 +34,13 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
     public function execute(): Redirect
     {
         $params = $this->request->getParams();
-        $this->logger->warning('Intesa fail callback received.', ['params' => $this->sanitizeParams($params)]);
         $order = $this->loadOrder($params);
 
         if ($order->getId()) {
+            if (!$this->validateResponseHash($params, $order)) {
+                return $this->redirectFactory->create()->setPath('checkout/cart');
+            }
+
             $order->addCommentToStatusHistory(
                 $this->getOrderFailComment($params)
             );
@@ -119,5 +125,25 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
             $code !== '' ? ' (' . $code . ')' : '',
             $error !== '' ? '. Error: ' . $error : ''
         );
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function validateResponseHash(array $params, Order $order): bool
+    {
+        try {
+            $this->hashValidator->validate($params, (int) $order->getStoreId());
+        } catch (LocalizedException $exception) {
+            $this->logger->warning(
+                'Intesa fail callback rejected: invalid response hash.',
+                ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
+
+            return false;
+        }
+
+        return true;
     }
 }
