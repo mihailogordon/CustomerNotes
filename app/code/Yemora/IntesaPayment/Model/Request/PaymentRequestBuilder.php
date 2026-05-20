@@ -10,6 +10,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Yemora\IntesaPayment\Model\Config;
+use Yemora\IntesaPayment\Model\Currency\NestPayCurrencyCodeResolver;
 
 class PaymentRequestBuilder
 {
@@ -18,16 +19,11 @@ class PaymentRequestBuilder
     private const ENCODING = 'utf-8';
     private const TRANSACTION_TYPE_AUTHORIZE = 'PreAuth';
     private const TRANSACTION_TYPE_CAPTURE = 'Auth';
-    private const CURRENCY_CODES = [
-        'RSD' => '941',
-        'EUR' => '978',
-        'USD' => '840',
-    ];
-
     public function __construct(
         private readonly Config $config,
         private readonly ResolverInterface $localeResolver,
-        private readonly UrlInterface $urlBuilder
+        private readonly UrlInterface $urlBuilder,
+        private readonly NestPayCurrencyCodeResolver $currencyCodeResolver
     ) {
     }
 
@@ -77,15 +73,7 @@ class PaymentRequestBuilder
 
     private function resolveCurrencyCode(OrderInterface $order): string
     {
-        $currencyCode = strtoupper((string) $order->getOrderCurrencyCode());
-
-        if (!isset(self::CURRENCY_CODES[$currencyCode])) {
-            throw new LocalizedException(
-                __('Intesa payment does not support order currency "%1".', $currencyCode)
-            );
-        }
-
-        return self::CURRENCY_CODES[$currencyCode];
+        return $this->currencyCodeResolver->resolveNumericCode((string) $order->getOrderCurrencyCode());
     }
 
     private function resolveLanguage(int $storeId): string

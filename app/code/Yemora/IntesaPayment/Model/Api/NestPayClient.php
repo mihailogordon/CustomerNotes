@@ -8,18 +8,14 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\HTTP\Client\Curl;
 use Magento\Sales\Model\Order;
 use Yemora\IntesaPayment\Model\Config;
+use Yemora\IntesaPayment\Model\Currency\NestPayCurrencyCodeResolver;
 
 class NestPayClient
 {
-    private const CURRENCY_CODES = [
-        'RSD' => '941',
-        'EUR' => '978',
-        'USD' => '840',
-    ];
-
     public function __construct(
         private readonly Config $config,
-        private readonly Curl $curl
+        private readonly Curl $curl,
+        private readonly NestPayCurrencyCodeResolver $currencyCodeResolver
     ) {
     }
 
@@ -198,15 +194,7 @@ class NestPayClient
 
     private function resolveCurrencyCode(Order $order): string
     {
-        $currencyCode = strtoupper((string) $order->getOrderCurrencyCode());
-
-        if (!isset(self::CURRENCY_CODES[$currencyCode])) {
-            throw new LocalizedException(
-                __('Intesa API does not support order currency "%1".', $currencyCode)
-            );
-        }
-
-        return self::CURRENCY_CODES[$currencyCode];
+        return $this->currencyCodeResolver->resolveNumericCode((string) $order->getOrderCurrencyCode());
     }
 
     private function formatAmount(float $amount): string

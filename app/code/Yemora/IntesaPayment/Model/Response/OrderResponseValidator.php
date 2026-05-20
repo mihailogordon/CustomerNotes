@@ -8,17 +8,13 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Yemora\IntesaPayment\Model\Config;
+use Yemora\IntesaPayment\Model\Currency\NestPayCurrencyCodeResolver;
 
 class OrderResponseValidator
 {
-    private const CURRENCY_CODES = [
-        'RSD' => '941',
-        'EUR' => '978',
-        'USD' => '840',
-    ];
-
     public function __construct(
-        private readonly Config $config
+        private readonly Config $config,
+        private readonly NestPayCurrencyCodeResolver $currencyCodeResolver
     ) {
     }
 
@@ -98,9 +94,8 @@ class OrderResponseValidator
         }
 
         $orderCurrency = strtoupper((string) $order->getOrderCurrencyCode());
-        $expectedNumericCurrency = self::CURRENCY_CODES[$orderCurrency] ?? '';
 
-        if ($currency !== $orderCurrency && $currency !== $expectedNumericCurrency) {
+        if (!$this->currencyCodeResolver->matches($currency, $orderCurrency)) {
             throw new LocalizedException(__('Intesa response currency does not match the order.'));
         }
     }
