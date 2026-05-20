@@ -23,6 +23,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Yemora\IntesaPayment\Model\Config;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
+use Yemora\IntesaPayment\Model\Response\OrderResponseValidator;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
 
 class Success implements HttpPostActionInterface, CsrfAwareActionInterface
@@ -38,7 +39,8 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly ManagerInterface $messageManager,
         private readonly LoggerInterface $logger,
         private readonly OrderSender $orderSender,
-        private readonly HashValidator $hashValidator
+        private readonly HashValidator $hashValidator,
+        private readonly OrderResponseValidator $orderResponseValidator
     ) {
     }
 
@@ -67,6 +69,10 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
+        if (!$this->validateResponseMatchesOrder($params, $order)) {
+            return $this->redirectFactory->create()->setPath('checkout/cart');
+        }
+
         if (!$this->isApprovedResponse($params)) {
             $this->logger->warning(
                 'Intesa success callback rejected: response is not approved.',
@@ -78,12 +84,31 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        if ($order->getState() === Order::STATE_PENDING_PAYMENT) {
-            $order->setState(Order::STATE_PROCESSING);
-            $order->setStatus(Order::STATE_PROCESSING);
+        $transactionId = $this->extractTransactionId($params);
+
+        if (!$this->canProcessApprovedOrder($order)) {
+            if ($this->isDuplicateApprovedCallback($order, $transactionId)) {
+                $this->prepareCheckoutSuccessSession($order);
+
+                return $this->redirectFactory->create()->setPath('checkout/onepage/success');
+            }
+
+            $this->logger->warning(
+                'Intesa success callback rejected: order is not pending payment.',
+                [
+                    'order_id' => $order->getIncrementId(),
+                    'state' => $order->getState(),
+                    'status' => $order->getStatus(),
+                    'params' => $this->sanitizeParams($params),
+                ]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
+
+            return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        $transactionId = (string) ($params['TransId'] ?? $params['transid'] ?? $params['transaction_id'] ?? '');
+        $order->setState(Order::STATE_PROCESSING);
+        $order->setStatus(Order::STATE_PROCESSING);
 
         if ($transactionId !== '') {
             $order->getPayment()->setLastTransId($transactionId);
@@ -131,6 +156,21 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         return $order->getPayment()->getMethod() === ConfigProvider::CODE;
     }
 
+    private function canProcessApprovedOrder(Order $order): bool
+    {
+        return $order->getState() === Order::STATE_PENDING_PAYMENT;
+    }
+
+    private function isDuplicateApprovedCallback(Order $order, string $transactionId): bool
+    {
+        if ($transactionId === '') {
+            return false;
+        }
+
+        return $order->getPayment()->getLastTransId() === $transactionId
+            && in_array($order->getState(), [Order::STATE_PROCESSING, Order::STATE_COMPLETE], true);
+    }
+
     /**
      * @param array<string, mixed> $params
      */
@@ -139,6 +179,21 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         unset($params['HASH'], $params['hash'], $params['HASHPARAMSVAL']);
 
         return $params;
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function extractTransactionId(array $params): string
+    {
+        return trim((string) (
+            $params['TransId']
+            ?? $params['transid']
+            ?? $params['transaction_id']
+            ?? $params['HostRefNum']
+            ?? $params['AuthCode']
+            ?? ''
+        ));
     }
 
     /**
@@ -241,6 +296,26 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         } catch (LocalizedException $exception) {
             $this->logger->warning(
                 'Intesa success callback rejected: invalid response hash.',
+                ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function validateResponseMatchesOrder(array $params, Order $order): bool
+    {
+        try {
+            $this->orderResponseValidator->validate($params, $order, true);
+        } catch (LocalizedException $exception) {
+            $this->logger->warning(
+                'Intesa success callback rejected: response does not match order.',
                 ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
             );
             $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));

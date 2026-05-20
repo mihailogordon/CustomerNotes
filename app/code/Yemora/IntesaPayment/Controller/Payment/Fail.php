@@ -17,6 +17,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Psr\Log\LoggerInterface;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
+use Yemora\IntesaPayment\Model\Response\OrderResponseValidator;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
 
 class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
@@ -28,6 +29,7 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly CheckoutSession $checkoutSession,
         private readonly ManagerInterface $messageManager,
         private readonly HashValidator $hashValidator,
+        private readonly OrderResponseValidator $orderResponseValidator,
         private readonly LoggerInterface $logger
     ) {
     }
@@ -49,6 +51,32 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
             }
 
             if (!$this->validateResponseHash($params, $order)) {
+                return $this->redirectFactory->create()->setPath('checkout/cart');
+            }
+
+            if (!$this->validateResponseMatchesOrder($params, $order)) {
+                return $this->redirectFactory->create()->setPath('checkout/cart');
+            }
+
+            if (!$this->canProcessFailedOrder($order)) {
+                if ($order->getState() === Order::STATE_CANCELED) {
+                    $this->checkoutSession->restoreQuote();
+                    $this->messageManager->addErrorMessage($this->getCustomerErrorMessage($params));
+
+                    return $this->redirectFactory->create()->setPath('checkout/cart');
+                }
+
+                $this->logger->warning(
+                    'Intesa fail callback rejected: order is not pending payment.',
+                    [
+                        'order_id' => $order->getIncrementId(),
+                        'state' => $order->getState(),
+                        'status' => $order->getStatus(),
+                        'params' => $this->sanitizeParams($params),
+                    ]
+                );
+                $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
+
                 return $this->redirectFactory->create()->setPath('checkout/cart');
             }
 
@@ -92,6 +120,11 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
     private function canHandleOrder(Order $order): bool
     {
         return $order->getPayment()->getMethod() === ConfigProvider::CODE;
+    }
+
+    private function canProcessFailedOrder(Order $order): bool
+    {
+        return $order->getState() === Order::STATE_PENDING_PAYMENT;
     }
 
     /**
@@ -160,6 +193,26 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         } catch (LocalizedException $exception) {
             $this->logger->warning(
                 'Intesa fail callback rejected: invalid response hash.',
+                ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function validateResponseMatchesOrder(array $params, Order $order): bool
+    {
+        try {
+            $this->orderResponseValidator->validate($params, $order, false);
+        } catch (LocalizedException $exception) {
+            $this->logger->warning(
+                'Intesa fail callback rejected: response does not match order.',
                 ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
             );
             $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
