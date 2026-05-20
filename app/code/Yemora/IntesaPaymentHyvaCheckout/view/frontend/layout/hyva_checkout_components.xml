@@ -3,10 +3,10 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="checkout.payment.methods">
-            <block class="Yemora\IntesaPaymentHyva\Block\Checkout\Payment\Method\Intesa"
+            <block class="Yemora\IntesaPaymentHyvaCheckout\Block\Checkout\Payment\Method\Intesa"
                    name="checkout.payment.method.intesa"
                    as="intesa"
-                   template="Yemora_IntesaPaymentHyva::checkout/payment/method/intesa.phtml"/>
+                   template="Yemora_IntesaPaymentHyvaCheckout::checkout/payment/method/intesa.phtml"/>
         </referenceBlock>
     </body>
 </page>

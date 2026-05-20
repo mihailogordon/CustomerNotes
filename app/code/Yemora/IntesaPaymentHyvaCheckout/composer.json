@@ -1,5 +1,5 @@
 {
-  "name": "yemora/module-intesa-payment-hyva",
+  "name": "yemora/module-intesa-payment-hyva-checkout",
   "description": "Hyva Checkout adapter for the Yemora Intesa payment module.",
   "type": "magento2-module",
   "version": "1.0.0",
@@ -23,7 +23,7 @@
       "registration.php"
     ],
     "psr-4": {
-      "Yemora\\IntesaPaymentHyva\\": ""
+      "Yemora\\IntesaPaymentHyvaCheckout\\": ""
     }
   }
 }

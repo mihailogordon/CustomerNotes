@@ -6,6 +6,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
-    'Yemora_IntesaPaymentHyva',
+    'Yemora_IntesaPaymentHyvaCheckout',
     __DIR__
 );

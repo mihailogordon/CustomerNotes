@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yemora\IntesaPaymentHyva\Block\Checkout\Payment\Method;
+namespace Yemora\IntesaPaymentHyvaCheckout\Block\Checkout\Payment\Method;
 
 use Magento\Framework\View\Element\Template;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
