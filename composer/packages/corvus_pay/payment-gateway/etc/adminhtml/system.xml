@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="corvuspay" translate="label comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>CorvusPay</label>
+                <comment><![CDATA[Accept credit/debit cards in your Magento store.<br/>No setup fee. Cardholder enters personal information in a secure (PCI DSS certified) environment.]]></comment>
+                <fieldset_css>corvuspay-section</fieldset_css>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+                <attribute type="displayIn">recommended_solutions</attribute>
+                <attribute type="activity_path">payment/corvuspay/active</attribute>
+
+                <group id="corvuspay_required" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10">
+                    <label>Required CorvusPay Settings</label>
+                    <attribute type="expanded">1</attribute>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/title</config_path>
+                        <label>Title</label>
+                    </field>
+
+                    <field id="environment" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/environment</config_path>
+                        <label>Environment</label>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\Environment</source_model>
+                    </field>
+
+                    <field id="test_store_id" translate="label comment" type="text" sortOrder="31" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/test_store_id</config_path>
+                        <label>Test Store ID</label>
+                        <comment>Copy Test Store ID from the CorvusPay Merchant Center.</comment>
+                        <validate>required-entry validate-digits</validate>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+                    <field id="test_secret_key" translate="label comment" type="obscure" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/test_secret_key</config_path>
+                        <label>Test Secret Key</label>
+                        <comment>Copy Test Secret Key from the CorvusPay Merchant Center.</comment>
+                        <validate>required-entry</validate>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+                    <field id="test_certificate" translate="label" type="file" sortOrder="33" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/test_certificate</config_path>
+                        <label>Test API Certificate</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\File</backend_model>
+                        <upload_dir config="system" scope_info="1">corvuspay/test</upload_dir>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+                    <field id="test_certificate_password" translate="label" type="obscure" sortOrder="34" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/test_certificate_password</config_path>
+                        <label>Test API Certificate Password</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+
+                    <field id="test_success_url" translate="label comment" type="hidden" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Success URL</label>
+                        <comment><![CDATA[Copy Success URL to the <a href="https://test-merchant.corvuspay.com">Test CorvusPay Merchant Center</a>.]]></comment>
+                        <frontend_model>CorvusPay\PaymentGateway\Model\AdminHtml\Frontend\SuccessUrl</frontend_model>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+                    <field id="test_cancel_url" translate="label comment" type="hidden" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Cancel URL</label>
+                        <comment><![CDATA[Copy Cancel URL to the <a href="https://test-merchant.corvuspay.com">Test CorvusPay Merchant Center</a>.]]></comment>
+                        <frontend_model>CorvusPay\PaymentGateway\Model\AdminHtml\Frontend\CancelUrl</frontend_model>
+                        <depends>
+                            <field id="environment">test</field>
+                        </depends>
+                    </field>
+
+                    <field id="prod_store_id" translate="label comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/prod_store_id</config_path>
+                        <label>Production Store ID</label>
+                        <comment>Copy Production Store ID from the CorvusPay Merchant Center.</comment>
+                        <validate>required-entry validate-digits</validate>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+                    <field id="prod_secret_key" translate="label comment" type="obscure" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/prod_secret_key</config_path>
+                        <label>Production Secret Key</label>
+                        <comment>Copy Production Secret Key from the CorvusPay Merchant Center.</comment>
+                        <validate>required-entry</validate>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+                    <field id="prod_certificate" translate="label" type="file" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/prod_certificate</config_path>
+                        <label>Production API Certificate</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\File</backend_model>
+                        <upload_dir config="system" scope_info="1">corvuspay/prod</upload_dir>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+                    <field id="prod_certificate_password" translate="label" type="obscure" sortOrder="38" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <config_path>payment/corvuspay/prod_certificate_password</config_path>
+                        <label>Production API Certificate Password</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+
+                    <field id="prod_success_url" translate="label comment" type="hidden" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Success URL</label>
+                        <comment><![CDATA[Copy Success URL to the <a href="https://merchant.corvuspay.com">Production CorvusPay Merchant Center</a>.]]></comment>
+                        <frontend_model>CorvusPay\PaymentGateway\Model\AdminHtml\Frontend\SuccessUrl</frontend_model>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+                    <field id="prod_cancel_url" translate="label comment" type="hidden" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Cancel URL</label>
+                        <comment><![CDATA[Copy Cancel URL to the <a href="https://merchant.corvuspay.com">Production CorvusPay Merchant Center</a>.]]></comment>
+                        <frontend_model>CorvusPay\PaymentGateway\Model\AdminHtml\Frontend\CancelUrl</frontend_model>
+                        <depends>
+                            <field id="environment">prod</field>
+                        </depends>
+                    </field>
+                </group>
+
+                <field id="active" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enabled</label>
+                    <config_path>payment/corvuspay/active</config_path>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <requires>
+                        <group id="corvuspay_required"/>
+                    </requires>
+                </field>
+
+                <group id="corvuspay_advanced" translate="label" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="50">
+                    <label>Advanced CorvusPay Settings</label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
+
+                    <field id="payment_action" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/payment_action</config_path>
+                        <label>Payment Action</label>
+                        <comment><![CDATA[Sale is a one step transaction in which customer's card is charged immediately.<br/>Authorize is a two step transaction (pre-autorized) - transaction must be captured (completed) by the merchant.]]></comment>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\PaymentAction</source_model>
+                    </field>
+
+                    <field id="vault" translate="label" type="select" sortOrder="61" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay_vault/active</config_path>
+                        <label>Vault Enabled</label>
+                        <comment>Vault is Magento's card storage (also know as tokenization or MOTO) solution.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="payment_form_auto_redirect" translate="label comment" type="select" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/payment_form_auto_redirect</config_path>
+                        <label>Payment Form Auto-redirect</label>
+                        <comment>Automatically redirect user to CorvusPay payment form.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="payment_form_language" translate="label" type="select" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/payment_form_language</config_path>
+                        <label>Payment Form Language</label>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\PaymentFormLanguage</source_model>
+                    </field>
+                    <field id="cardholder_fields" translate="label comment" type="select" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/cardholder_fields</config_path>
+                        <label>Send Cardholder Information</label>
+                        <comment>Send customer information to CorvusPay to speed up payment process. Can include name, address and contact details.</comment>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\CardholderFields</source_model>
+                    </field>
+                    <field id="suppress_order_confirmation_email" translate="label comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/suppress_order_confirmation_email</config_path>
+                        <label>Suppress order confirmation email</label>
+                        <comment>Magento can send an order confirmation email after the order has been created. This
+                            option will suppress that behavior and delay sending of an order confirmation email until
+                            the order has been payed for.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+
+                    <field id="form_time_limit_enabled" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/form_time_limit_enabled</config_path>
+                        <label>Time Limit Enabled</label>
+                        <comment>Limit payment time. Make sure Magento keeps accurate time.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="form_time_limit_seconds" translate="label comment" type="text" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/form_time_limit_seconds</config_path>
+                        <label>Time Limit in seconds</label>
+                        <comment>Payment time limit in seconds. Maximum value is "900" (15 minutes).</comment>
+                        <validate>validate-digits validate-digits-range digits-range-1-900</validate>
+                        <depends>
+                            <field id="form_time_limit_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="form_installments" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/form_installments</config_path>
+                        <label>Installments</label>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\Installments</source_model>
+                    </field>
+
+                    <field id="form_installments_map" translate="label comment" sortOrder="81" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/form_installments_map</config_path>
+                        <label>Installments plan:</label>
+                        <comment>Example row: "Visa; 1; 2; 10; 15". Explanation: All Visa cards get a 10% discount if
+                            customer pays in one payment or in two installments. Some Visa cards, issued by a specific
+                            issuer, get a 15% discount under the same conditions. To setup specific discounts, contact
+                            CorvusPay.
+                        </comment>
+                        <frontend_model>CorvusPay\PaymentGateway\Model\AdminHtml\Frontend\InstallmentsMap</frontend_model>
+                        <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                        <depends>
+                            <field id="form_installments">map</field>
+                        </depends>
+                    </field>
+
+                    <field id="pis_enabled" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/pis_enabled</config_path>
+                        <label>PIS Payments Enabled</label>
+                        <comment>Enable Pay by IBAN functionality.</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="pis_creditor_reference" translate="label comment" type="text" sortOrder="91" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/pis_creditor_reference</config_path>
+                        <label>Creditor Reference</label>
+                        <comment>Payee model and reference number for PIS payments. Sequence "${orderId}" is replaced with Magento Order ID.</comment>
+                        <depends>
+                            <field id="pis_enabled">1</field>
+                        </depends>
+                    </field>
+
+                    <field id="sort_order" translate="label" type="text" sortOrder="99" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <config_path>payment/corvuspay/sort_order</config_path>
+                        <label>Sort Order</label>
+                        <validate>validate-digits</validate>
+                    </field>
+
+                    <field id="hide_tabs" translate="label comment" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/hide_tabs</config_path>
+                        <label>Hide payment methods</label>
+                        <comment>Hide payment methods during checkout.</comment>
+                        <source_model>CorvusPay\PaymentGateway\Model\AdminHtml\Source\Tab</source_model>
+                        <can_be_empty>1</can_be_empty>
+                    </field>
+
+                    <field id="description" translate="label" type="textarea" sortOrder="110" showInDefault="1"
+                           showInWebsite="1" showInStore="1" canRestore="1">
+                        <config_path>payment/corvuspay/description</config_path>
+                        <label>Description</label>
+                        <comment>This controls the description which the user sees during checkout. You can add the following symbols: :amex: :dina: :diners: :discover: :jcb: :maestro: :master: :visa: :card: :iban: :paysafecard: :wallet: :applepay: :googlepay:</comment>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

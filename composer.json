@@ -18,6 +18,7 @@
     },
     "version": "2.4.7-p3",
     "require": {
+        "corvus_pay/payment-gateway": "1.4.7",
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "^2.0.4",
         "magento/module-bundle-sample-data": "100.4.*",
@@ -92,6 +93,13 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "repositories": [
+        {
+            "type": "path",
+            "url": "composer/packages/*/*",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "composer",
             "url": "https://repo.magento.com/"

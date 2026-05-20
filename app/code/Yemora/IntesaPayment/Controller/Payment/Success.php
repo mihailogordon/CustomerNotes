@@ -23,6 +23,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Yemora\IntesaPayment\Model\Config;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
+use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
 
 class Success implements HttpPostActionInterface, CsrfAwareActionInterface
 {
@@ -52,7 +53,28 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
+        if (!$this->canHandleOrder($order)) {
+            $this->logger->warning(
+                'Intesa success callback rejected: order payment method does not match.',
+                ['order_id' => $order->getIncrementId()]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
+
+            return $this->redirectFactory->create()->setPath('checkout/cart');
+        }
+
         if (!$this->validateResponseHash($params, $order)) {
+            return $this->redirectFactory->create()->setPath('checkout/cart');
+        }
+
+        if (!$this->isApprovedResponse($params)) {
+            $this->logger->warning(
+                'Intesa success callback rejected: response is not approved.',
+                ['order_id' => $order->getIncrementId(), 'params' => $this->sanitizeParams($params)]
+            );
+            $this->messageManager->addErrorMessage(__('The card payment was not approved by Intesa.'));
+            $this->checkoutSession->restoreQuote();
+
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
@@ -102,6 +124,11 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         $incrementId = (string) ($params['oid'] ?? $params['OrderId'] ?? $params['order_id'] ?? '');
 
         return $this->orderFactory->create()->loadByIncrementId($incrementId);
+    }
+
+    private function canHandleOrder(Order $order): bool
+    {
+        return $order->getPayment()->getMethod() === ConfigProvider::CODE;
     }
 
     /**
@@ -187,6 +214,21 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         } catch (\Throwable $exception) {
             $this->logger->critical($exception);
         }
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function isApprovedResponse(array $params): bool
+    {
+        $response = strtolower(trim((string) ($params['Response'] ?? '')));
+        $code = trim((string) ($params['ProcReturnCode'] ?? ''));
+
+        if (!in_array($response, ['approved', 'success'], true)) {
+            return false;
+        }
+
+        return $code === '' || $code === '00';
     }
 
     /**

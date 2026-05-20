@@ -1,0 +1,26 @@
+{
+  "name": "corvus_pay/payment-gateway",
+  "description": "Provides a completely integrated checkout experience between Magento 2 and CorvusPay.",
+  "require": {
+    "ext-curl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-simplexml": "*",
+    "corvuspay/corvuspay_wallet_php_sdk": "^1.0.0"
+  },
+  "type": "magento2-module",
+  "version": "1.4.7",
+  "license": "OSL-3.0",
+  "autoload": {
+    "files": [ "registration.php" ],
+    "psr-4": {
+      "CorvusPay\\PaymentGateway\\": ""
+    }
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url":  "https://github.com/corvuspay/corvuspay_wallet_php_sdk.git"
+    }
+  ]
+}

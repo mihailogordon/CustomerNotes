@@ -1,0 +1,107 @@
+"Redirect to CorvusPay Cancel URL without POST parameters.","Preusmjeravanje na CorvusPay URL za neuspjeh bez POST parametara."
+"Redirect to CorvusPay Success URL without POST parameters.","Preusmjeravanje na CorvusPay URL za uspjeh bez POST parametara."
+"Payment failed! ERROR: Invalid signature.","Neuspješno plaćanje! GREŠKA: Krivi potpis."
+"There was an error while trying to process the request.","Došlo je do pogreške prilikom obrade zahtjeva."
+"Transaction has been declined. Please try again later.","Transakcija je odbijena. Molimo pokušajte ponovno."
+"Specified currency code not supported.",Navedeni kod valute nije podržan.
+"Specified amount is not supported.",Navedeni iznos nije podržan.
+"Unsupported time limit value.",Vrijednost vremenskog ograničenja nije podržana.
+"Redirected customer to CorvusPay payment gateway.","Redirected customer to CorvusPay payment gateway."
+"Gateway rejected the transaction.","Gateway je odbio transakciju."
+"Card brand","Kartični brend"
+"Minimum installments","Najmanji broj rata"
+"Maximum installments","Najveći broj rata"
+"General discount","Opći popust"
+"Specific discount","Poseban popust"
+"American Express","American Express"
+DinaCard,DinaCard
+Diners,Diners
+"Discover Card","Discover Card"
+IBAN,IBAN
+Maestro,Maestro
+Mastercard,Mastercard
+Visa,Visa
+None,Ništa
+Mandatory,Obavezne
+"Both mandatory and optional","I obavezne i opcionalne"
+Test,Test
+Production,Produkcija
+Disabled,Onemogućeno
+Simple,Jednostavne
+Advanced,Napredne
+"Sale (authorization)","Prodaja (autorizacija)"
+"Authorize (pre-authorization, requires completion)","Predautorizacija (zahtijeva kompletiranje)"
+Autodetect,Automatska detekcija
+Croatian,Hrvatski
+English,Engleski
+Serbian,Srpski
+German,Njemački
+Italian,Talijanski
+Slovenian,Slovenski
+"CorvusPay by Card","CorvusPay by Card"
+"CorvusPay by IBAN","CorvusPay by IBAN"
+CorvusWallet,CorvusWallet
+paysafecard,paysafecard
+"Continue to payment","Nastavi na plaćanje"
+"Save credit card information for future use.","Pohrani kartične podatke za buduća plaćanja."
+"Place Order","Naruči"
+CorvusPay,CorvusPay
+"Accept credit/debit cards in your Magento store.<br/>No setup fee. Cardholder enters personal information in a secure (PCI DSS certified) environment.","Prihvat kreditnih i debitnih kartica u vašoj Magento prodavaonici.<br/>Bez ulazne naknade. Vlasnik kartice unosi osobne podatke putem sigurne (PCI DSS certificirane) okoline."
+"Required CorvusPay Settings","Obavezne CorvusPay postavke"
+Title,Naziv
+Environment,Okolina
+"Test Store ID","ID testnog prodajnog mjesta"
+"Copy Test Store ID from the CorvusPay Merchant Center.","Kopirajte ID testnog prodajnog mjesta iz CorvusPay Merchant Centera."
+"Test Secret Key","Testni tajni ključ"
+"Copy Test Secret Key from the CorvusPay Merchant Center.","Kopirajte testni tajni ključ iz CorvusPay Merchant Centera."
+"Test API Certificate","Testni API certifikat"
+"Test API Certificate Password","Lozinka testnog API certifikata"
+"Success URL","URL za uspjeh"
+"Copy Success URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>.","Kopirajte URL za uspjeh u <a href=""https://test-merchant.corvuspay.com"">testni CorvusPay Merchant Center</a>."
+"Cancel URL","URL za neuspjeh"
+"Copy Cancel URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>.","Kopirajte URL za neuspjeh u <a href=""https://test-merchant.corvuspay.com"">testni CorvusPay Merchant Center</a>."
+"Production Store ID","ID produkcijskog prodajnog mjesta"
+"Copy Production Store ID from the CorvusPay Merchant Center.","Kopirajte ID produkcijskog prodajnog mjesta iz CorvusPay Merchant Centera."
+"Production Secret Key","Produkcijski tajni ključ"
+"Copy Production Secret Key from the CorvusPay Merchant Center.","Kopirajte produkcijski tajni ključ iz CorvusPay Merchant Centera."
+"Production API Certificate","Produkcijski API certifikat"
+"Production API Certificate Password","Lozinka produkcijskog API certifikata"
+"Copy Success URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>.","Kopirajte URL za uspjeh u <a href=""https://merchant.corvuspay.com"">produkcijski CorvusPay Merchant Center</a>."
+"Copy Cancel URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>.","Kopirajte URL za neuspjeh u <a href=""https://merchant.corvuspay.com"">produkcijski CorvusPay Merchant Center</a>."
+Enabled,Omogućeno
+"Advanced CorvusPay Settings","Napredne CorvusPay postavke"
+"Payment Action","Vrsta plaćanja"
+"Vault Enabled","Omogućen Vault"
+"Payment Form Auto-redirect","Automatsko preusmjeravanje na platnu formu"
+"Automatically redirect user to CorvusPay payment form.","Automatski preusmjeri korisnika na CorvusPay platnu formu."
+"Payment Form Language","Jezik platne forme"
+"Send Cardholder Information","Pošalji podatke o vlasniku kartice"
+"Send customer information to CorvusPay to speed up payment process. Can include name, address and contact details.","Pošalji korisnikove podatke u CorvusPay kako bi se ubrzalo proces plaćanja. Može uključivati ime, adresu i kontakt podatke."
+"Suppress order confirmation email","Zabrani email o potvrdi narudžbe"
+"Magento can send an order confirmation email after the order has been created. This
+                            option will suppress that behavior and delay sending of an order confirmation email until
+                            the order has been payed for.","Magento može poslati email o potvrdi narudžbe odmah nakon
+                            kreiranja narudžbe. Ova postavka će zabraniti takav email i odgoditi slanje emaila o potvrdi
+                            narudžbe sve dok narudžba ne bude plaćena."
+"Time Limit Enabled","Omogući vremensko ograničenje"
+"Limit payment time. Make sure Magento keeps accurate time.","Ograniči vrijeme plaćanja. Provjerite ima li Magento ispravno postavljeno vrijeme."
+"Time Limit in seconds","Vremensko ograničenje u sekundama"
+"Payment time limit in seconds. Maximum value is ""900"" (15 minutes).","Vremensko ograničenje plaćanja u sekundama. Najveća podržana vrijednost je ""900"" (15 minuta)."
+Installments,Rate
+"Installments plan:","Rate:"
+"Example row: ""Visa; 1; 2; 10; 15"". Explanation: All Visa cards get a 10% discount if
+                            customer pays in one payment or in two installments. Some Visa cards, issued by a specific
+                            issuer, get a 15% discount under the same conditions. To setup specific discounts, contact
+                            CorvusPay.","Primjer unosa: ""Visa; 1; 2; 10; 15"". Objašnjenje: Svim Visa karticama
+                            odobrava se 10% popusta ako kupac plati jednokratno ili na dvije rate. Nekim Visa karticama,
+                            koje je izdao poseban izdavatelj, odobrava se 15% popusta pod istim uvjetima. Za
+                            postavljanje posebnih popusta kontaktirajte CorvusPay."
+"PIS Payments Enabled",Omogućena PIS plaćanja
+"Enable Pay by IBAN functionality.",Omogući Pay by IBAN funkcionalnost.
+"Creditor Reference",Poziv na broj
+"Payee model and reference number for PIS payments. Sequence ""${orderId}"" is replaced with Magento Order ID.","Model i poziv na broj primatelja za PIS plaćanja. Niz ""${orderId}"" će biti zamijenjen brojem Magento narudžbe."
+"Sort Order","Redoslijed prikazivanja"
+"Hide payment methods","Sakrij metode plaćanja"
+"Hide payment methods during checkout.","Sakrij metode plaćanja na platnoj formi."
+"Description","Opis"
+"This controls the description which the user sees during checkout. You can add the following symbols: :amex: :dina: :diners: :discover: :jcb: :maestro: :master: :visa: :card: :iban: :paysafecard: :wallet: :applepay: :googlepay:","Ova postavka određuje koji opis će se prikazivati korisniku prilikom plaćanja. Možete dodati sljedeće simbole: :amex: :dina: :diners: :discover: :jcb: :maestro: :master: :visa: :card: :iban: :paysafecard: :wallet: :applepay: :googlepay:"

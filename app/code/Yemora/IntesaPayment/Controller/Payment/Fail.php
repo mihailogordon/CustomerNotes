@@ -17,6 +17,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
 use Psr\Log\LoggerInterface;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
+use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
 
 class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
 {
@@ -37,6 +38,16 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         $order = $this->loadOrder($params);
 
         if ($order->getId()) {
+            if (!$this->canHandleOrder($order)) {
+                $this->logger->warning(
+                    'Intesa fail callback rejected: order payment method does not match.',
+                    ['order_id' => $order->getIncrementId()]
+                );
+                $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
+
+                return $this->redirectFactory->create()->setPath('checkout/cart');
+            }
+
             if (!$this->validateResponseHash($params, $order)) {
                 return $this->redirectFactory->create()->setPath('checkout/cart');
             }
@@ -78,6 +89,11 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         return $this->orderFactory->create()->loadByIncrementId($incrementId);
     }
 
+    private function canHandleOrder(Order $order): bool
+    {
+        return $order->getPayment()->getMethod() === ConfigProvider::CODE;
+    }
+
     /**
      * @param array<string, mixed> $params
      */
@@ -116,7 +132,14 @@ class Fail implements HttpPostActionInterface, CsrfAwareActionInterface
         $response = trim((string) ($params['Response'] ?? 'Declined'));
         $code = trim((string) ($params['ProcReturnCode'] ?? ''));
         $error = trim((string) ($params['ErrMsg'] ?? ''));
-        $transactionId = trim((string) ($params['TransId'] ?? $params['HostRefNum'] ?? $params['AuthCode'] ?? ''));
+        $transactionId = trim((string) (
+            $params['TransId']
+            ?? $params['transid']
+            ?? $params['transaction_id']
+            ?? $params['HostRefNum']
+            ?? $params['AuthCode']
+            ?? ''
+        ));
 
         return (string) __(
             'Registered Intesa notification about declined payment. Transaction ID: "%1". Response: %2%3%4',

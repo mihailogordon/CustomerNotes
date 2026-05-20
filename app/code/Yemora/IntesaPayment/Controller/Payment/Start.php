@@ -7,6 +7,8 @@ namespace Yemora\IntesaPayment\Controller\Payment;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\Forward;
 use Magento\Framework\Controller\Result\ForwardFactory;
+use Magento\Framework\Controller\Result\Redirect;
+use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
@@ -21,6 +23,7 @@ class Start implements HttpGetActionInterface
     public function __construct(
         private readonly CheckoutSession $checkoutSession,
         private readonly ForwardFactory $forwardFactory,
+        private readonly RedirectFactory $redirectFactory,
         private readonly ManagerInterface $messageManager,
         private readonly PageFactory $pageFactory,
         private readonly PaymentRequestBuilder $paymentRequestBuilder
@@ -44,7 +47,7 @@ class Start implements HttpGetActionInterface
         } catch (LocalizedException $exception) {
             $this->messageManager->addErrorMessage($exception->getMessage());
 
-            return $this->forwardNoRoute();
+            return $this->redirectToCart();
         }
 
         $resultPage = $this->pageFactory->create();
@@ -66,6 +69,13 @@ class Start implements HttpGetActionInterface
         $resultForward = $this->forwardFactory->create();
 
         return $resultForward->forward('noroute');
+    }
+
+    private function redirectToCart(): Redirect
+    {
+        $this->checkoutSession->restoreQuote();
+
+        return $this->redirectFactory->create()->setPath('checkout/cart');
     }
 
     private function canStartPayment(Order $order): bool

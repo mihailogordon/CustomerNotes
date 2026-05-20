@@ -1,0 +1,107 @@
+"Redirect to CorvusPay Cancel URL without POST parameters.","Redirect to CorvusPay Cancel URL without POST parameters."
+"Redirect to CorvusPay Success URL without POST parameters.","Redirect to CorvusPay Success URL without POST parameters."
+"Payment failed! ERROR: Invalid signature.","Payment failed! ERROR: Invalid signature."
+"There was an error while trying to process the request.","There was an error while trying to process the request."
+"Transaction has been declined. Please try again later.","Transaction has been declined. Please try again later."
+"Specified currency code not supported.","Specified currency code not supported."
+"Specified amount is not supported.","Specified amount is not supported."
+"Unsupported time limit value.","Unsupported time limit value."
+"Redirected customer to CorvusPay payment gateway.","Redirected customer to CorvusPay payment gateway."
+"Gateway rejected the transaction.","Gateway rejected the transaction."
+"Card brand","Card brand"
+"Minimum installments","Minimum installments"
+"Maximum installments","Maximum installments"
+"General discount","General discount"
+"Specific discount","Specific discount"
+"American Express","American Express"
+DinaCard,DinaCard
+Diners,Diners
+"Discover Card","Discover Card"
+IBAN,IBAN
+Maestro,Maestro
+Mastercard,Mastercard
+Visa,Visa
+None,None
+Mandatory,Mandatory
+"Both mandatory and optional","Both mandatory and optional"
+Test,Test
+Production,Production
+Disabled,Disabled
+Simple,Simple
+Advanced,Advanced
+"Sale (authorization)","Sale (authorization)"
+"Authorize (pre-authorization, requires completion)","Authorize (pre-authorization, requires completion)"
+Autodetect,Autodetect
+Croatian,Croatian
+English,English
+Serbian,Serbian
+German,German
+Italian,Italian
+Slovenian,Slovenian
+"CorvusPay by Card","CorvusPay by Card"
+"CorvusPay by IBAN","CorvusPay by IBAN"
+CorvusWallet,CorvusWallet
+paysafecard,paysafecard
+"Continue to payment","Continue to payment"
+"Save credit card information for future use.","Save credit card information for future use."
+"Place Order","Place Order"
+CorvusPay,CorvusPay
+"Accept credit/debit cards in your Magento store.<br/>No setup fee. Cardholder enters personal information in a secure (PCI DSS certified) environment.","Accept credit/debit cards in your Magento store.<br/>No setup fee. Cardholder enters personal information in a secure (PCI DSS certified) environment."
+"Required CorvusPay Settings","Required CorvusPay Settings"
+Title,Title
+Environment,Environment
+"Test Store ID","Test Store ID"
+"Copy Test Store ID from the CorvusPay Merchant Center.","Copy Test Store ID from the CorvusPay Merchant Center."
+"Test Secret Key","Test Secret Key"
+"Copy Test Secret Key from the CorvusPay Merchant Center.","Copy Test Secret Key from the CorvusPay Merchant Center."
+"Test API Certificate","Test API Certificate"
+"Test API Certificate Password","Test API Certificate Password"
+"Success URL","Success URL"
+"Copy Success URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>.","Copy Success URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>."
+"Cancel URL","Cancel URL"
+"Copy Cancel URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>.","Copy Cancel URL to the <a href=""https://test-merchant.corvuspay.com"">Test CorvusPay Merchant Center</a>."
+"Production Store ID","Production Store ID"
+"Copy Production Store ID from the CorvusPay Merchant Center.","Copy Production Store ID from the CorvusPay Merchant Center."
+"Production Secret Key","Production Secret Key"
+"Copy Production Secret Key from the CorvusPay Merchant Center.","Copy Production Secret Key from the CorvusPay Merchant Center."
+"Production API Certificate","Production API Certificate"
+"Production API Certificate Password","Production API Certificate Password"
+"Copy Success URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>.","Copy Success URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>."
+"Copy Cancel URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>.","Copy Cancel URL to the <a href=""https://merchant.corvuspay.com"">Production CorvusPay Merchant Center</a>."
+Enabled,Enabled
+"Advanced CorvusPay Settings","Advanced CorvusPay Settings"
+"Payment Action","Payment Action"
+"Vault Enabled","Vault Enabled"
+"Payment Form Auto-redirect","Payment Form Auto-redirect"
+"Automatically redirect user to CorvusPay payment form.","Automatically redirect user to CorvusPay payment form."
+"Payment Form Language","Payment Form Language"
+"Send Cardholder Information","Send Cardholder Information"
+"Send customer information to CorvusPay to speed up payment process. Can include name, address and contact details.","Send customer information to CorvusPay to speed up payment process. Can include name, address and contact details."
+"Suppress order confirmation email","Suppress order confirmation email"
+"Magento can send an order confirmation email after the order has been created. This
+                            option will suppress that behavior and delay sending of an order confirmation email until
+                            the order has been payed for.","Magento can send an order confirmation email after the order has been created. This
+                            option will suppress that behavior and delay sending of an order confirmation email until
+                            the order has been payed for."
+"Time Limit Enabled","Time Limit Enabled"
+"Limit payment time. Make sure Magento keeps accurate time.","Limit payment time. Make sure Magento keeps accurate time."
+"Time Limit in seconds","Time Limit in seconds"
+"Payment time limit in seconds. Maximum value is ""900"" (15 minutes).","Payment time limit in seconds. Maximum value is ""900"" (15 minutes)."
+Installments,Installments
+"Installments plan:","Installments plan:"
+"Example row: ""Visa; 1; 2; 10; 15"". Explanation: All Visa cards get a 10% discount if
+                            customer pays in one payment or in two installments. Some Visa cards, issued by a specific
+                            issuer, get a 15% discount under the same conditions. To setup specific discounts, contact
+                            CorvusPay.","Example row: ""Visa; 1; 2; 10; 15"". Explanation: All Visa cards get a 10% discount if
+                            customer pays in one payment or in two installments. Some Visa cards, issued by a specific
+                            issuer, get a 15% discount under the same conditions. To setup specific discounts, contact
+                            CorvusPay."
+"PIS Payments Enabled","PIS Payments Enabled"
+"Enable Pay by IBAN functionality.","Enable Pay by IBAN functionality."
+"Creditor Reference","Creditor Reference"
+"Payee model and reference number for PIS payments. Sequence ""${orderId}"" is replaced with Magento Order ID.","Payee model and reference number for PIS payments. Sequence ""${orderId}"" is replaced with Magento Order ID."
+"Sort Order","Sort Order"
+"Hide payment methods","Hide payment methods"
+"Hide payment methods during checkout.","Hide payment methods during checkout."
+"Description","Description"
+"This controls the description which the user sees during checkout. You can add the following symbols: :amex: :dina: :diners: :discover: :jcb: :maestro: :master: :visa: :card: :iban: :paysafecard: :wallet: :applepay: :googlepay:","This controls the description which the user sees during checkout. You can add the following symbols: :amex: :dina: :diners: :discover: :jcb: :maestro: :master: :visa: :card: :iban: :paysafecard: :wallet: :applepay: :googlepay:"

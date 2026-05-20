@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2336645dfd04fa77fe705768550cf795",
+    "content-hash": "e2cf8049483e8936a5ea449292440c4a",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -1364,6 +1364,82 @@
                 }
             ],
             "time": "2024-05-06T16:37:16+00:00"
+        },
+        {
+            "name": "corvus_pay/payment-gateway",
+            "version": "1.4.7",
+            "dist": {
+                "type": "path",
+                "url": "composer/packages/corvus_pay/payment-gateway",
+                "reference": "53886e16f6983f4875f8e397d8cbf2aabe2712ec"
+            },
+            "require": {
+                "corvuspay/corvuspay_wallet_php_sdk": "^1.0.0",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-simplexml": "*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "CorvusPay\\PaymentGateway\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0"
+            ],
+            "description": "Provides a completely integrated checkout experience between Magento 2 and CorvusPay.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "corvuspay/corvuspay_wallet_php_sdk",
+            "version": "1.4.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/corvuspay/corvuspay_wallet_php_sdk.git",
+                "reference": "26577a38e154f65856f22fb4de18e5de648b6cb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/corvuspay/corvuspay_wallet_php_sdk/zipball/26577a38e154f65856f22fb4de18e5de648b6cb0",
+                "reference": "26577a38e154f65856f22fb4de18e5de648b6cb0",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "ext-openssl": "*",
+                "ext-posix": "*",
+                "ext-simplexml": "*",
+                "psr/log": "*"
+            },
+            "require-dev": {
+                "monolog/monolog": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "init.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "CorvusPay Wallet PHP SDK",
+            "support": {
+                "issues": "https://github.com/corvuspay/corvuspay_wallet_php_sdk/issues",
+                "source": "https://github.com/corvuspay/corvuspay_wallet_php_sdk/tree/1.4.7"
+            },
+            "time": "2025-12-01T12:23:04+00:00"
         },
         {
             "name": "dasprid/enum",
@@ -19166,16 +19242,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "2.10.0",
+            "version": "2.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7"
+                "reference": "37308608e599f34a1a4845b16440047ec98a172a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/5cf826f2991858b54d5c3809bee745560a1042a7",
-                "reference": "5cf826f2991858b54d5c3809bee745560a1042a7",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/37308608e599f34a1a4845b16440047ec98a172a",
+                "reference": "37308608e599f34a1a4845b16440047ec98a172a",
                 "shasum": ""
             },
             "require": {
@@ -19193,7 +19269,7 @@
                 "graylog2/gelf-php": "^1.4.2 || ^2@dev",
                 "guzzlehttp/guzzle": "^7.4",
                 "guzzlehttp/psr7": "^2.2",
-                "mongodb/mongodb": "^1.8",
+                "mongodb/mongodb": "^1.8 || ^2.0",
                 "php-amqplib/php-amqplib": "~2.4 || ^3",
                 "phpspec/prophecy": "^1.15",
                 "phpstan/phpstan": "^1.10",
@@ -19252,7 +19328,7 @@
             ],
             "support": {
                 "issues": "https://github.com/Seldaek/monolog/issues",
-                "source": "https://github.com/Seldaek/monolog/tree/2.10.0"
+                "source": "https://github.com/Seldaek/monolog/tree/2.11.0"
             },
             "funding": [
                 {
@@ -19264,7 +19340,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-11-12T12:43:37+00:00"
+            "time": "2026-01-01T13:05:00+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",

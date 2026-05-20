@@ -1,0 +1,224 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="CorvusPayFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="const">CorvusPay\PaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\ConfigurableInfo</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CorvusPayValueHandlerPool</argument>
+            <argument name="commandPool" xsi:type="object">CorvusPayCommandPool</argument>
+            <argument name="commandManagerPool" xsi:type="object">CorvusPayVaultCommandManagerPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayVaultFacade" type="CorvusPay\PaymentGateway\Model\Method\CorvusPayVault">
+        <arguments>
+            <argument name="code" xsi:type="const">CorvusPay\PaymentGateway\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+            <argument name="valueHandlerPool" xsi:type="object">CorvusPayVaultValueHandlerPool</argument>
+            <argument name="vaultProvider" xsi:type="object">CorvusPayFacade</argument>
+            <argument name="commandPool" xsi:type="object">CorvusPayCommandPool</argument>
+            <argument name="config" xsi:type="object">CorvusPayVaultConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayVaultValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CorvusPayVaultConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayVaultConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">CorvusPayVaultConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayVaultConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">\CorvusPay\PaymentGateway\Model\Ui\ConfigProvider::VAULT_CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
+        <arguments>
+            <argument name="executors" xsi:type="array">
+                <item name="corvuspay" xsi:type="string">CorvusPayCommandManager</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="CorvusPayCommandManager" type="Magento\Payment\Gateway\Command\CommandManager">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">CorvusPayCommandPool</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">CorvusPayConfigValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayConfigValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="const">\CorvusPay\PaymentGateway\Model\Ui\ConfigProvider::CODE</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">CorvusPayInitializeCommand</item>
+                <item name="capture" xsi:type="string">CorvusPayCaptureCommand</item>
+                <item name="void" xsi:type="string">CorvusPayVoidCommand</item>
+                <item name="refund" xsi:type="string">CorvusPayRefundCommand</item>
+                <item name="status" xsi:type="string">CorvusPayStatusCommand</item>
+                <item name="status-pis" xsi:type="string">CorvusPayStatusPisCommand</item>
+                <item name="fetch_transaction_information" xsi:type="string">CorvusPayFetchTransactionInformationCommand</item>
+                <item name="vault_sale" xsi:type="string">CorvusPayVaultSaleCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="CorvusPayInitializeCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">
+                CorvusPay\PaymentGateway\Gateway\Request\InitializeRequest
+            </argument>
+            <argument name="handler" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Response\InitializeHandler</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\FakeClient</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\InitializeRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CorvusPayCaptureCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Request\CaptureRequest</argument>
+            <argument name="handler" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Response\ApiResponseHandler</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Validator\ApiResponseValidator</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\CaptureRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CorvusPayVoidCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Request\VoidRequest</argument>
+            <argument name="handler" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Response\ApiResponseHandler</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Validator\ApiResponseValidator</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\VoidRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CorvusPayRefundCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Request\RefundRequest</argument>
+            <argument name="handler" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Response\ApiResponseHandler</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Validator\ApiResponseValidator</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\RefundRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CorvusPayFetchTransactionInformationCommand" type="CorvusPay\PaymentGateway\Gateway\Command\FetchTransactionInfoCommand">
+        <arguments>
+            <argument name="commandPool" xsi:type="object">CorvusPayCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayStatusCommand" type="CorvusPay\PaymentGateway\Gateway\Command\StatusCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPayStatusRequest</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+            <argument name="validator" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Validator\ApiResponseValidator</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayStatusRequest" type="CorvusPay\PaymentGateway\Gateway\Request\StatusRequest">
+        <arguments>
+            <argument name="apiEndpoint" xsi:type="const">CorvusPay\PaymentGateway\Gateway\Request\StatusRequest::STATUS_GENERAL</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayStatusPisCommand" type="CorvusPay\PaymentGateway\Gateway\Command\StatusCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPayStatusPisRequest</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="CorvusPayStatusPisRequest" type="CorvusPay\PaymentGateway\Gateway\Request\StatusRequest">
+        <arguments>
+            <argument name="apiEndpoint" xsi:type="const">CorvusPay\PaymentGateway\Gateway\Request\StatusRequest::STATUS_PIS</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\StatusRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="CorvusPayVaultSaleCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Request\NextSubscriptionPaymentRequest</argument>
+            <argument name="handler" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Response\ApiResponseHandler</argument>
+            <argument name="transferFactory" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Transfer\TransferFactory</argument>
+            <argument name="validator" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Validator\ApiResponseValidator</argument>
+            <argument name="client" xsi:type="object">CorvusPay\PaymentGateway\Gateway\Client\CurlClient</argument>
+        </arguments>
+    </virtualType>
+    <type name="CorvusPay\PaymentGateway\Gateway\Request\NextSubscriptionPaymentRequest">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="CorvusPay\PaymentGateway\Gateway\Client\CurlClient">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="CorvusPay\PaymentGateway\Gateway\Options">
+        <arguments>
+            <argument name="config" xsi:type="object">CorvusPayConfig</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Payment\Model\CcConfigProvider">
+        <plugin name="CorvusPay_PaymentGateway_icons_plugin" type="CorvusPay\PaymentGateway\Model\CorvusPayCcConfigProvider"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Email\Sender\OrderSender">
+        <plugin name="CorvusPay_PaymentGateway_order_confirmation_email" type="CorvusPay\PaymentGateway\Model\CorvusPayOrderSender"/>
+    </type>
+</config>

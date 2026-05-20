@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <corvuspay>
+                <active>0</active>
+                <debug>0</debug>
+                <can_initialize>1</can_initialize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>1</can_capture_partial>
+                <can_void>1</can_void>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_fetch_transaction_information>1</can_fetch_transaction_information>
+                <can_fetch_transaction_info>1</can_fetch_transaction_info>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture_vault>1</can_capture_vault>
+                <currency>AUD,BAM,CAD,CHF,CZK,DKK,EUR,GBP,HRK,HUF,JPY,NOK,PLN,SEK,USD</currency>
+                <is_gateway>1</is_gateway>
+                <model>CorvusPayFacade</model>
+                <paymentInfoKeys>order_number,approval_code,amount</paymentInfoKeys>
+                <payment_action>authorize_capture</payment_action>
+                <sort_order></sort_order>
+                <title>Credit Card - CorvusPay</title>
+                <description>Processing transactions on the Internet.
+                    :amex: :dina: :diners: :discover: :maestro: :master: :visa: :iban: :paysafecard: :applepay: :googlepay:</description>
+                <environment>test</environment>
+                <payment_form_auto_redirect>1</payment_form_auto_redirect>
+                <payment_form_language>auto</payment_form_language>
+                <cardholder_fields>all</cardholder_fields>
+                <suppress_order_confirmation_email>1</suppress_order_confirmation_email>
+                <form_time_limit_enabled>0</form_time_limit_enabled>
+                <form_time_limit_seconds>900</form_time_limit_seconds>
+                <form_installments>none</form_installments>
+                <pis_enabled>0</pis_enabled>
+                <pis_creditor_reference>HR00${orderId}</pis_creditor_reference>
+                <hide_tabs></hide_tabs>
+            </corvuspay>
+            <corvuspay_vault>
+                <model>CorvusPayVaultFacade</model>
+                <title>Stored Credit Card (CorvusPay)</title>
+            </corvuspay_vault>
+        </payment>
+    </default>
+</config>
