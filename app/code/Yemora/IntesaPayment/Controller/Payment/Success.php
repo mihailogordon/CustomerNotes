@@ -11,15 +11,13 @@ use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
-use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\OrderFactory;
-use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use Yemora\IntesaPayment\Model\Config;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
@@ -32,8 +30,6 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly RedirectFactory $redirectFactory,
         private readonly RequestInterface $request,
         private readonly OrderFactory $orderFactory,
-        private readonly InvoiceService $invoiceService,
-        private readonly Transaction $transaction,
         private readonly Config $config,
         private readonly CheckoutSession $checkoutSession,
         private readonly ManagerInterface $messageManager,
@@ -84,7 +80,7 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        $transactionId = $this->extractTransactionId($params);
+        $transactionId = $this->extractTransactionId($params) ?: 'intesa-' . $order->getIncrementId();
 
         if (!$this->canProcessApprovedOrder($order)) {
             if ($this->isDuplicateApprovedCallback($order, $transactionId)) {
@@ -107,23 +103,10 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
             return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        $order->setState(Order::STATE_PROCESSING);
-        $order->setStatus(Order::STATE_PROCESSING);
-
-        if ($transactionId !== '') {
-            $order->getPayment()->setLastTransId($transactionId);
+        if (!$this->registerPaymentNotification($order, $params, $transactionId)) {
+            return $this->redirectFactory->create()->setPath('checkout/cart');
         }
 
-        if ($this->config->getPaymentAction((int) $order->getStoreId()) === MethodInterface::ACTION_AUTHORIZE_CAPTURE) {
-            $this->registerInvoice($order, $transactionId);
-        } else {
-            $order->getPayment()->setAmountAuthorized($order->getGrandTotal());
-            $order->getPayment()->setBaseAmountAuthorized($order->getBaseGrandTotal());
-        }
-
-        $order->addCommentToStatusHistory(
-            $this->getOrderSuccessComment($order, $params, $transactionId)
-        );
         $order->save();
         $this->sendOrderEmail($order);
         $this->prepareCheckoutSuccessSession($order);
@@ -199,49 +182,50 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
     /**
      * @param array<string, mixed> $params
      */
-    private function getOrderSuccessComment(Order $order, array $params, string $transactionId): string
+    private function registerPaymentNotification(Order $order, array $params, string $transactionId): bool
     {
+        $payment = $order->getPayment();
         $paymentAction = $this->config->getPaymentAction((int) $order->getStoreId());
-        $actionLabel = $paymentAction === MethodInterface::ACTION_AUTHORIZE_CAPTURE ? __('captured') : __('authorized');
-        $amount = (string) ($params['amount'] ?? $order->getGrandTotal());
-        $currency = (string) ($params['currencyAlphaCode'] ?? $order->getOrderCurrencyCode());
-        $response = trim((string) ($params['Response'] ?? 'Approved'));
-        $code = trim((string) ($params['ProcReturnCode'] ?? ''));
 
-        if ($transactionId === '') {
-            $transactionId = trim((string) ($params['HostRefNum'] ?? $params['AuthCode'] ?? ''));
+        $payment->setTransactionId($transactionId);
+
+        $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $this->getTransactionDetails($params));
+        $payment->setIsTransactionClosed(false);
+
+        try {
+            if ($paymentAction === MethodInterface::ACTION_AUTHORIZE_CAPTURE) {
+                $payment->registerCaptureNotification($order->getBaseGrandTotal(), true);
+            } else {
+                $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
+            }
+        } catch (\Throwable $exception) {
+            $this->logger->critical(
+                'Unable to register Intesa payment notification.',
+                ['order_id' => $order->getIncrementId(), 'message' => $exception->getMessage()]
+            );
+            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
+
+            return false;
         }
 
-        return (string) __(
-            'Registered Intesa notification about %1 amount of %2 %3. Transaction ID: "%4". Response: %5%6',
-            $actionLabel,
-            $amount,
-            $currency,
-            $transactionId !== '' ? $transactionId : __('N/A'),
-            $response,
-            $code !== '' ? ' (' . $code . ')' : ''
-        );
+        return true;
     }
 
-    private function registerInvoice(Order $order, string $transactionId): void
+    /**
+     * @param array<string, mixed> $params
+     * @return array<string, string>
+     */
+    private function getTransactionDetails(array $params): array
     {
-        if (!$order->canInvoice()) {
-            return;
+        $details = [];
+
+        foreach (['oid', 'TransId', 'HostRefNum', 'AuthCode', 'Response', 'ProcReturnCode', 'amount', 'currency'] as $key) {
+            if (isset($params[$key]) && !is_array($params[$key])) {
+                $details[$key] = (string) $params[$key];
+            }
         }
 
-        $invoice = $this->invoiceService->prepareInvoice($order);
-
-        if (!$invoice->getTotalQty()) {
-            return;
-        }
-
-        $invoice->setRequestedCaptureCase(Invoice::CAPTURE_OFFLINE);
-        $invoice->setTransactionId($transactionId);
-        $invoice->register();
-        $invoice->pay();
-
-        $order->addRelatedObject($invoice);
-        $this->transaction->addObject($invoice)->addObject($order)->save();
+        return $details;
     }
 
     private function prepareCheckoutSuccessSession(Order $order): void
