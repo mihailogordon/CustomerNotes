@@ -1,0 +1,29 @@
+{
+  "name": "yemora/module-intesa-payment-hyva",
+  "description": "Hyva Checkout adapter for the Yemora Intesa payment module.",
+  "type": "magento2-module",
+  "version": "1.0.0",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Yemora",
+      "email": "support@yemora.com",
+      "homepage": "https://www.yemora.com",
+      "role": "Technical Support"
+    }
+  ],
+  "require": {
+    "php": "^8.2.0",
+    "magento/framework": "^103.0",
+    "hyva-themes/magento2-hyva-checkout": "*",
+    "yemora/module-intesa-payment": "*"
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Yemora\\IntesaPaymentHyva\\": ""
+    }
+  }
+}

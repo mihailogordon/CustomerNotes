@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Yemora\IntesaPaymentHyva\Block\Checkout\Payment\Method\Intesa;
+
+/** @var Intesa $block */
+/** @var Escaper $escaper */
+
+$description = $block->getDescription();
+?>
+
+<?php if ($description): ?>
+    <div>
+        <p class="px-7 rounded-lg text-gray-600 cursor-default flex flex-col gap-2">
+            <?= $escaper->escapeHtml($description) ?>
+        </p>
+    </div>
+<?php endif; ?>
