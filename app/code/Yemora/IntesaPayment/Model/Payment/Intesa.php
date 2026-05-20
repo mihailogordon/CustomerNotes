@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Yemora\IntesaPayment\Model\Payment;
 
 use Magento\Payment\Model\Method\AbstractMethod;
+use Magento\Payment\Model\InfoInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Framework\UrlInterface;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
@@ -22,6 +24,16 @@ class Intesa extends AbstractMethod
     protected $_canUseCheckout = true;
 
     protected $_canUseInternal = false;
+
+    protected $_canCapture = false;
+
+    protected $_canCapturePartial = false;
+
+    protected $_canVoid = false;
+
+    protected $_canRefund = false;
+
+    protected $_canRefundInvoicePartial = false;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -53,6 +65,36 @@ class Intesa extends AbstractMethod
     public function getOrderPlaceRedirectUrl(): string
     {
         return $this->urlBuilder->getUrl('intesa/payment/start', ['_secure' => true]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function capture(InfoInterface $payment, $amount)
+    {
+        parent::capture($payment, $amount);
+
+        throw new LocalizedException(__('Intesa capture API is not implemented yet.'));
+    }
+
+    /**
+     * @return $this
+     */
+    public function void(InfoInterface $payment)
+    {
+        parent::void($payment);
+
+        throw new LocalizedException(__('Intesa void API is not implemented yet.'));
+    }
+
+    /**
+     * @return $this
+     */
+    public function refund(InfoInterface $payment, $amount)
+    {
+        parent::refund($payment, $amount);
+
+        throw new LocalizedException(__('Intesa refund API is not implemented yet.'));
     }
 
     /**

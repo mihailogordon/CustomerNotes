@@ -6,6 +6,11 @@
             <intesa>
                 <active>0</active>
                 <model>Yemora\IntesaPayment\Model\Payment\Intesa</model>
+                <can_capture>0</can_capture>
+                <can_capture_partial>0</can_capture_partial>
+                <can_void>0</can_void>
+                <can_refund>0</can_refund>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
                 <payment_action>authorize_capture</payment_action>
                 <order_status>pending_payment</order_status>
                 <title>Intesa card payment</title>
