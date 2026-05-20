@@ -79,6 +79,7 @@ class Intesa extends AbstractMethod
         parent::capture($payment, $amount);
 
         $orderPayment = $this->getOrderPayment($payment);
+        $this->assertAuthorizationCanBeCaptured($orderPayment);
         $order = $orderPayment->getOrder();
         $response = $this->nestPayClient->capture($order, $this->convertBaseAmountToOrderAmount($order, (float) $amount));
         $this->applyApiResponseToPayment($orderPayment, $response);
@@ -151,6 +152,20 @@ class Intesa extends AbstractMethod
         }
 
         return $transactionId;
+    }
+
+    private function assertAuthorizationCanBeCaptured(OrderPayment $payment): void
+    {
+        $authorizationTransaction = $payment->getAuthorizationTransaction();
+
+        if (
+            $authorizationTransaction
+            && (int) $authorizationTransaction->getIsClosed()
+            && (float) $payment->getBaseAmountPaidOnline() <= 0.0
+            && (float) $payment->getBaseAmountPaid() <= 0.0
+        ) {
+            throw new LocalizedException(__('Cannot capture a voided Intesa authorization.'));
+        }
     }
 
     /**
