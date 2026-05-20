@@ -62,7 +62,31 @@
                     </depends>
                 </field>
 
-                <field id="prod_gateway_url" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="test_api_url" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test API URL</label>
+                    <comment>Server-to-server NestPay API endpoint used for capture, void and refund.</comment>
+                    <validate>validate-url</validate>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="test_api_username" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test API Username</label>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="test_api_password" translate="label comment" type="obscure" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test API Password</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="environment">test</field>
+                    </depends>
+                </field>
+
+                <field id="prod_gateway_url" translate="label comment" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Production Gateway URL</label>
                     <validate>required-entry validate-url</validate>
                     <depends>
@@ -70,7 +94,7 @@
                     </depends>
                 </field>
 
-                <field id="prod_merchant_id" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="prod_merchant_id" translate="label comment" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Production Merchant ID</label>
                     <validate>required-entry</validate>
                     <depends>
@@ -78,7 +102,7 @@
                     </depends>
                 </field>
 
-                <field id="prod_store_key" translate="label comment" type="obscure" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="prod_store_key" translate="label comment" type="obscure" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Production StoreKey</label>
                     <comment>Secret StoreKey used only for hash generation. It is not posted to Intesa.</comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -88,23 +112,47 @@
                     </depends>
                 </field>
 
-                <field id="lang" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="prod_api_url" translate="label comment" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production API URL</label>
+                    <comment>Server-to-server NestPay API endpoint used for capture, void and refund.</comment>
+                    <validate>validate-url</validate>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="prod_api_username" translate="label comment" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production API Username</label>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="prod_api_password" translate="label comment" type="obscure" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Production API Password</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="environment">prod</field>
+                    </depends>
+                </field>
+
+                <field id="lang" translate="label comment" type="select" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment Page Language</label>
                     <comment>Auto resolves language from the store locale. Supported values sent to Intesa are sr and en.</comment>
                     <source_model>Yemora\IntesaPayment\Model\Config\Source\Language</source_model>
                 </field>
 
-                <field id="sort_order" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="sort_order" translate="label" type="text" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sort Order</label>
                     <validate>validate-number</validate>
                 </field>
 
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment from Applicable Countries</label>
                     <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
                 </field>
 
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="specificcountry" translate="label" type="multiselect" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Payment from Specific Countries</label>
                     <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
                     <can_be_empty>1</can_be_empty>

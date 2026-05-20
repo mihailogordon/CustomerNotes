@@ -53,6 +53,23 @@ class Config
         return $value ? $this->encryptor->decrypt($value) : '';
     }
 
+    public function getApiUrl(?int $storeId = null): string
+    {
+        return (string) $this->getValue($this->getEnvironment($storeId) . '_api_url', $storeId);
+    }
+
+    public function getApiUsername(?int $storeId = null): string
+    {
+        return (string) $this->getValue($this->getEnvironment($storeId) . '_api_username', $storeId);
+    }
+
+    public function getApiPassword(?int $storeId = null): string
+    {
+        $value = $this->getValue($this->getEnvironment($storeId) . '_api_password', $storeId);
+
+        return $value ? $this->encryptor->decrypt($value) : '';
+    }
+
     public function getLanguage(?int $storeId = null): string
     {
         return $this->getValue('lang', $storeId) ?: 'auto';

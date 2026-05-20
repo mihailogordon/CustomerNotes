@@ -6,18 +6,20 @@
             <intesa>
                 <active>0</active>
                 <model>Yemora\IntesaPayment\Model\Payment\Intesa</model>
-                <can_capture>0</can_capture>
+                <can_capture>1</can_capture>
                 <can_capture_partial>0</can_capture_partial>
-                <can_void>0</can_void>
-                <can_refund>0</can_refund>
-                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_void>1</can_void>
+                <can_refund>1</can_refund>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
                 <payment_action>authorize_capture</payment_action>
                 <order_status>pending_payment</order_status>
                 <title>Intesa card payment</title>
                 <description>You will be redirected to Intesa to complete the payment.</description>
                 <environment>test</environment>
                 <test_gateway_url>https://testsecurepay.eway2pay.com/fim/est3Dgate</test_gateway_url>
+                <test_api_url>https://testsecurepay.eway2pay.com/fim/api</test_api_url>
                 <prod_gateway_url>https://securepay.eway2pay.com/fim/est3Dgate</prod_gateway_url>
+                <prod_api_url>https://securepay.eway2pay.com/fim/api</prod_api_url>
                 <lang>auto</lang>
                 <allowspecific>0</allowspecific>
                 <sort_order>50</sort_order>

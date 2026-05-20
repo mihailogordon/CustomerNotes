@@ -8,7 +8,10 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment as OrderPayment;
+use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Framework\UrlInterface;
+use Yemora\IntesaPayment\Model\Api\NestPayClient;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
 
 class Intesa extends AbstractMethod
@@ -25,15 +28,15 @@ class Intesa extends AbstractMethod
 
     protected $_canUseInternal = false;
 
-    protected $_canCapture = false;
+    protected $_canCapture = true;
 
     protected $_canCapturePartial = false;
 
-    protected $_canVoid = false;
+    protected $_canVoid = true;
 
-    protected $_canRefund = false;
+    protected $_canRefund = true;
 
-    protected $_canRefundInvoicePartial = false;
+    protected $_canRefundInvoicePartial = true;
 
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -44,6 +47,7 @@ class Intesa extends AbstractMethod
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Payment\Model\Method\Logger $logger,
         private readonly UrlInterface $urlBuilder,
+        private readonly NestPayClient $nestPayClient,
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -74,7 +78,12 @@ class Intesa extends AbstractMethod
     {
         parent::capture($payment, $amount);
 
-        throw new LocalizedException(__('Intesa capture API is not implemented yet.'));
+        $orderPayment = $this->getOrderPayment($payment);
+        $order = $orderPayment->getOrder();
+        $response = $this->nestPayClient->capture($order, $this->convertBaseAmountToOrderAmount($order, (float) $amount));
+        $this->applyApiResponseToPayment($orderPayment, $response);
+
+        return $this;
     }
 
     /**
@@ -84,7 +93,14 @@ class Intesa extends AbstractMethod
     {
         parent::void($payment);
 
-        throw new LocalizedException(__('Intesa void API is not implemented yet.'));
+        $orderPayment = $this->getOrderPayment($payment);
+        $response = $this->nestPayClient->void(
+            $orderPayment->getOrder(),
+            $this->getGatewayTransactionId((string) $orderPayment->getParentTransactionId())
+        );
+        $this->applyApiResponseToPayment($orderPayment, $response, false);
+
+        return $this;
     }
 
     /**
@@ -94,7 +110,68 @@ class Intesa extends AbstractMethod
     {
         parent::refund($payment, $amount);
 
-        throw new LocalizedException(__('Intesa refund API is not implemented yet.'));
+        $orderPayment = $this->getOrderPayment($payment);
+        $order = $orderPayment->getOrder();
+        $response = $this->nestPayClient->refund(
+            $order,
+            $this->convertBaseAmountToOrderAmount($order, (float) $amount),
+            $this->getGatewayTransactionId((string) $orderPayment->getRefundTransactionId())
+        );
+        $this->applyApiResponseToPayment($orderPayment, $response);
+
+        return $this;
+    }
+
+    private function getOrderPayment(InfoInterface $payment): OrderPayment
+    {
+        if (!$payment instanceof OrderPayment) {
+            throw new LocalizedException(__('Intesa payment action requires a sales order payment.'));
+        }
+
+        return $payment;
+    }
+
+    private function convertBaseAmountToOrderAmount(Order $order, float $baseAmount): float
+    {
+        $baseGrandTotal = (float) $order->getBaseGrandTotal();
+
+        if ($baseGrandTotal <= 0.0) {
+            return $baseAmount;
+        }
+
+        return $baseAmount * ((float) $order->getGrandTotal() / $baseGrandTotal);
+    }
+
+    private function getGatewayTransactionId(string $transactionId): ?string
+    {
+        $transactionId = trim($transactionId);
+
+        if ($transactionId === '' || str_starts_with($transactionId, 'intesa-')) {
+            return null;
+        }
+
+        return $transactionId;
+    }
+
+    /**
+     * @param array<string, string> $response
+     */
+    private function applyApiResponseToPayment(
+        OrderPayment $payment,
+        array $response,
+        bool $updateTransactionId = true
+    ): void {
+        $transactionId = $response['transid']
+            ?? $response['trans_id']
+            ?? $response['hostrefnum']
+            ?? $payment->getTransactionId();
+
+        if ($updateTransactionId && $transactionId) {
+            $payment->setTransactionId((string) $transactionId);
+        }
+
+        $payment->setTransactionAdditionalInfo(Transaction::RAW_DETAILS, $response);
+        $payment->setIsTransactionClosed(false);
     }
 
     /**
