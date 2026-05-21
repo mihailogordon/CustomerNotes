@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yemora\IntesaPayment\Controller\Payment;
 
-use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\App\CsrfAwareActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
@@ -12,14 +11,15 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Payment\Model\MethodInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Sales\Model\OrderFactory;
 use Psr\Log\LoggerInterface;
+use Yemora\IntesaPayment\Model\CallbackCookieSuppressor;
 use Yemora\IntesaPayment\Model\Config;
+use Yemora\IntesaPayment\Model\ReturnUrlToken;
 use Yemora\IntesaPayment\Model\Response\HashValidator;
 use Yemora\IntesaPayment\Model\Response\OrderResponseValidator;
 use Yemora\IntesaPayment\Model\Ui\ConfigProvider;
@@ -31,12 +31,12 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         private readonly RequestInterface $request,
         private readonly OrderFactory $orderFactory,
         private readonly Config $config,
-        private readonly CheckoutSession $checkoutSession,
-        private readonly ManagerInterface $messageManager,
         private readonly LoggerInterface $logger,
         private readonly OrderSender $orderSender,
         private readonly HashValidator $hashValidator,
-        private readonly OrderResponseValidator $orderResponseValidator
+        private readonly OrderResponseValidator $orderResponseValidator,
+        private readonly ReturnUrlToken $returnUrlToken,
+        private readonly CallbackCookieSuppressor $callbackCookieSuppressor
     ) {
     }
 
@@ -46,9 +46,9 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         $order = $this->loadOrder($params);
 
         if (!$order->getId()) {
-            $this->messageManager->addErrorMessage(__('Unable to find the order returned by Intesa.'));
-
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->suppressCookies(
+                $this->redirectFactory->create()->setPath('checkout/cart')
+            );
         }
 
         if (!$this->canHandleOrder($order)) {
@@ -56,17 +56,22 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                 'Intesa success callback rejected: order payment method does not match.',
                 ['order_id' => $order->getIncrementId()]
             );
-            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
 
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->suppressCookies(
+                $this->redirectFactory->create()->setPath('checkout/cart')
+            );
         }
 
         if (!$this->validateResponseHash($params, $order)) {
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->suppressCookies(
+                $this->redirectFactory->create()->setPath('checkout/cart')
+            );
         }
 
         if (!$this->validateResponseMatchesOrder($params, $order)) {
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->suppressCookies(
+                $this->redirectFactory->create()->setPath('checkout/cart')
+            );
         }
 
         if (!$this->isApprovedResponse($params)) {
@@ -74,19 +79,15 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                 'Intesa success callback rejected: response is not approved.',
                 ['order_id' => $order->getIncrementId(), 'params' => $this->sanitizeParams($params)]
             );
-            $this->messageManager->addErrorMessage(__('The card payment was not approved by Intesa.'));
-            $this->checkoutSession->restoreQuote();
 
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->redirectToComplete($order, 'fail', (string) __('The card payment was not approved by Intesa.'));
         }
 
         $transactionId = $this->extractTransactionId($params) ?: 'intesa-' . $order->getIncrementId();
 
         if (!$this->canProcessApprovedOrder($order)) {
             if ($this->isDuplicateApprovedCallback($order, $transactionId)) {
-                $this->prepareCheckoutSuccessSession($order);
-
-                return $this->redirectFactory->create()->setPath('checkout/onepage/success');
+                return $this->redirectToComplete($order, 'success');
             }
 
             $this->logger->warning(
@@ -98,20 +99,24 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                     'params' => $this->sanitizeParams($params),
                 ]
             );
-            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
 
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->suppressCookies(
+                $this->redirectFactory->create()->setPath('checkout/cart')
+            );
         }
 
         if (!$this->registerPaymentNotification($order, $params, $transactionId)) {
-            return $this->redirectFactory->create()->setPath('checkout/cart');
+            return $this->redirectToComplete(
+                $order,
+                'fail',
+                (string) __('Unable to process the Intesa payment response.')
+            );
         }
 
         $order->save();
         $this->sendOrderEmail($order);
-        $this->prepareCheckoutSuccessSession($order);
 
-        return $this->redirectFactory->create()->setPath('checkout/onepage/success');
+        return $this->redirectToComplete($order, 'success');
     }
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -203,7 +208,6 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                 'Unable to register Intesa payment notification.',
                 ['order_id' => $order->getIncrementId(), 'message' => $exception->getMessage()]
             );
-            $this->messageManager->addErrorMessage(__('Unable to process the Intesa payment response.'));
 
             return false;
         }
@@ -228,18 +232,25 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
         return $details;
     }
 
-    private function prepareCheckoutSuccessSession(Order $order): void
+    private function redirectToComplete(Order $order, string $result, string $message = ''): Redirect
     {
-        $quoteId = (int) $order->getQuoteId();
+        return $this->suppressCookies($this->redirectFactory->create()->setPath(
+            'intesa/payment/complete',
+            [
+                'oid' => $order->getIncrementId(),
+                'result' => $result,
+                'message' => $message,
+                'token' => $this->returnUrlToken->generate($order, $result, $message),
+                '_secure' => true,
+            ]
+        ));
+    }
 
-        if ($quoteId > 0) {
-            $this->checkoutSession->setLastQuoteId($quoteId);
-            $this->checkoutSession->setLastSuccessQuoteId($quoteId);
-        }
+    private function suppressCookies(Redirect $redirect): Redirect
+    {
+        $this->callbackCookieSuppressor->suppressResponseCookies();
 
-        $this->checkoutSession->setLastOrderId((int) $order->getId());
-        $this->checkoutSession->setLastRealOrderId((string) $order->getIncrementId());
-        $this->checkoutSession->setLastOrderStatus((string) $order->getStatus());
+        return $redirect;
     }
 
     private function sendOrderEmail(Order $order): void
@@ -282,7 +293,6 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                 'Intesa success callback rejected: invalid response hash.',
                 ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
             );
-            $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
 
             return false;
         }
@@ -302,7 +312,6 @@ class Success implements HttpPostActionInterface, CsrfAwareActionInterface
                 'Intesa success callback rejected: response does not match order.',
                 ['message' => $exception->getMessage(), 'params' => $this->sanitizeParams($params)]
             );
-            $this->messageManager->addErrorMessage(__('Unable to verify the Intesa payment response.'));
 
             return false;
         }
